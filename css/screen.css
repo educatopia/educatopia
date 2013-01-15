@@ -1,0 +1,57 @@
+body {
+	padding-top: 70px;
+}
+
+#sidebar a{
+	cursor: pointer;
+}
+
+.nav {
+	text-transform: capitalize;
+}
+
+.nav-header .label {
+	margin-left: 6px;
+}
+
+.nav-header button {
+	text-transform: none;
+}
+
+.accordion {
+	background-color: white;
+	margin-top: 3em
+}
+
+#banner,
+#sidebar,
+#content {
+	display: none;
+}
+
+s {
+	color: rgb(185, 74, 72) !important;
+	text-decoration: none;
+}
+
+.tooltip {
+	text-shadow: none;
+	font-weight: normal;
+	line-height: normal;
+	text-transform: none;
+}
+
+footer {
+	background-color: #f5f5f5;
+	padding: 20px 0 ;
+	border-top: 1px solid #E5E5E5;
+	text-align: center;
+	margin-top: 40px;
+}
+footer a{
+	margin: 0 10px;
+}
+
+#content .nav a {
+	text-transform: none;
+}

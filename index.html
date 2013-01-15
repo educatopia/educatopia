@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Bootstrap, from Twitter</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/screen.css" rel="stylesheet">
+	<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+	<link rel="shortcut icon" href="img/favicon.png">
+</head>
+
+<body>
+
+<script id="exerciseSideBarTemplate" type="text/template">
+
+	<li class="nav-header clearfix">URL:</li>
+	<li>
+		<% var url = 'educatopia.org/#' + id %>
+		<small class="muted"><a href="http://<%= url %>"><%= url %></a></small>
+	</li>
+	<li class="divider"></li>
+
+	<li class="nav-header clearfix">
+		Difficulty: <span class="pull-right"><%= difficulty * 10 %>/10</span>
+	</li>
+	<li>
+		<div class="progress">
+			<div class="bar" style="width:<% print( (difficulty * 100) + '%') %>"></div>
+		</div>
+	</li>
+	<li class="divider"></li>
+
+
+	<li class="nav-header clearfix">
+		Credits: <span class="badge  pull-right"><%= credits %></span>
+	</li>
+	<li class="divider"></li>
+
+
+	<li class="nav-header  clearfix">
+		Status: <span data-trigger="hover" class="badge badge-<%
+
+	var dic = {
+		correct: 'success',
+		unapproved: 'warning',
+		incorrect: 'important'
+	}
+
+	print(dic[status])
+
+			%>
+	pull-right"><%= status %></span>
+	</li>
+	<li class="divider"></li>
+
+
+	<li class="nav-header  clearfix">
+		Subject: <span class="label pull-right"><%= subject %></span>
+	</li>
+
+	<li class="nav-header  clearfix">
+		Tags:
+		<% _.each(tags, function(tag){ %> <span class="label pull-right"><%= tag %></span> <% }) %>
+	</li>
+	<li class="divider"></li>
+
+
+	<li class="nav-header clearfix">Help:
+	                                <%
+	                                var clas = ''
+	                                viewedHints = displayedHints + 1
+
+	                                //console.log('asdf', hints.length, displayedHints)
+
+	                                if(hints && hints.length > 0){
+
+	                                if(displayedHints == hints.length ){
+	                                    clas = 'disabled'
+	                                    viewedHints = displayedHints
+	                                }
+
+	                                print('<button id="showHint" class="btn btn-mini pull-right '+
+	                                clas +'">Show Hint ' + viewedHints +'/'+ hints.length + '</button>') } %>
+	</li>
+	<li class="divider"></li>
+
+
+	<li class="nav-header clearfix">Note:
+	</li>
+	<li>
+		<small class="muted">
+			<%= note %>
+		</small>
+	</li>
+	<li class="divider"></li>
+
+
+	<li class="nav-header clearfix">
+		Created: <span class="pull-right"><% print(created.split('T').join(' ')) %></span>
+	</li>
+	<li class="divider"></li>
+</script>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<!--<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>-->
+			<a class="brand" href="#">educatopia</a>
+
+			<!--<div class="nav-collapse collapse">-->
+			<div>
+				<ul class="nav">
+					<li class="divider-vertical"></li>
+					<li><a name='math' href="#math">math</a></li>
+					<!--<li class="divider-vertical"></li>
+					<li><a href="#digital-electroincs">digital electronics</a></li>
+					<li class="divider-vertical"></li>
+					<li><a href="#modelling">modelling</a></li>
+					<li class="divider-vertical"></li>
+					<li><a href="#programming">programming</a></li>-->
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id=contentWrapper class="container-fluid">
+
+	<div id="banner" class="hero-unit">
+		<div class="page-header">
+			<h1>1001 Exercises
+				<small>Practice 'till you drop!</small>
+			</h1>
+		</div>
+
+		<p>The goal of this website is to build an extensive library of exercises from a variety of scientific topics such as
+		   Math, Digital Electronics, Modelling, Computer Science, …</p>
+		<p>Please Enjoy!</p>
+	</div>
+
+	<div id='tasks' class="row-fluid">
+		<ul id="sidebar" class="well nav nav-list span2"></ul>
+		<div id="content" class="well span10"></div>
+	</div>
+
+</div>
+
+<footer>
+	<p><a href="http://adriansieber.com">By Adrian Sieber</a><span class="muted">•</span>
+		<a href="https://github.com/adius/educatopia">Github</a><span class="muted">•</span>
+		<a href="https://github.com/adius/educatopia/issues">Issues</a>
+	</p>
+</footer>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.3/underscore-min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.9/backbone-min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://raw.github.com/adius/DOMinate/master/src/dominate.min.js"></script>
+
+<script type="text/javascript" src="lang/de.js"></script>
+<script type="text/javascript" src="js/lang.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+
+</body>
+</html>
