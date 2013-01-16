@@ -1,4 +1,4 @@
-{"tasks": [
+{"tasks":[
 	{
 		"id": 1,
 		"task": "Wandle die formulierten Regeln und Schlussfolgerungen in Aussagen um",
@@ -550,23 +550,43 @@
 	{
 		"subject": "math",
 		"created": "2013-01-01T12:00",
-		"credits": 0,
+		"credits": 3,
 		"given": [
-			"`n^4 − 4n^2` ist durch `3` teilbar.",
-			"Die Potenzmenge einer `n`-elementigen Menge enthält `2^n` Elemente."
+			"`n^4 − 4n^2` ist durch `3` teilbar."
+		],
+		"solutions":[
+			"<strong>Induktionsbasis:</strong>\n<br>\n<p>`n = 0`<br>\n   `=> (n^4 - 4n^2) | 3`<br>\n   `=> (0^4 - 4 * 0^2) | 3`<br>\n   `=> 0 | 3`\n</p>\n\n\n<strong>Induktionsvorraussetzung:</strong>\n<br>\n<p>`AA n in NN: (n^4 - 4n^2) | 3`</p>\n\n\n<strong>Induktionsschluss:</strong>\n<br>\n`(n + 1)^4 - 4(n + 1)^2`<br>\n`= n^4 + 4n^3 + 6n^2 + 4n + 1 - 4n^2 + 8n - 4`<br>\n`= n^4 + 4n^3 + 2n^2 - 4n - 3`<br>\n`= (n^4 - 4n^2 ) + (4n^3 + 6n^2 - 4n - 3)`<br>\n`= (n^4 - 4n^2 ) + (3n^3 + 6n^2 - 3n - 3) + (n^3 - n)`<br>\n`= (n^4 - 4n^2 ) + 3(n^3 + 2n^2 - n - 1)+ n(n^2 - 1)`<br>\n`= (n^4 - 4n^2 ) + 3(n^3 + 2n^2 - n - 1) + n (n - 1)(n+1)`<br>\n<br>\n<p>Nun sind alle 3 Summanden durch 3 teilbar:</p>\n<ol>\n\t<li>Nach Induktionsvoraussetzung</li>\n\t<li>Ganzes vielfaches von 3</li>\n\t<li>Von den 3 aufeinanderfolgenden Zahlen `(n-1)`, `n` und `(n+1)`\n\t    muss eine durch 3 teilbar sein\n\t</li>\n</ol>\n<p> Somit ist auch die Summe durch 3 teilbar.</p>"
 		],
 		"hints": null,
-		"id": 30,
+		"id": 301,
 		"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 		"setting": "Für alle natürlichen Zahlen `N` (inkl. der 0) gilt:",
 		"status": "unapproved",
-		"tags": null,
+		"tags": ["induction"],
 		"task": "Zeigen Sie mit Hilfe der vollständigen Induktion:"
 	},
 	{
 		"subject": "math",
 		"created": "2013-01-01T12:00",
-		"credits": 0,
+		"credits": 3,
+		"given": [
+			"Die Potenzmenge einer `n`-elementigen Menge enthält `2^n` Elemente."
+		],
+		"solutions":[
+			"<strong>Induktionsbasis:</strong>\n\n<p>`n = 0`<br>\n   `=> #M = 0`<br>\n   `=> M = O/`<br>\n   `=> P(M) = {O/}`<br>\n   `=> #P(M) = 1 = 2^0`<br>\n</p>\n\n\n<strong>Induktionsvorraussetzung:</strong>\n\n<p>`AA n in NN: #P(M) = 2^n`\n</p>\n\n\n<strong>Induktionsschluss:</strong>\n\n<p>Sei `M_(n+1)` eine Menge für die gelte:<br>\n   `#M_(n+1) = (n+1)`<br>\n   `M_(n+1) = {e_1, e_2, …, e_(n+1)}`<br>\n\t<br>\n   Nun betrachen wir die Teilmenge `M_n`. Es gilt:<br>\n   `P(M_n) = 2^n` (Induktionsvorraussetzung)<br>\n   `P(M_n) = {T(1), …, T(2^n)}`<br>\n\t<br>\n   `=> P(M_(n+1)) = {T(1), …, T(2^n), T(1) uu {e_(n+1)}, …, T(2^n) uu {e_(n+1)} }`<br>\n   `=> #P(M_(n+1))\n   = 2^n + 2\n   = 2 * 2^n\n   = 2^(n+1)`<br>\n</p>\n"
+		],
+		"hints": null,
+		"id": 302,
+		"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
+		"setting": "Für alle natürlichen Zahlen `N` (inkl. der 0) gilt:",
+		"status": "unapproved",
+		"tags": ["induction"],
+		"task": "Zeigen Sie mit Hilfe der vollständigen Induktion:"
+	},
+	{
+		"subject": "math",
+		"created": "2013-01-01T12:00",
+		"credits": 1122,
 		"difficulty": 0.5,
 		"displayedHints": 0,
 		"given": [
@@ -579,8 +599,14 @@
 		"id": 31,
 		"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 		"setting": "`(a_1, … , a_n)` mit der Länge `n in N` über `{A, … , Z}`",
-		"status": "unapproved",
-		"tags": null,
-		"task": "Nennen sie alle Zeichenfolgen"
+		"status": "incorrect",
+		"solutions":[
+			"<p>a) Nur möglich für `n <= 26`: `26/((26-n)!)`</p>\n\t\t",
+			"<p>b) `((n),(k))` Möglichkeiten für die `A`s und `25^(n-k)` für die restlichen Stellen:`((n),(k)) * 25^(n-k)`</p>",
+			"<p>c) `26 * sum_(k=2)^n( ((n),(k)) * ((25),(n-k)) * k!)`</p>",
+			"<s>d) Missing</s>"
+		],
+		"tags": ["stochastik"],
+		"task": "Nennen sie die Anzahl aller Zeichenfolgen"
 	}
 ]}

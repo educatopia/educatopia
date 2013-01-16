@@ -29,7 +29,7 @@
 			"status": "unapproved",
 			"subject": "",
 			"tags": null,
-			"task": "Do this:",
+			"task": "Do this:"
 		},
 		initialize: function() {
 		}
@@ -38,7 +38,7 @@
 
 	var TasksCollection = Backbone.Collection.extend({
 		model: Task,
-		url: 'js/tasks.json',
+		url: 'js/tasks.js',
 		parse: function(response) {
 			return response.tasks
 		}
@@ -116,7 +116,7 @@
 	})
 
 	var TaskView = Backbone.View.extend({
-		template: _.template("<div class=\"tabbable span9\">\n\t<ul class=\"nav nav-tabs\">\n\t\t<li class=\"active\">\n\t\t\t<a href=\"#tab1\">Task</a>\n\t\t</li>\n\t\t<li class=\"disabled\"><a>Edit</a></li>\n\t\t<li class=\"disabled\"><a>History</a></li>\n\t</ul>\n\n\t<div class=\"tab-content\">\n\t\t<div id=\"tab1\" class=\"tab-pane active\">\n\t\t\t\n\t\t\t<% if(status == \'incorrect\'){ %>\n\t\t\t\t<div class=\"alert alert-error\"><strong>Attention!</strong> There are mistakes in this exercise! Please help to correct them!</div>\n\t\t\t<% } %>\n\t\t\t\n\t\t\t<h4><%= task %></h4>\n\t\t\t\n\t\t\t<hr>\n\n\t\t\t<p><%= setting %></p>\n\t\t\t\n\t\t\t<hr>\n\n\t\t\t<p><%= _.reduce(given, function(a,b){ return a + \'</p><p>\' + b }) %></p>\n\t\t\t\n\t\t\t<div id=\"hints\"></div>\n\n\t\t\t<div class=\"accordion\">\n\t\t\t\t<div class=\"accordion-group\">\n\t\t\t\t\t<div class=\"accordion-heading\">\n\n\t\t\t\t\t\t<a href=\"#collapseOne\" class=\"btn btn-success accordion-toggle\" data-toggle=\"collapse\">Solution</a>\n\t\t\t\t\t\t<!--<a class=\"accordion-toggle\" data-toggle=\"collapse\"  href=\"#collapseOne\">\n\t\t\t\t\t\t\tSolution\n\t\t\t\t\t\t</a>-->\n\t\t\t\t\t</div>\n\t\t\t\t\t<div id=\"collapseOne\" class=\"accordion-body collapse out\">\n\t\t\t\t\t\t<div class=\"accordion-inner\">\n\t\t\t\t\t\t\t<p><%= _.reduce(solutions, function(a,b){ return a + \'</p><p>\' + b }) %></p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n\t</div>\n\n</div>\n<div class=\"container span3\">\t\n</div>\n"),
+		template: _.template("<div class=\"tabbable span9\">\n\t<ul class=\"nav nav-tabs\">\n\t\t<li class=\"active\">\n\t\t\t<a href=\"#tab1\">Task</a>\n\t\t</li>\n\t\t<li class=\"disabled\"><a>Edit</a></li>\n\t\t<li class=\"disabled\"><a>History</a></li>\n\t</ul>\n\n\t<div class=\"tab-content\">\n\t\t<div id=\"tab1\" class=\"tab-pane active\">\n\n\t\t\t<% if(status == \'incorrect\'){ %>\n\t\t\t<div class=\"alert alert-error\">\n\t\t\t\t<strong>Attention!</strong> There are mistakes in this exercise! Please help to correct them!\n\t\t\t</div>\n\t\t\t<% } %>\n\n\t\t\t<h4><%= task %></h4>\n\n\t\t\t<hr>\n\n\t\t\t<div><%= setting %></div>\n\n\t\t\t<hr>\n\n\t\t\t<div><%= _.reduce(given, function(a,b){ return a + \'</p><p>\' + b }) %></div>\n\n\t\t\t<div id=\"hints\"></div>\n\n\t\t\t<div class=\"accordion\">\n\t\t\t\t<div class=\"accordion-group\">\n\t\t\t\t\t<div class=\"accordion-heading\">\n\n\t\t\t\t\t\t<a href=\"#collapseOne\" class=\"btn btn-success accordion-toggle\" data-toggle=\"collapse\">Solution</a>\n\t\t\t\t\t\t<!--<a class=\"accordion-toggle\" data-toggle=\"collapse\"  href=\"#collapseOne\">\n\t\t\t\t\t\t\tSolution\n\t\t\t\t\t\t</a>-->\n\t\t\t\t\t</div>\n\t\t\t\t\t<div id=\"collapseOne\" class=\"accordion-body collapse out\">\n\t\t\t\t\t\t<div class=\"accordion-inner\">\n\t\t\t\t\t\t\t<p></p><%= _.reduce(solutions, function(a,b){ return a + \'</p><p>\' + b }) %></p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n\t</div>\n\n</div>\n<div class=\"container span3\">\n</div>\n"),
 		events: {
 			"click #showHint": "showHint"
 		},
@@ -194,7 +194,7 @@
 	var AppRouter = Backbone.Router.extend({
 		routes: {
 			"": "home",
-			":subject": "list",
+			":subject": "list"
 		},
 		initialize: function() {
 			this.tasksList = new TasksCollection()
