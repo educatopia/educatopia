@@ -1,7 +1,30 @@
 (function() {
 
-	var international = i18n(dictionary),
-		t8 = international.map
+	var appRouter,
+		AppRouter,
+		ExerciseFormView,
+		AppView,
+		TaskBarView,
+		TaskView,
+		TasksListItemView,
+		TasksListView,
+		Task,
+		TasksCollection,
+		international = i18n(dictionary),
+		t8 = international.map,
+		auto,
+		specified,
+		rootExercise,
+		ExerciseForm,
+		exerciseFormData;
+
+
+	// Add capitalize function to underscore
+	_.mixin({
+		capitalize: function(string) {
+			return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
+		}
+	});
 
 
 	/*$('.nav-collapse a').each(function(index, link) {
@@ -13,39 +36,83 @@
 	 })*/
 
 
-	var Task = Backbone.Model.extend({
-		defaults: {
-			"created": "2013-01-01T12:00",
-			"credits": 0,
-			"difficulty": 0.5,
-			"displayedHints": 0,
-			"given": ["", ""],
-			"hints": null,
-			"id": 0,
-			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
-			"setting": "",
-			"solutions": ["", ""],
-			"specifications": "",
-			"status": "unapproved",
-			"subject": "",
-			"tags": null,
-			"task": "Do this:"
+	var subjects = [
+		'math',
+		'programming',
+		'digital electronics',
+		'modelling'
+	]
+
+
+	/*
+	 * Root exercise from which all other exercises inherit
+	 */
+
+	// Automatically created attributes
+	auto = {
+		"id": 0,
+		"created": "2013-01-01T12:00",
+		"status": "unapproved"
+	};
+
+	// Attributes specified by the user
+	specified = {
+		"subject": "",
+		"setting": "",
+		"task": "",
+		"solution": "",
+		"credits": 3,
+		"difficulty": 0.5,
+		"given": "",
+		"hints": null,
+		"note": "",
+		"tags": null,
+		"prototype": null
+	}
+
+	// Merge to root exercise
+	rootExercise = _.extend(auto, specified)
+
+
+	/*
+	 * Models
+	 */
+
+	Task = Backbone.Model.extend({
+		defaults: rootExercise,
+		schema: {
+			subject: {type: 'Text', validators: ['required']},
+			task: {type: 'TextArea', editorClass: 'span6', validators: ['required']},
+			setting: {type: 'TextArea', editorClass: 'span6'},
+			solution: {type: 'TextArea', editorClass: 'span6'},
+			credits: {type: 'Number', editorClass: 'span2', editorAttrs: {min: 0}},
+			difficulty: {type: 'Number', editorClass: 'span2', editorAttrs: {min: 0, max: 1}},
+			note: {type: 'Text'},
+			tags: {type: 'Text'}
 		},
 		initialize: function() {
 		}
-	})
+	});
 
 
-	var TasksCollection = Backbone.Collection.extend({
+	/*
+	 * Collections
+	 */
+
+	TasksCollection = Backbone.Collection.extend({
 		model: Task,
 		url: 'js/tasks.js',
 		parse: function(response) {
 			return response.tasks
 		}
-	})
+	});
 
 
-	var TasksListView = Backbone.View.extend({
+	/*
+	 *	Views
+	 */
+
+	TasksListView = Backbone.View.extend({
 		tagName: 'ul',
 		className: 'nav nav-list',
 		initialize: function() {
@@ -65,9 +132,9 @@
 
 			return this
 		}
-	})
+	});
 
-	var TasksListItemView = Backbone.View.extend({
+	TasksListItemView = Backbone.View.extend({
 		tagName: "li",
 		events: {
 			'click .taskLink': function() {
@@ -113,15 +180,17 @@
 			return this
 		}
 
-	})
+	});
 
-	var TaskView = Backbone.View.extend({
-		template: _.template("<div class=\"tabbable span9\">\n\t<ul class=\"nav nav-tabs\">\n\t\t<li class=\"active\">\n\t\t\t<a href=\"#tab1\">Task</a>\n\t\t</li>\n\t\t<li class=\"disabled\"><a>Edit</a></li>\n\t\t<li class=\"disabled\"><a>History</a></li>\n\t</ul>\n\n\t<div class=\"tab-content\">\n\t\t<div id=\"tab1\" class=\"tab-pane active\">\n\n\t\t\t<% if(status == \'incorrect\'){ %>\n\t\t\t<div class=\"alert alert-error\">\n\t\t\t\t<strong>Attention!</strong> There are mistakes in this exercise! Please help to correct them!\n\t\t\t</div>\n\t\t\t<% } %>\n\n\t\t\t<h4><%= task %></h4>\n\n\t\t\t<hr>\n\n\t\t\t<div><%= setting %></div>\n\n\t\t\t<hr>\n\n\t\t\t<div><%= _.reduce(given, function(a,b){ return a + \'</p><p>\' + b }) %></div>\n\n\t\t\t<div id=\"hints\"></div>\n\n\t\t\t<div class=\"accordion\">\n\t\t\t\t<div class=\"accordion-group\">\n\t\t\t\t\t<div class=\"accordion-heading\">\n\n\t\t\t\t\t\t<a href=\"#collapseOne\" class=\"btn btn-success accordion-toggle\" data-toggle=\"collapse\">Solution</a>\n\t\t\t\t\t\t<!--<a class=\"accordion-toggle\" data-toggle=\"collapse\"  href=\"#collapseOne\">\n\t\t\t\t\t\t\tSolution\n\t\t\t\t\t\t</a>-->\n\t\t\t\t\t</div>\n\t\t\t\t\t<div id=\"collapseOne\" class=\"accordion-body collapse out\">\n\t\t\t\t\t\t<div class=\"accordion-inner\">\n\t\t\t\t\t\t\t<p></p><%= _.reduce(solutions, function(a,b){ return a + \'</p><p>\' + b }) %></p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n\t</div>\n\n</div>\n<div class=\"container span3\">\n</div>\n"),
+	TaskView = Backbone.View.extend({
+		template: _.template($('#exerciseTemplate').html()),
 		events: {
 			"click #showHint": "showHint"
 		},
 		initialize: function() {
 			this.model.on('reset', this.render, this)
+
+			this.model.set('displayedHints', 0)
 		},
 		render: function() {
 			this
@@ -152,12 +221,19 @@
 
 			if(counter < this.model.get('hints').length) {
 
-				var el = $('<div class="alert alert-info">' + this.model.get('hints')[counter] + '</div>')
+				var hints = $('#hints')
 
-				this.$('#hints')
+				if(counter == 0)
+					$('<hr>')
+						.hide()
+						.appendTo(hints)
+						.slideDown('fast')
+
+
+				var el = $('<div class="alert alert-info">' + this.model.get('hints')[counter] + '</div>')
 					.hide()
-					.append(el)
-					.fadeIn('fast')
+					.appendTo(hints)
+					.slideDown('fast')
 
 				MathJax.Hub.Queue(["Typeset", MathJax.Hub, el[0]])
 
@@ -169,8 +245,7 @@
 		}
 	});
 
-
-	var TaskBarView = Backbone.View.extend({
+	TaskBarView = Backbone.View.extend({
 		tagName: 'ul',
 		className: 'nav nav-list',
 		template: _.template($('#exerciseSideBarTemplate').html()),
@@ -181,17 +256,75 @@
 
 			return this
 		}
-	})
+	});
 
-
-	var AppView = Backbone.View.extend({
+	AppView = Backbone.View.extend({
 		render: function() {
 
 		}
-	})
+	});
 
 
-	var AppRouter = Backbone.Router.extend({
+	/*
+	 *	Exercise Formular
+	 */
+
+	ExerciseFormView = Backbone.View.extend({
+		id: "exerciseModal",
+		className: "modal hide fade",
+		events: {
+			"click #exerciseFormSubmit": "showModal"
+		},
+		initialize: function() {
+
+			exerciseFormData = new Task({created: new Date()});
+
+			ExerciseForm = new Backbone.Form({
+				model: exerciseFormData,
+				idPrefix: 'exerciseForm-'
+			})
+
+		},
+
+		attributes: {
+			role: "dialog"
+		},
+
+		template: _.template($('#exerciseFormTemplate').html()),
+
+		showModal: function() {
+
+			if(!ExerciseForm.validate()){
+
+				var subject = "Exercise Submission",
+					data = encodeURIComponent(JSON.stringify(exerciseFormData.attributes))
+
+				window.location = 'mailto:submission@educatopia.org?subject=' + subject + '&body=' + data
+			}
+		},
+
+		render: function() {
+			this.$el.html(this.template())
+
+			this.$('.modal-body').append(ExerciseForm.render().el)
+
+			this.$('#exerciseForm-subject').typeahead({
+				source: _.map(subjects, _.capitalize)
+			})
+
+			// Fixes backbone-form bug of not being able to set stepsize
+			this.$('#exerciseForm-difficulty').attr('step', 0.1)
+
+			return this
+		}
+	});
+
+
+	/*
+	 *	Router
+	 */
+
+	AppRouter = Backbone.Router.extend({
 		routes: {
 			"": "home",
 			":subject": "list"
@@ -200,6 +333,8 @@
 			this.tasksList = new TasksCollection()
 
 			this.route(/^(\d+)$/, "taskDetails")
+
+			$('body').append(new ExerciseFormView().render().el)
 		},
 
 		list: function(subject) {
@@ -258,14 +393,11 @@
 
 	});
 
-	var appRouter = new AppRouter()
+	appRouter = new AppRouter();
 
-	Backbone.history.start({
-		root: "localhost/~adrian/educatopia"
-	})
+	Backbone.history.start()
 
 
-	//Activate Tooltips
 
 	/*
 	 hyperdoc.table('#table2a', [
@@ -293,7 +425,5 @@
 	 ])
 	 */
 
-
 	//console.log(international.getUntranslated())
-
 }())

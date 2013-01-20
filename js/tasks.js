@@ -1,612 +1,618 @@
-{"tasks":[
-	{
-		"id": 1,
-		"task": "Wandle die formulierten Regeln und Schlussfolgerungen in Aussagen um",
-		"credits": 6,
-		"setting": "Für diese Übung wird zunächst das Kartenspiel Uno betrachtet. Das Spiel wird mit Karten in den 4 Farben rot,\n   blau, grün, gelb gespielt, die die Werte 0 bis 9 haben. Dazu gibt es noch weitere Karten in den Farben für den\n   Wechsel der Spielrichtung, das Ziehen von Strafkarten und das Aussetzen des nächsten Spielers. Neben den\n   Farbkarten gibt es noch schwarze Karten, einmal den Farbwunsch und dann noch Farbwunsch und Karte ziehen\n   kombiniert.<br>\n   Dabei gelten die folgende Grundregeln:</p>\n\n<ul>\n\t<li>Karten der gleichen Farbe dürfen aufeinander gelegt werden.</li>\n\t<li>Karten des gleichen Wertes dürfen aufeinander gelegt werden.</li>\n\t<li>Schwarze Karten dürfen nur auf farbige Karten gelegt werden.</li>\n</ul>\n\n<p>Das Uno-Spiel mit diesen Regeln ist recht langweilig. Von daher werden im Folgenden einige Zusatzregeln eingeführt. Wandle die\n   folgenden formulierten Regeln und Schlussfolgerungen in Aussagen um.</p>\n\n<ol>\n\t<li>Wenn die Farbe einer Karte grün ist, dann sagt der Spieler blau.</li>\n\t<li>Jede gelbe Karte, die gerade ist, hat die Farbe grün.</li>\n\t<li>Wenn die Karte gelb ist, und der Spieler nicht blau sagt, dann war die Karte ungerade oder eine\n\t    Sonderkarte.\n\t</li>\n\t<li>Wenn der Spieler nicht blau sagt, dann ist weder die Karte gelb und gerade noch ist die Farbe grün.</li>\n</ol>Lege dazu für die atomaren Ausdrücke jeweils eine Variable fest und erzeugen Sie dann die entsprechenden\n aussagenlogischen Ausdrücke. Verwende für die gesamte Aufgabe nicht mehr als 4 atomare Ausdrücke. Eine der\n   oben genannten Aussagen ist dabei kein atomarer Ausdruck.",
-		"solutions": [
-			"<h4>Atomare Ausdrücke</h4>\n<ul>\n\t<li>grün `iff` Karte ist grün</li>\n\t<li>sagtBlau `iff` Spieler sagt blau</li>\n\t<li>gerade `iff` Karte ist gerade</li>\n\t<li>gelb `iff` Karte ist gelb</li>\n</ul>\n\n<h4>Äquivalente aussagenlogische Ausdrücke</h4>\n<ol>\n\t<li>grün `=>` sagtBlau</li>\n\t<li>(gelb `^^` gerade) `=>` grün</li>\n\t<li>(gelb `^^` `not`sagtBlau) `=> not`gerade</li>\n\t<li>`not`sagtBlau `=> not`(gelb `^^` gerade) `^^` `not`grün</li>\n</ol>"
-		],
-		"status": "correct",
-		"subject": "math"
-	},
-	{
-		"subject": "math",
-		"id": 2,
-		"credits": 3,
-		"setting": null,
-		"task": "Erstellen Sie Wahrheitstafeln für die folgenden Aussagen:",
-		"given": [
-			"`(a vv b) ^^ (a vv not c) => (b ^^ not c)`",
-			"`(a => b) ^^ (not b => not a) iff (b ^^ not c)`"
-		],
-		"solutions": [
-			"<table id=\"table2a\">\n\t<caption>a</caption>\n</table>\n<table id=\"table2b\">\n\t<caption>b</caption>\n</table>"
-		],
-		"tags": [
-			"Wahrheitstafel"
-		]
-	},
-	{
-		"subject": "math",
-		"id": 3,
-		"credits": 3,
-		"setting": null,
-		"task": "Zeigen Sie ohne die Verwendung einer Wahrheitstafel, dass die folgenden Aussagen jeweils äquivalent sind:",
-		"given": [
-			"`not (p vv q) ^^ (p vv r)` und `not p ^^ not q ^^ r`",
-			"`(p => q) ^^ (not p => r)` und `(q ^^ (p vv r)) vv (not p ^^ r)`"
-		],
-		"solutions": [
-			"<em>Beweis:</em>\n\n<figure>\n\t`not (p vv q) ^^ (p vv r)` (De Morgan)<br>\n\t`-= (not p ^^ not q) ^^ (p vv r)` (Distributivität)<br>\n\t`-= (not p ^^ not q ^^ p) vv (not p ^^ not q ^^ r)` (Kommutativität)<br>\n\t`-= (p ^^ not p ^^ not q ) vv (not p ^^ not q ^^ r)` (Kontradiktion)<br>\n\t`-= (0 ^^ not q ) vv (not p ^^ not q ^^ r)` (Kontradiktionsregel)<br>\n\t`-= 0 vv (not p ^^ not q ^^ r)` (Kontradiktionsregel)<br>\n\t`-= (not p ^^ not q ^^ r)`<br>\n\t`q.e.d`<br>\n</figure>\n\n<em>Beweis:</em>\n\n<figure>\n\t`(p => q) ^^ (not p => r)` (Tautolgie)<br>\n\t`-= (not p vv q) ^^ (p vv r)` (Distributivität)<br>\n\t`-= not p ^^ (p vv r) vv q ^^ (p vv r)`<br>\n\t`-= r ^^ not p vv q ^^ (p vv r)`<br>\n\t`-= (q ^^ (p vv r)) vv (not p ^^ r)`<br>\n\t`q.e.d`<br>\n</figure>"
-		],
-		"tags": [
-			"Beweis"
-		]
-	},
-	{
-		"subject": "math",
-		"id": 4,
-		"credits": 4,
-		"setting": "<p>In dieser Übung sollen folgende Aussageformen betrachtet werden:</p>\n<ul>\n\t<li>`m(t):` Student hat Mathe am Zeitpunkt `t` verstanden.</li>\n\t<li>`h(t):` Student hat zum Zeitpunkt `t` Hunger.</li>\n\t<li>`d(t):` Zeitpunkt `t` ist am Tag.</li>\n\t<li>`n(t):` Zeitpunkt `t` ist nachts.</li>\n\t<li>`t_1 < t_2`: Zeitpunkt `t_1` trat irgendwann vor `t_2` ein.</li>\n</ul>",
-		"task": "Drücken sie folgende Sätze als prädikatenlogische Formeln aus:",
-		"given": [
-			"Immer wenn der Student Hunger hat, versteht er nichts von Mathe.",
-			"Es kommt vor, dass der Student nachts Hunger hat.",
-			"Es gibt einen erleuchtenden Moment, ab dem der Student Mathe immer verstehen wird.",
-			"Zwischen zwei bestimmten Zeitpunkten (z.B. während der Prüfung) hat der Student einen Mathe-Blackout (versteht nichts mehr), aber vorher und auch hinterher hat er immer Ahnung."
-		],
-		"solutions": [
-			"<ol>\n\t<li>`AA t : h(t) => not m(t)`</li>\n\t<li>`EE t : n(t) ^^ h(t)`</li>\n\t<li>`EE t_0: ∀t : (t_0 < t) => m(t)`</li>\n\t<li><s>`EE t_0: EE t_1 : AA t : (t_0 < t) ^^ (t < t_1) <=> not m(t)`</s></li>\n</ol>"
-		],
-		"tags": [
-			"Prädikatenlogik"
-		]
-	},
-	{
-		"subject": "math",
-		"id": 5,
-		"credits": 4,
-		"setting": null,
-		"task": "Drücken Sie folgende Aussagen in deutschen Sätzen aus:",
-		"given": [
-			"`not AA t: h(t) ^^ EE t: m(t)`",
-			"`∀t: ((h(t) vv n(t)) => ¬m(t))`",
-			"`∀t_1 ((d(t_1) ^^ EE t_2(m(t_2) ^^ t_2 < t_1 ^^ ∀t_3((t_2 < t_3 ^^ t_3 < t_1) => n(t_3)))) => h(t_1))`",
-			"`∀t_1∀t_2 ((n(t_1) ^^ n(t_2) ^^ EE t_3(t_1 < t_3 ^^ t_3 < t_2 ^^ d(t_3))) => EE t_3(t_1 < t_3 ^^ t_3 < t_2 ^^ h(t_3)))`"
-		],
-		"solutions": [
-			"`¬∀t: h(t) ^^ EE t: m(t)` (Negationsregel)<br>\t`≡ EE t: ¬h(t) ^^ EE t: m(t)`<br>\tManchmal hat der Student keinen Hunger und manchmal versteht er Mathe.",
-			"Immer wenn der Student Hunger hat oder es Nacht ist, dann versteht er Mathe nicht.",
-			"Der Student hat bei Tagesanbruch Hunger, wenn er in der Nacht davor Mathe verstanden hat.",
-			"An einem Tag zwischen zwei Nächten hat der Student tagsüber mindestens einmal Hunger."
-		],
-		"tags": [
-			""
-		]
-	},
-	{
-		"subject": "math",
-		"id": 6,
-		"credits": 0,
-		"setting": "Betrachte die vier Universen `{0,1}, ZZ, QQ^+, RR`.",
-		"task": "In welchen der Universen gelten die folgenden Aussagen?",
-		"given": [
-			"`EE x AA y: (x ≤ y)`",
-			"`AA x EE y: (y^2 = x)`",
-			"`∀xEE y: ¬(y ≤ x)`",
-			"`∀(x,y): ((¬(y≤x)) => EE z: ¬((z≤x) vv (y≤z)))`"
-		],
-		"solutions": [
-			"`{0,1}`",
-			"`{0,1}`",
-			"`ZZ, QQ^+, RR`",
-			"`QQ^+, RR`"
-		],
-		"tags": [
-			""
-		]
-	},
-	{
-		"subject": "math",
-		"id": 7,
-		"credits": 4,
-		"setting": "<p>Betrachten Sie folgende Aussageformen über `NN^+`:</p>\n<ul>\n\t<li>`P(x): x` besitzt genau drei verschiedene Primfaktoren `(a^t * b^y * c^z )`.</li>\n\t<li>`Q(x): x` ist durch das Quadrat einer Primzahl teilbar.</li>\n\t<li>`R(x):` die Dezimaldarstellung von `x` enthält nur Ziffern, die sich ohne Ecken und Spitzen darstellen\n\t    lassen\n\t    (also 0, 6, 8, 9).\n\t</li>\n</ul>",
-		"task": "Zählen Sie die zehn kleinsten Elemente der folgenden Mengen auf:",
-		"given": [
-			"`M_1 := {x | P(x) ^^ ¬Q(x)}`",
-			"`M_2 := {x | Q(x) ^^ R(x)}`",
-			"`M_3 := {x | (¬P(x) ^^ Q(x)) vv R(x)}`",
-			"`M_4 := {x | P(x) vv Q(x) vv R(x)}`"
-		],
-		"solutions": [
-			"`{0,1}`",
-			"`{0,1}`",
-			"`ZZ, QQ^+, RR`",
-			"`QQ^+, RR`"
-		],
-		"hints": ["<s>`P(x) = {30, 42, 66, 70, 78, 102, 105, 110, 114, 130, 138, 154, 165, 170, 182, 190, 195, …}`</s>\n\t`Q(x) = {4, 8, 9, 12, 16, 18, 20, 24, 25, 27, 28, 32, 36, 40, 44, 45, 48, 49, 50, 52, 54, 56, …}`\n\t`R(x) = {6, 8, 9, 60, 66, 68, 69, 80, 86, 88, 89, 90, 96, 98, 99, …}`\n"],
-		"tags": [
-			""
-		]
-	},
-	{
-		"subject": "math",
-		"id": 8,
-		"credits": 4,
-		"setting": "",
-		"task": "Zählen Sie die fünf kleinsten Elemente der folgenden Menge auf und geben Sie eine logische Beschreibung der Mengen analog zu Aufgabe 7 an:",
-		"given": [
-			"`M_1 uu M_2`",
-			"`M_4 nn bar(M_1)`",
-			"( M_1 setminus M_3 )",
-			"( overline{ M_4 setminus M_2} )"
-		],
-		"solutions": [
-			"( M_1 cup M_2 := left {x mid (P(x) wedge \neg Q(x)) \u000bee (Q(x) wedge R(x)) \right } = left { 8, 9, 30, 42 , 60, … \right } )",
-			"<s>( M_4 cap overline M_1 := left {x mid (P(x) \u000bee Q(x) \u000bee R(x)) wedge \neg (P(x) wedge \neg Q(x)) \right } = left {4, 6, 8, 9, 12, … \right } )</s>",
-			"( M_1 setminus M_3 := left { x mid (P(x) wedge \neg Q(x)) wedge \neg (( \neg P(x) wedge Q(x)) \u000bee R(x)) \right } = left {30, 42, 70, 78, 102, … \right } )",
-			"( overline{M_4 setminus M_2} := left {x mid \neg (P(x) \u000bee Q(x) \u000bee R(x)) \u000bee Q(x) wedge R(x) \right } = left {1, 2, 3, 5 , 7, … \right } )"
-		],
-		"note": null,
-		"tags": [
-			""
-		]
-	},
-	{
-		"subject": "math",
-		"id": 9,
-		"credits": 4,
-		"setting": "<p>Seien `M, U` Menge mit `O/ ⊂ U sube M`. Betrachten Sie die folgenden Aussageformen über dem Universum aller\n   Teilmengen `X sube M`.\n   Beachten Sie dabei, dass das Universum in dieser Aufgabe Mengen enthält und es sich daher bei den `M_i` um Mengen\n   von Mengen handelt. Zum Verständnis der Aufgabe können Sie sich geeignete Elemente wählen, z.B. `M = {1,2,3,4}` und ein festes\n   `U`,\n   und damit die zu untersuchenden `M_i` konstruieren.</p>\n<ul>\n\t<li>`E(X): X` enthält mindestens ein Element von `U`</li>\n\t<li>`A(X): X` enthält alle Elemente von `U`</li>\n</ul>",
-		"task": "Vergleichen Sie die folgenden Mengen paarweise.",
-		"given": [
-			"( M_1 = left {X mid E(X) \right } )",
-			"( M_2 = left {X mid A(X) \right } )",
-			"( M_3 = left {X mid A(X) \u000bee \neg E(X) \right } )",
-			"( M_4 = left {X mid \neg A(X) wedge E(X) \right } )"
-		],
-		"solutions": [
-			"`M_1 supe M_2`",
-			"( M_1 subseteq overline M_3 )",
-			"( M_1 supset M_4 )",
-			"`M_2 sub M_3`",
-			"( M_2 subset overline M_4 )",
-			"( M_3 = overline M_4 )"
-		],
-		"note": null,
-		"tags": [
-			""
-		]
-	},
-	{
-		"subject": "math",
-		"id": 10,
-		"credits": 2,
-		"task": "Beweisen sie",
-		"setting": "Für alle Mengen `A, B, C, D sube M` gilt die Aussage: `(A xx B) nn (C xx D) = (A nn C) xx (B nn D)`<br>Zeigen sie zum Training einzeln `sube` und `supe`.",
-		"given": null,
-		"solutions": [
-			"<p>Zu beweisen: `(A xx B) nn (C xx D) sube (A nn C) xx (B nn D)`</p>\n<figure>\n\t`(s, t) in (A xx B) nn (C xx D)` (Deﬁnition Schnittmenge)<br>\n\t`=> (s, t) in A xx B ^^ (s, t) in C xx D` (Deﬁnition Kreuzprodukt)<br>\n\t`=> s in A ^^ t in B ^^ s in C ^^ t in D` (Kommutativität)<br>\n\t`=> s in A ^^ s in C ^^ t in B ^^ t in D` (Deﬁnition Schnittmenge)<br>\n\t`=> s in (A nn C) ^^ t in (B nn D)` (Deﬁnition Kreuzprodukt)<br>\n\t`=> (s, t) in (A nn C) xx (B nn D)`<br>\n\t`=> (A xx B) nn (C xx D) sube (A nn C) xx (B nn D)`<br>\n\t`q.e.d.`\n</figure>\n\n<p>Zu beweisen: `(A xx B) nn (C xx D) supe (A nn C) xx (B nn D)`</p>\n<figure>\n\t`(s, t) in (A nn C) xx (B nn D)`<br>\n\t`=> s in (A nn C) ^^ t in (B nn D)` (Deﬁnition Kreuzprodukts)<br>\n\t`=> s in A ^^ s in C ^^ t in B ^^ t in D` (Deﬁnition Schnittmenge)<br>\n\t`=> s in A ^^ t in B ^^ s in C ^^ t in D` (Kommutativität)<br>\n\t`=> (s, t) in (A xx B) ^^ (s, t) in (C xx D)` (Deﬁnition Kreuzprodukt)<br>\n\t`=> (s, t) in (A xx B) nn (C xx D)` (Deﬁnition Schnittmenge)<br>\n\t`=> (A xx B) nn (C xx D) supe (A nn C) xx (B nn D)`<br>\n\t`q.e.d.`\n</figure>\n<figure>\n\t`(A xx B) nn (C xx D) sube (A nn C) xx (B nn D) ^^ (A xx B) nn (C xx D) supe (A nn C) xx (B nn D)`<br>\n\t`=> (A xx B) nn (C xx D) = (A nn C) xx (B nn D)`<br>\n\t`q.e.d.`\n</figure>"
-		],
-		"note": null,
-		"tags": [
-			"Beweis"
-		]
-	},
-	{
-		"subject": "math",
-		"id": 11,
-		"credits": 2,
-		"setting": "",
-		"task": "Beweisen Sie für alle Relationen `T,R,S sube M^2` die Aussage: `T @ (R uu S) = (T @ R) uu (T @ S)`. Zeigen sie zum Training einzeln `supe` und `sube`.</p>",
-		"given": null,
-		"solutions": [
-			"<p>Zu beweisen: `T @ (R uu S) sube (T @ R) uu (T @ S)`</p>\n<figure>\n\t`(x, y) in T @ (R uu S)` (Deﬁnition Komposition)<br>\n\t`=> EE z in M : (x, z) in T ^^ (z, y) in R uu S` (Deﬁnition Vereinigung)<br>\n\t`=> EE z in M : (x, z) in T ^^ ((z, y) in R vv (z, y) in S)` (Distributivität)<br>\n\t`=> EE z in M : ((x, z) in T ^^ (z, y) in R) vv ((x, z) in T ^^ (z, y) in S)` (Deﬁnition Komposition)<br>\n\t`=> ((x, y) in T @ R) vv ((x, y) in T @ S)` (Deﬁnition Vereinigung)<br>\n\t`=> (x, y) in (T @ R) uu (T @ S)`<br>\n\t`=> T @ (R uu S) sube (T @ R) uu (T @ S)`<br>\n\t`q.e.d.`\n</figure>\n\n<p>Zu beweisen: `T @ (R uu S) supe (T @ R) uu (T @ S)`</p>\n<figure>\n\t`(x, y) in (T @ R) uu (T @ S)`<br> (Deﬁnition Vereinigung)\n\t`=> (x, y) in (T @ R) vv (x, y) in (T @ S)` (Deﬁnition Komposition)<br>\n\t`=> EE z_1, z_2 in M : ((x, z_1) in T ^^ (z_1, y) in R) vv ((x, z_2) in T ^^ (z_2, y) in S)` (`z = (z_1 vv z_2)`)<br>\n\t`=> EE z in M : ((x, z) in T ^^ (z, y) in R) vv ((x, z) in T ^^ (z, y) in S)` (Distributivität)<br>\n\t`=> EE z in M : (x, z) in T ^^ ((z, y) in R vv (z, y) in S)` (Deﬁnition Vereinigung)<br>\n\t`=> EE z in M : (x, z) in T ^^ ((z, y) in R uu S)` (Deﬁnition Komposition)<br>\n\t`=> (x, y) in T @ (R uu S)`<br>\n\t`=> T @ (R uu S) supe (T @ R) uu (T @ S)`<br>\n\t`q.e.d.`\n</figure>\n<figure>\n\t`T @ (R uu S) sube (T @ R) uu (T @ S) ^^ T @ (R uu S) supe (T @ R) uu (T @ S)`<br>\n\t`=> T @ (R uu S) = (T @ R) uu (T @ S)`<br>\n\t`q.e.d.`\n</figure>"
-		],
-		"note": null,
-		"tags": [
-			"Beweis"
-		]
-	},
-	{
-		"subject": "math",
-		"id": 12,
-		"credits": 4,
-		"setting": "<p>Zeichnen Sie in den Graphen `@ -> @ larr @ -> @ -> @` zusätzliche Kanten ein (so wenige wie möglich, jeweils für jede\n   Teilaufgabe), so dass die Kantenrelation folgende Eigenschaften erfüllt:",
-		"task": "Kennzeichnen Sie neue Kanten und begründen Sie kurz.",
-		"given": [
-			"Symmetrie",
-			"Reflexivität",
-			"Transitivität",
-			"Symmetrie und Transitivität"
-		],
-		"solutions": [
-			"<p>Gerichtete Kanten gibt es immer in beide Richtungen.</p><img src='img/12-a.png' alt=' '/>",
-			"<p>Jeder Knoten hat eine Kante zu sich selbst.</p><img src=img/12-b.png alt=' '/>",
-			"<p>Zwei Knoten die über einen weiteren Knoten gerichtet miteinander verbunden sind, sind in die gleiche Richtung verbunden.</p><img src=img/12-c.png>",
-			"<p>Siehe a. und c.</p><img src=img/12-d.png alt=' '/>"
-		],
-		"solutions2": [
-			"1->2; 3->2; 3->4; 4->5",
-			"1->2; 3->2; 3->4; 4->5; 1->1; 2->2; 3->3; 4->4; 5->5",
-			"1->2; 3->2; 3->4; 4->5; 3->5",
-			"1->1; 1->2; 1->3; 1->4; 1->5; 2->1; 2->2; 2->3; 2->4; 2->5; 3->1; 3->2; 3->3; 3->4; 3->5; 4->1; 4->2; 4->3; 4->4; 4->5; 5->1; 5->2; 5->3; 5->4; 5->5"
-		],
-		"note": null,
-		"tags": [
-			"Graph"
-		]
-	},
-	{
-		"subject": "math",
-		"id": 13,
-		"credits": 4,
-		"setting": "Sei E die Kantenrelation des Graphen aus Aufgabe 12.",
-		"task": "Zeichnen Sie jeweils die Kanten der folgenden Kantenrelationen in den Graphen aus Aufgabe 12.",
-		"given": [
-			"`E @ E`",
-			"`E^(−1)`",
-			"`E^(−1) @ E`",
-			"`{ (x,y) | EE z:(z,x) in E ^^ (y,z) inE }`"
-		],
-		"solutions": [
-			"<img src=img/12-c.png alt=''>",
-			"<img src=img/13-b.png alt=''>",
-			"<img src=img/13-c.png alt=''>",
-			"<img src=img/13-d.png alt=''>"
-		],
-		"solutions2": [
-			"1->2; 3->2; 3->4; 4->5; 3->5",
-			"<img src=img/13-b.png alt=''>",
-			"1->2; 3->2; 3->4; 4->5; 2->2; 2->2; 2->4; 4->2; 4->4; 5->5",
-			"1->2; 3->2; 3->4; 4->5; 5->3"
-		],
-		"note": null,
-		"tags": [
-			"Graph"
-		]
-	},
-	{
-		"subject": "math",
-		"id": 14,
-		"credits": 4,
-		"setting": "Wir definieren die folgenden Relationen R über die Menge M aller Foursquare-Nutzer.",
-		"task": "Entscheiden Sie mit einer kurzen natürlichsprachlichen Begründung, welche der Relationen Äquivalenzen sind.",
-		"given": [
-			"`xRy` genau dann, wenn `x` und `y` gegenseitige Foursquare-Freunde sind.",
-			"`xRy` genau dann, wenn `x` und `y` mindestens einen gemeinsamen Foursquare-Freund haben.",
-			"`xRy` genau dann, wenn `x` und `y` die gleiche Anzahl an Foursquare-Checkins haben.",
-			"`xRy` genau dann, wenn `x` und `y` gemeinsam an einer Foursquare-Location eingecheckt haben."
-		],
-		"solutions": [
-			"Keine Äquivalenzrelation, da man nicht mit sich selbst befreundet sein kann und sie somit nicht reflexiv ist.",
-			"Keine Äquivalenzrelation, denn wenn man mit zwei anderen Personen jeweils einen gemeinsamen Freund hat, heißt das nicht, dass diese beiden auch einen gemeinsamen Freund haben müssen.",
-			"Äquivalenzrelation, da man gleich viele check-ins wie man selber hat und wenn man gleich viele hat wie jemand anderes, dieser auch gleich viele hat wie man selbst und wenn man gleich viele hat wie zwei andere diese beiden auch gleich vielehaben.",
-			"Annahme: Man kann zu verschiedenen Zeiten an einem Ort einchecken.<br> Keine Äquivalenzrelation, denn wenn man mit zwei Personen jeweils gemeinsam an einem Ort eingecheckt ist heißt das nicht, dass diese gemeinsam an einem Ort eingecheckt haben müssen."
-		],
-		"note": null,
-		"tags": [
-			"Relation",
-			"Menge"
-		]
-	},
-	{
-		"subject": "math",
-		"id": 15,
-		"credits": 4,
-		"setting": "Sei `M` eine beliebige Menge mit `R sube M^2`",
-		"task": "Zeigen sie:",
-		"given": [
-			"Wenn `R` gleichzeitig reflexiv, symmetrisch und antisymmetrisch ist, folgt `R = id_M`",
-			"Genau dann, wenn `R` transitiv ist, gilt `R @ R sube R`"
-		],
-		"solutions": [
-			"<figure>\n\tSei `(x,y) in R` (Definition reflexiv, symmetrisch, antisymmetrisch)<br>\n\t`=> xRx ^^ xRy ^^ yRx ^^ (xRy ^^ yRx -> x=y)` (`a => b = neg a v b`)<br>\n\t`=> xRx ^^ xRy ^^ yRx ^^ (neg (xRy ^^ yRx) vv x=y)` (De Morgan)<br>\n\t`=> xRx ^^ xRy ^^ yRx ^^ (neg xRy vv neg yRx vv x=y)` (Definition Identitätsrelation: y = x)<br>\n\t`=> xRx ^^ xRx ^^ xRx ^^ (neg xRx vv neg xRx vv x=x)` (Tautolgie)<br>\n\t`=> xRx ^^ xRx ^^ xRx` (Tautologie)<br>\n\t`=> xRx`<br>\n\t`q.e.d.`<br>\n\t<s>Kein abgeschlossener Beweis!</s>\n</figure>",
-			"<figure>\n\t<s>\n\t\t`(x,y) in R @ R` (Definition `@`)<br>\n\t\t`=> EEz : (x,z) in R ^^ (z,y) in R` (Distributivgesetz)<br>\n\t\t`=> EEz : ((x,z) ^^ (z,y)) in R` (Definition Transitivität)<br>\n\t\t`=> (x,y) in R`<br>\n\t\t`q.e.d.`<br>\n\t</s>\n</figure>\n<figure>\n\t<s>Rückrichtung</s>\n</figure>"
-		],
-		"note": null,
-		"tags": [
-			"Beweis",
-			"Menge"
-		]
-	},
-	{
-		"subject": "math",
-		"id": 16,
-		"credits": 4,
-		"setting": "",
-		"task": "Überprüfen sie, ob `Z = {Z_i | i >= 0}` eine gültige Zerlegung der Menge `M` ist und geben sie dann die entsprechende Äquivalenzrelation an:",
-		"given": [
-			"`M = NN` und `Z_i = {x | (i < 13) ^^ EE k((k in NN) ^^ (13k + i = x)}`",
-			"`M = QQ^+` und `Z_i = {x | EE p((p in NN) ^^ (x · i = p))}`",
-			"`M = RR_0^+` und `Z_i={x | (i≤x)^^(x < i+1)}`",
-			"`M = RR_0^+` und `Z_i = {x | i \"ist die Quersumme von\" x}`"
-		],
-		"solutions": [
-			"`R = {(x, y) | x mod 13 = y mod 13}`<br><s>`Z_i = O/ =>` keine Zerlegung</s>",
-			"Nein, keine Zerlegung der Menge, da z.B. 2 in Z1 und Z2 auftaucht",
-			"(R = {(x, y) mid lfloor x \rfloor = lfloor y \rfloor } )",
-			"Nein, da die Quersumme nur für natürliche Zahlen definiert ist und somit nicht alle reelen Zahlen in einer Partition auftauchen."
-		],
-		"note": null,
-		"status": "incorrect",
-		"tags": [
-			""
-		]
-	},
-	{
-		"subject": "math",
-		"id": 17,
-		"credits": 4,
-		"setting": "Sei F linksvollständig und rechtseindeutig, `f = (A, B, F)` und `M sube N sube A`.",
-		"task": "",
-		"given": [
-			"Zeigen Sie `f(M) sube f(N)`",
-			"Finden Sie kleine Mengen A, B, M, N und eine Abbildung `f = (A, B, F)` mit `f(M) sube f(N)`, aber `not (M sube N)`"
-		],
-		"solutions": [
-			"Zu zeigen:<br>\n`f(M) sube f(N)` (Definition Teilmenge)<br>\n`= x in f(M) => x in f(N)`<br>\n<br>\nSei `x in f(M)` (Definition Bild)<br>\n`=> EE m in M : x = f(m)` `(M sube N)`<br>\n`=> EE m in N : x = f(m)` (Definition Bild)<br>\n`=> x in f(N)`<br>\n`q.e.d`",
-			"`A = {1,2,3}`<br>\n`B = {4}`<br>\n`F = {(1,4), (2,4), (3,4)}`<br>\n`M = {1,2}`<br>\n`N = {1,3}`<br>\n<br>\n`f(M) = 4`<br>\n`f(N) = 4`<br>"
-		],
-		"note": null,
-		"tags": [
-			""
-		]
-	},
-	{
-		"subject": "math",
-		"id": 18,
-		"credits": 4,
-		"setting": "Seien A und B nichtleere Mengen und `f : A → B` Abbildung. Für `a,b in A` gelte `a ∼ b <=> f(a) = f(b)`.",
-		"task": "Zeigen Sie:",
-		"given": [
-			"`∼` ist äquivalenz",
-			"`f^(−1)(f(a)) = [a]` für alle `a in A`"
-		],
-		"solutions": [
-			"reflexiv: `f(a) = f(a)`<br>\nsymmetrisch: `f(a) = f(b) => f(b) = f(a)`<br>\ntransitiv: `(f(a) = f(b)) ^^ (f(b) = f(c)) => f(a) = f(c)`<br>\n`=>` ist äquivalenz<br>\n`q.e.d`",
-			"`f^(-1)(f(a))` (Definition Urbild)<br>\n`= {a in A | f(a) in f(a)}` (Angabe)<br>\n`= {a in A | a ~ a}` (Definition Äquivalenzklasse)<br>\n`= [a]`<br>\n`q.e.d`"
-		],
-		"note": null,
-		"tags": [
-			"Beweis"
-		]
-	},
-	{
-		"subject": "math",
-		"id": 19,
-		"credits": 4,
-		"setting": "Seien A, B, C Mengen und `f : A → B` und `g : B → C` Abbildungen. Dann ist `g @ f` Abbildung `A → C`:<",
-		"task": "Zeigen Sie:",
-		"given": [
-			"`f` und `g` surjektiv `=> g @ f` surjektiv",
-			"`f` und `g` injektiv `=> g @ f` injektiv"
-		],
-		"solutions": [
-			"`(g @ f)(A)`<br>\n`= g(f(A))`<br>\n`= g(B)`<br>\n`= C`<br>\n`=> g @ f` ist surjektiv<br>\n`q.e.d`",
-			"Seien `a_1, a_2 in A`<br>\n`=> (g @ f)(a_1) = (g @ f)(a_2)`<br>\n`=> g(f(a_1)) = g(f(a_2))` (g injektiv)<br>\n`=> f(a_1) = f(a_2)` (f injektiv)<br>\n`=> a_1 = a_2`<br>\n`=> g @ f` ist injektiv<br>\n`q.e.d`"
-		],
-		"note": null,
-		"tags": [
-			"Beweis"
-		]
-	},
-	{
-		"subject": "math",
-		"id": 20,
-		"credits": 3,
-		"setting": "`M = {a, b, c}`",
-		"task": "Gebe eine Halbordnung `R` an, so dass `R` die jeweils folgenden Eigenschaften besitzt:",
-		"given": [
-			"`R` ist eine Ordnungsrelation",
-			"Es gibt ein Minimum und zwei maximale Elemente",
-			"Es gibt zwei minimale Elemente und ein Maximum"
-		],
-		"solutions": [
-			"Anordnung der Buchstaben im lateinischen Alphabet:<br>`R = {(a,a), (b,b), (c,c), (a,b), (b,c), (a,c)}`",
-			"`R = {(a,a), (b,b), (c,c), (a,b), (a,c)}`",
-			"`R = {(a,a), (b,b), (c,c), (a,c), (b,c)}`"
-		],
-		"note": null,
-		"tags": [
-			""
-		]
-	},
-	{
-		"subject": "math",
-		"id": 21,
-		"credits": 4,
-		"setting": "",
-		"task": "Erweitere die folgenden Relation `R ⊂ M × M` mit `M = {1, 2, 3, 4, 5, 6, 7})` um so wenig Elemente wie möglich, so dass die neue Relation eine Halbordnung ist. Bestimme die maximalen Ketten der Relation.",
-		"given": [
-			"`R = {(1,1), (3,2), (1,3), (4,5), (5,6)}`",
-			"`R = {(1,2), (2,3), (4,5), (6,5), (7,1)}`"
-		],
-		"solutions": [
-			"`R_(Ho) `\n`= R uu {(2,2), (3,3), (4,4), (5,5), (6,6), (7,7), (1,2), (4,6)}`\n`= {(1,1), (2,2), (3,3), (4,4), (5,5), (6,6), (7,7), (1,3), (3,2), (1,2), (4,5), (5,6), (4,6)}`<br>\n<br>\nMaximale Ketten:<br>\n`K_1 = {1, 3, 2}`<br>\n`K_2 = {4, 5, 6}`<br>\n`K_3 = {7}`",
-			"`R_(Ho) `\n`= R uu {(1,1), (2,2), (3,3), (4,4), (5,5), (6,6), (7,7), (7,2), (7,3), (1,3)}`\n`= {(1,1), (2,2), (3,3), (4,4), (5,5), (6,6), (7,7), (7,1), (1,2), (2,3), (7,2), (7,3), (1,3), (4,5), (6,5)}`<br>\n<br>\nMaximale Ketten:<br>\n`K_1 = {7, 1, 2, 3}`<br>\n`K_2 = {4, 5}`<br>\n`K_3 = {6, 5}`"
-		],
-		"note": null,
-		"tags": [
-			""
-		]
-	},
-	{
-		"subject": "math",
-		"id": 22,
-		"credits": 4,
-		"setting": "Sei `(p_i)_(i in N)` eine Folge, die alle Primzahlen injektiv aufzählt. Sie können nun für jedes `k in NN` jedes beliebige Tupel\n`bar(a) = (a_1, …, a_k) in NN^k` wie folgt auf eine natürliche Zahl abbilden:<br/>\n<br>\n`bar(a) |-> p_1^(a_1) * p_2^(a_2) * … * p_(k-1)^(a_(k-1)) * p_k^(a_(k+1))`<br/>\n<br/>\nDiese Abbildung von `NN^(**) := uu_(k in N) NN^k` nach `NN^+` soll `f` heißen: `f : NN^(**) -> NN^+`\nAußerdem werde das leere Tupel `epsilon in NN^0` auf `1` abgebildet.",
-		"task": "Zeigen Sie:",
-		"given": [
-			"`f` ist injektiv",
-			"`f` ist surjektiv"
-		],
-		"solutions": [
-			"Zu zeigen: `f(a) = f(b) => a = b`<br>\nSei `f(a), f(b), k in NN`<br>\n`f(a) = f(b)`<br>\n`EE bar(a) = (a_1, …, a_k), bar(b) = (b_1, …, b_k) in NN^k :\np_1^(a_1) * p_2^(a_2) * … * p_(k-1)^(a_(k-1)) * p_k^(a_(k+1)) =\np_1^(b_1) * p_2^(b_2) * … * p_(k-1)^(b_(k-1)) * p_k^(b_(k+1))` (Definition der Funktion)<br>\n`=> bar(a) = bar(b)`",
-			"Zu zeigen: `f(A) = NN`<br>\n`NN sube f(A)`<br>\nSei `b, k in NN` <br>\n`=> EE bar(a) in NN^k : f(bar(a)) = b` (Definition: Für jede Zahl existiert eine Primfaktorzerlegung)<br>\n<br>\n`f(A) sube NN` folgt aus der Funktion<br>\n`=> f` ist surjektiv<br>\n`q.e.d`"
-		],
-		"hints": ["Um die Aufgabe besser zu verstehen, legen Sie sich `p_1` bis `p_5` fest und bilden Sie 0 bis 5-Tupel mittels `f` auf natürliche Zahlen ab. So erkennen Sie, warum der letzte Exponent als einziger `a_k + 1` heißt."],
-		"note": null,
-		"tags": [
-			""
-		]
-	},
-	{
-		"subject": "math",
-		"id": 23,
-		"credits": 2,
-		"setting": "`f: P(NN) -> [0, 1]`",
-		"task": "Konstruieren Sie eine Surjektion",
-		"solutions": [
-			"Sei `a_i in {0, …, 9}`<br>\n<br>\n`f: P(NN) -> [0, 1]`<br>\n`= {a_0, a_0a_1, a_0a_1a_2, a_0a_1a_2a_3, …} -> 0,a_0a_1a_2a_3…`<br>\n<br>\nIst surjektiv: `AA p in P(NN) : EE r in RR: f(p) = r`,<br>\naber nicht injektiv: `{1} -> 1` und `{1, 10} -> 1`"
-		],
-		"hints": "Sie können verwenden, dass es zu jeder reellen Zahl `x in [0, 1]` eine Darstellung<br>\n`x = sum_(i >= 1) 2^(−i)a_i` mit `a_i in {0, 1}` gibt,<br>\ndie Binärdarstellung `0, a_1, a_2, a_3, …` des unendlichen Bruchs.\nSie müssen also nur für `M sube NN` die passenden `a_i` definieren und zeigen, dass Ihre Abbildung surjektiv ist.",
-		"note": null,
-		"tags": null
-	},
-	{
-		"subject": "math",
-		"id": 24,
-		"credits": 4,
-		"setting": "",
-		"task": "Zeigen Sie für alle `m,n in NN : m <= n -> 2^m <= 2^n`.",
-		"solutions": [
-			"Zu Zeigen: `AA m,n in NN : m <= n => 2^m <= 2^n`<br>\n`2^m <= 2^n` (`log_2`)<br>\n`-= log_2 2^m <= log_2 2^n`<br>\n`-= m <= n`<br>\n`q.e.d`<br>"
-		],
-		"note": null,
-		"tags": []
-	},
-	{
-		"subject": "math",
-		"id": 25,
-		"credits": 4,
-		"setting": "",
-		"task": "Beweisen Sie mittels Widerspruch, dass sich `root 3 2` nicht als Bruch `p / q` darstellen lässt.",
-		"solutions": [
-			"`a in NN`<br>\n`root a 2 = p/q`<br>\n`2 = p^a/q^a`<br>\n`2q^a = p^a`\n`=> 2 | p^a`\n`=> 2 | p`\n`=> EE r in NN : p = 2r`<br>\n`2q^a = (2r)^a`<br>\n`q^a = 2^(a-1)r^a`\n`=> 2 | q^a`\n`=> p not _|_ q`\n`=> ↯`<br>\n`q.e.d`<br>"
-		],
-		"note": null,
-		"hints": "Nehmen Sie an, dass `p / q` mit `p,q in NN` vollständig gekürzt ist, d.h. `ggT(p,q) = 1`.\nSie können auch verwenden, dass wenn `x | y^2` mit `x, y in NN` gilt und `x` Primzahl ist,\ndann gilt auch `x^2 | y^2` und `x | y`.",
-		"tags": []
-	},
-	{
-		"subject": "math",
-		"created": "2013-01-01T12:00",
-		"credits": 3,
-		"difficulty": 0.5,
-		"displayedHints": 0,
-		"hints": null,
-		"id": 26,
-		"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
-		"solutions": ["<strong>Induktionsbasis:</strong><br> `n = 0`<br> `sum_(k=1)^0 2k − 1 = 0^2`<br> <br> <strong>Induktionsvoraussetzung:</strong><br> `EE a in NN: sum_(k=1)^a 2k − 1 = a^2`<br> <br> <strong>Induktionsschluss:</strong><br> `sum_(k=1)^(a+1) 2k − 1`<br> `= sum_(k=1)^a 2k − 1 + 2(a + 1) - 1` (Induktionsvoraussetzung)<br> `= a^2 + 2a + 2 - 1`<br> `= a^2 + 2a + 1` (1.Binomische Regel)<br> `= (a + 1)^2`<br> <span class='qed'>∎</span>"],
-		"setting": "",
-		"status": "unapproved",
-		"tags": null,
-		"task": "Zeigen Sie mit Hilfe eines kombinatorischen Beweises, dass folgende Aussage gilt:<br> Wenn sich eine Gruppe von `k` Kindern eine Tüte mit `10k + 1` Bonbons teilt, so gibt es ein Kind, das mindestens `11` Bonbons bekommt."
-	},
-	{
-		"subject": "math",
-		"created": "2013-01-01T12:00",
-		"credits": 3,
-		"difficulty": 0.5,
-		"displayedHints": 0,
-		"hints": null,
-		"id": 27,
-		"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
-		"solutions": ["<strong>Induktionsbasis:</strong><br> `n = 0`<br> `sum_(k=1)^0 2k − 1 = 0^2`<br> <br> <strong>Induktionsvoraussetzung:</strong><br> `EE a in NN: sum_(k=1)^a 2k − 1 = a^2`<br> <br> <strong>Induktionsschluss:</strong><br> `sum_(k=1)^(a+1) 2k − 1`<br> `= sum_(k=1)^a 2k − 1 + 2(a + 1) - 1` (Induktionsvoraussetzung)<br> `= a^2 + 2a + 2 - 1`<br> `= a^2 + 2a + 1` (1.Binomische Regel)<br> `= (a + 1)^2`<br> <span class='qed'>∎</span>"],
-		"setting": "",
-		"status": "unapproved",
-		"tags": null,
-		"task": "Zeigen Sie mit Hilfe der vollständigen Induktion, dass für alle natürlichen Zahlen n gilt:<br> `sum_(k=1)^n 2k − 1 = n^2`"
-	},
-	{
-		"subject": "math",
-		"created": "2013-01-01T12:00",
-		"credits": 3,
-		"difficulty": 0.5,
-		"hints": null,
-		"id": 28,
-		"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
-		"solutions": ["<strong>Induktionsbasis:</strong><br> `n = 0`<br> a: `sum_(k=0)^0 k^3 = 0`<br> b: `(0^2(0 + 1)^2)/4 − 1 = -1`<br> `=> a != b`<br> <br> <strong>Induktionsvoraussetzung:</strong><br> `EE a in NN: sum_(k=0)^a k^3 = (a^2(a + 1)^2)/4 − 1`<br> <br> <strong>Induktionsschluss:</strong><br> `sum_(k=0)^(a+1) k^3`<br> `= sum_(k=0)^a k^3 + (a + 1)^3`<br> `= (a^2(a + 1)^2)/4 − 1 + (a+1)(a+1)^2`<br> `= (a^2(a + 1)^2)/4 − 1 + (4(a+1)(a+1)^2)/4` (Distributivgesetz)<br> `= ((a + 1)^2 (a^2 + 4(a+1)))/4 − 1` (Distributivgesetz)<br> `= ((a + 1)^2 (a^2 + 4a + 4))/4 − 1` (Binomische Formel)<br> `= ((a + 1)^2 (a + 2)^2)/4 − 1`<br> `= ((a + 1)^2 ((a + 1) + 1)^2)/4 − 1`<br> <span class='qed'>∎</span>"],
-		"setting": "<br> `sum_(k=0)^n k^3 = (n^2(n + 1)^2)/4 − 1`<br> Die Behauptung muss dennoch falsch sein. Man sieht also, dass eine bewiesene Induktionsbasis essenziell für einen vollständigen Induktionsbeweis ist.",
-		"status": "unapproved",
-		"tags": null,
-		"task": "Zeigen Sie, dass bei der folgenden Formel zwar der Induktionsschritt funktioniert, jedoch nicht die Induktionsbasis:"
-	},
-	{
-		"subject": "math",
-		"created": "2013-01-01T12:00",
-		"credits": 3,
-		"difficulty": 0.5,
-		"hints": null,
-		"id": 29,
-		"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
-		"solutions": ["Durch das zweite Herausschicken betrachtet man wieder nur eine Person und nicht `n + 1 = 2` Personen. Somit wird die Anforderung an den Induktionsschritt nicht erfüllt und es kann auch keine Aussage über die Richtigkeit der Behauptung gemacht werden."],
-		"setting": "<strong>Behauptung:</strong><br> Auf einer Party mit `n ≥ 1` Gästen haben alle denselben Namen.<br> <br> <strong>Induktionsbasis:</strong><br> Wenn auf einer Party nur ein Gast ist, ist die Aussage wahr (weil es nur einen Namen gibt).<br> <br> <strong>Induktionsschritt: </strong><br> Seien auf einer Party `n + 1` Gäste. Wir schicken einen raus. Dann sind auf dieser Party nur noch `n` Gäste. Nach Induktionsvoraussetzung haben all diese `n` Gäste den gleichen Namen. Nun holen wir den Gast der draußen steht wieder rein und schicken einen anderen Gast raus. Nun haben nach Induktionsvoraussetzung wieder alle den gleichen Namen. Also müssen alle `n + 1` Gäste den gleichen Namen haben. Daraus folgt, dass alle Gäste auf einer Party gleich heißen.",
-		"status": "unapproved",
-		"tags": null,
-		"task": "Warum ist folgender Beweis fehlerhaft?"
-	},
-	{
-		"subject": "math",
-		"created": "2013-01-01T12:00",
-		"credits": 3,
-		"given": [
-			"`n^4 − 4n^2` ist durch `3` teilbar."
-		],
-		"solutions":[
-			"<strong>Induktionsbasis:</strong>\n<br>\n<p>`n = 0`<br>\n   `=> (n^4 - 4n^2) | 3`<br>\n   `=> (0^4 - 4 * 0^2) | 3`<br>\n   `=> 0 | 3`\n</p>\n\n\n<strong>Induktionsvorraussetzung:</strong>\n<br>\n<p>`AA n in NN: (n^4 - 4n^2) | 3`</p>\n\n\n<strong>Induktionsschluss:</strong>\n<br>\n`(n + 1)^4 - 4(n + 1)^2`<br>\n`= n^4 + 4n^3 + 6n^2 + 4n + 1 - 4n^2 + 8n - 4`<br>\n`= n^4 + 4n^3 + 2n^2 - 4n - 3`<br>\n`= (n^4 - 4n^2 ) + (4n^3 + 6n^2 - 4n - 3)`<br>\n`= (n^4 - 4n^2 ) + (3n^3 + 6n^2 - 3n - 3) + (n^3 - n)`<br>\n`= (n^4 - 4n^2 ) + 3(n^3 + 2n^2 - n - 1)+ n(n^2 - 1)`<br>\n`= (n^4 - 4n^2 ) + 3(n^3 + 2n^2 - n - 1) + n (n - 1)(n+1)`<br>\n<br>\n<p>Nun sind alle 3 Summanden durch 3 teilbar:</p>\n<ol>\n\t<li>Nach Induktionsvoraussetzung</li>\n\t<li>Ganzes vielfaches von 3</li>\n\t<li>Von den 3 aufeinanderfolgenden Zahlen `(n-1)`, `n` und `(n+1)`\n\t    muss eine durch 3 teilbar sein\n\t</li>\n</ol>\n<p> Somit ist auch die Summe durch 3 teilbar.</p>"
-		],
-		"hints": null,
-		"id": 301,
-		"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
-		"setting": "Für alle natürlichen Zahlen `N` (inkl. der 0) gilt:",
-		"status": "unapproved",
-		"tags": ["induction"],
-		"task": "Zeigen Sie mit Hilfe der vollständigen Induktion:"
-	},
-	{
-		"subject": "math",
-		"created": "2013-01-01T12:00",
-		"credits": 3,
-		"given": [
-			"Die Potenzmenge einer `n`-elementigen Menge enthält `2^n` Elemente."
-		],
-		"solutions":[
-			"<strong>Induktionsbasis:</strong>\n\n<p>`n = 0`<br>\n   `=> #M = 0`<br>\n   `=> M = O/`<br>\n   `=> P(M) = {O/}`<br>\n   `=> #P(M) = 1 = 2^0`<br>\n</p>\n\n\n<strong>Induktionsvorraussetzung:</strong>\n\n<p>`AA n in NN: #P(M) = 2^n`\n</p>\n\n\n<strong>Induktionsschluss:</strong>\n\n<p>Sei `M_(n+1)` eine Menge für die gelte:<br>\n   `#M_(n+1) = (n+1)`<br>\n   `M_(n+1) = {e_1, e_2, …, e_(n+1)}`<br>\n\t<br>\n   Nun betrachen wir die Teilmenge `M_n`. Es gilt:<br>\n   `P(M_n) = 2^n` (Induktionsvorraussetzung)<br>\n   `P(M_n) = {T(1), …, T(2^n)}`<br>\n\t<br>\n   `=> P(M_(n+1)) = {T(1), …, T(2^n), T(1) uu {e_(n+1)}, …, T(2^n) uu {e_(n+1)} }`<br>\n   `=> #P(M_(n+1))\n   = 2^n + 2\n   = 2 * 2^n\n   = 2^(n+1)`<br>\n</p>\n"
-		],
-		"hints": null,
-		"id": 302,
-		"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
-		"setting": "Für alle natürlichen Zahlen `N` (inkl. der 0) gilt:",
-		"status": "unapproved",
-		"tags": ["induction"],
-		"task": "Zeigen Sie mit Hilfe der vollständigen Induktion:"
-	},
-	{
-		"subject": "math",
-		"created": "2013-01-01T12:00",
-		"credits": 1122,
-		"difficulty": 0.5,
-		"displayedHints": 0,
-		"given": [
-			"Es kommt kein Zeichen mehrfach vor.",
-			"Das ’A’ kommt genau k-mal vor.",
-			"Genau ein Zeichen kommt mindestens doppelt vor.",
-			"Genau drei Zeichen kommen jeweils genau doppelt vor."
-		],
-		"hints": null,
-		"id": 31,
-		"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
-		"setting": "`(a_1, … , a_n)` mit der Länge `n in N` über `{A, … , Z}`",
-		"status": "incorrect",
-		"solutions":[
-			"<p>a) Nur möglich für `n <= 26`: `26/((26-n)!)`</p>\n\t\t",
-			"<p>b) `((n),(k))` Möglichkeiten für die `A`s und `25^(n-k)` für die restlichen Stellen:`((n),(k)) * 25^(n-k)`</p>",
-			"<p>c) `26 * sum_(k=2)^n( ((n),(k)) * ((25),(n-k)) * k!)`</p>",
-			"<s>d) Missing</s>"
-		],
-		"tags": ["stochastik"],
-		"task": "Nennen sie die Anzahl aller Zeichenfolgen"
-	}
-]}
+{
+	"tasks"
+:
+	[
+		{
+			"id": 1,
+			"task": "Wandle die formulierten Regeln und Schlussfolgerungen in Aussagen um",
+			"credits": 6,
+			"setting": "Für diese Übung wird zunächst das Kartenspiel Uno betrachtet. Das Spiel wird mit Karten in den 4 Farben rot,\n   blau, grün, gelb gespielt, die die Werte 0 bis 9 haben. Dazu gibt es noch weitere Karten in den Farben für den\n   Wechsel der Spielrichtung, das Ziehen von Strafkarten und das Aussetzen des nächsten Spielers. Neben den\n   Farbkarten gibt es noch schwarze Karten, einmal den Farbwunsch und dann noch Farbwunsch und Karte ziehen\n   kombiniert.<br>\n   Dabei gelten die folgende Grundregeln:</p>\n\n<ul>\n\t<li>Karten der gleichen Farbe dürfen aufeinander gelegt werden.</li>\n\t<li>Karten des gleichen Wertes dürfen aufeinander gelegt werden.</li>\n\t<li>Schwarze Karten dürfen nur auf farbige Karten gelegt werden.</li>\n</ul>\n\n<p>Das Uno-Spiel mit diesen Regeln ist recht langweilig. Von daher werden im Folgenden einige Zusatzregeln eingeführt. Wandle die\n   folgenden formulierten Regeln und Schlussfolgerungen in Aussagen um.</p>\n\n<ol>\n\t<li>Wenn die Farbe einer Karte grün ist, dann sagt der Spieler blau.</li>\n\t<li>Jede gelbe Karte, die gerade ist, hat die Farbe grün.</li>\n\t<li>Wenn die Karte gelb ist, und der Spieler nicht blau sagt, dann war die Karte ungerade oder eine\n\t    Sonderkarte.\n\t</li>\n\t<li>Wenn der Spieler nicht blau sagt, dann ist weder die Karte gelb und gerade noch ist die Farbe grün.</li>\n</ol>Lege dazu für die atomaren Ausdrücke jeweils eine Variable fest und erzeugen Sie dann die entsprechenden\n aussagenlogischen Ausdrücke. Verwende für die gesamte Aufgabe nicht mehr als 4 atomare Ausdrücke. Eine der\n   oben genannten Aussagen ist dabei kein atomarer Ausdruck.",
+			"solutions": [
+				"<h4>Atomare Ausdrücke</h4>\n<ul>\n\t<li>grün `iff` Karte ist grün</li>\n\t<li>sagtBlau `iff` Spieler sagt blau</li>\n\t<li>gerade `iff` Karte ist gerade</li>\n\t<li>gelb `iff` Karte ist gelb</li>\n</ul>\n\n<h4>Äquivalente aussagenlogische Ausdrücke</h4>\n<ol>\n\t<li>grün `=>` sagtBlau</li>\n\t<li>(gelb `^^` gerade) `=>` grün</li>\n\t<li>(gelb `^^` `not`sagtBlau) `=> not`gerade</li>\n\t<li>`not`sagtBlau `=> not`(gelb `^^` gerade) `^^` `not`grün</li>\n</ol>"
+			],
+			"status": "correct",
+			"subject": "math"
+		},
+		{
+			"subject": "math",
+			"id": 2,
+			"credits": 3,
+			"setting": null,
+			"task": "Erstellen Sie Wahrheitstafeln für die folgenden Aussagen:",
+			"given": [
+				"`(a vv b) ^^ (a vv not c) => (b ^^ not c)`",
+				"`(a => b) ^^ (not b => not a) iff (b ^^ not c)`"
+			],
+			"solutions": [
+				"<table id=\"table2a\">\n\t<caption>a</caption>\n</table>\n<table id=\"table2b\">\n\t<caption>b</caption>\n</table>"
+			],
+			"tags": [
+				"Wahrheitstafel"
+			]
+		},
+		{
+			"subject": "math",
+			"id": 3,
+			"credits": 3,
+			"setting": null,
+			"task": "Zeigen Sie ohne die Verwendung einer Wahrheitstafel, dass die folgenden Aussagen jeweils äquivalent sind:",
+			"given": [
+				"`not (p vv q) ^^ (p vv r)` und `not p ^^ not q ^^ r`",
+				"`(p => q) ^^ (not p => r)` und `(q ^^ (p vv r)) vv (not p ^^ r)`"
+			],
+			"solutions": [
+				"<em>Beweis:</em>\n\n<figure>\n\t`not (p vv q) ^^ (p vv r)` (De Morgan)<br>\n\t`-= (not p ^^ not q) ^^ (p vv r)` (Distributivität)<br>\n\t`-= (not p ^^ not q ^^ p) vv (not p ^^ not q ^^ r)` (Kommutativität)<br>\n\t`-= (p ^^ not p ^^ not q ) vv (not p ^^ not q ^^ r)` (Kontradiktion)<br>\n\t`-= (0 ^^ not q ) vv (not p ^^ not q ^^ r)` (Kontradiktionsregel)<br>\n\t`-= 0 vv (not p ^^ not q ^^ r)` (Kontradiktionsregel)<br>\n\t`-= (not p ^^ not q ^^ r)`<br>\n\t`q.e.d`<br>\n</figure>\n\n<em>Beweis:</em>\n\n<figure>\n\t`(p => q) ^^ (not p => r)` (Tautolgie)<br>\n\t`-= (not p vv q) ^^ (p vv r)` (Distributivität)<br>\n\t`-= not p ^^ (p vv r) vv q ^^ (p vv r)`<br>\n\t`-= r ^^ not p vv q ^^ (p vv r)`<br>\n\t`-= (q ^^ (p vv r)) vv (not p ^^ r)`<br>\n\t`q.e.d`<br>\n</figure>"
+			],
+			"tags": [
+				"Beweis"
+			]
+		},
+		{
+			"subject": "math",
+			"id": 4,
+			"credits": 4,
+			"setting": "<p>In dieser Übung sollen folgende Aussageformen betrachtet werden:</p>\n<ul>\n\t<li>`m(t):` Student hat Mathe am Zeitpunkt `t` verstanden.</li>\n\t<li>`h(t):` Student hat zum Zeitpunkt `t` Hunger.</li>\n\t<li>`d(t):` Zeitpunkt `t` ist am Tag.</li>\n\t<li>`n(t):` Zeitpunkt `t` ist nachts.</li>\n\t<li>`t_1 < t_2`: Zeitpunkt `t_1` trat irgendwann vor `t_2` ein.</li>\n</ul>",
+			"task": "Drücken sie folgende Sätze als prädikatenlogische Formeln aus:",
+			"given": [
+				"Immer wenn der Student Hunger hat, versteht er nichts von Mathe.",
+				"Es kommt vor, dass der Student nachts Hunger hat.",
+				"Es gibt einen erleuchtenden Moment, ab dem der Student Mathe immer verstehen wird.",
+				"Zwischen zwei bestimmten Zeitpunkten (z.B. während der Prüfung) hat der Student einen Mathe-Blackout (versteht nichts mehr), aber vorher und auch hinterher hat er immer Ahnung."
+			],
+			"solutions": [
+				"<ol>\n\t<li>`AA t : h(t) => not m(t)`</li>\n\t<li>`EE t : n(t) ^^ h(t)`</li>\n\t<li>`EE t_0: ∀t : (t_0 < t) => m(t)`</li>\n\t<li><s>`EE t_0: EE t_1 : AA t : (t_0 < t) ^^ (t < t_1) <=> not m(t)`</s></li>\n</ol>"
+			],
+			"tags": [
+				"Prädikatenlogik"
+			]
+		},
+		{
+			"subject": "math",
+			"id": 5,
+			"credits": 4,
+			"setting": null,
+			"task": "Drücken Sie folgende Aussagen in deutschen Sätzen aus:",
+			"given": [
+				"`not AA t: h(t) ^^ EE t: m(t)`",
+				"`∀t: ((h(t) vv n(t)) => ¬m(t))`",
+				"`∀t_1 ((d(t_1) ^^ EE t_2(m(t_2) ^^ t_2 < t_1 ^^ ∀t_3((t_2 < t_3 ^^ t_3 < t_1) => n(t_3)))) => h(t_1))`",
+				"`∀t_1∀t_2 ((n(t_1) ^^ n(t_2) ^^ EE t_3(t_1 < t_3 ^^ t_3 < t_2 ^^ d(t_3))) => EE t_3(t_1 < t_3 ^^ t_3 < t_2 ^^ h(t_3)))`"
+			],
+			"solutions": [
+				"`¬∀t: h(t) ^^ EE t: m(t)` (Negationsregel)<br>\t`≡ EE t: ¬h(t) ^^ EE t: m(t)`<br>\tManchmal hat der Student keinen Hunger und manchmal versteht er Mathe.",
+				"Immer wenn der Student Hunger hat oder es Nacht ist, dann versteht er Mathe nicht.",
+				"Der Student hat bei Tagesanbruch Hunger, wenn er in der Nacht davor Mathe verstanden hat.",
+				"An einem Tag zwischen zwei Nächten hat der Student tagsüber mindestens einmal Hunger."
+			],
+			"tags": [
+				""
+			]
+		},
+		{
+			"subject": "math",
+			"id": 6,
+			"credits": 0,
+			"setting": "Betrachte die vier Universen `{0,1}, ZZ, QQ^+, RR`.",
+			"task": "In welchen der Universen gelten die folgenden Aussagen?",
+			"given": [
+				"`EE x AA y: (x ≤ y)`",
+				"`AA x EE y: (y^2 = x)`",
+				"`∀xEE y: ¬(y ≤ x)`",
+				"`∀(x,y): ((¬(y≤x)) => EE z: ¬((z≤x) vv (y≤z)))`"
+			],
+			"solutions": [
+				"`{0,1}`",
+				"`{0,1}`",
+				"`ZZ, QQ^+, RR`",
+				"`QQ^+, RR`"
+			],
+			"tags": [
+				""
+			]
+		},
+		{
+			"subject": "math",
+			"id": 7,
+			"credits": 4,
+			"setting": "<p>Betrachten Sie folgende Aussageformen über `NN^+`:</p>\n<ul>\n\t<li>`P(x): x` besitzt genau drei verschiedene Primfaktoren `(a^t * b^y * c^z )`.</li>\n\t<li>`Q(x): x` ist durch das Quadrat einer Primzahl teilbar.</li>\n\t<li>`R(x):` die Dezimaldarstellung von `x` enthält nur Ziffern, die sich ohne Ecken und Spitzen darstellen\n\t    lassen\n\t    (also 0, 6, 8, 9).\n\t</li>\n</ul>",
+			"task": "Zählen Sie die zehn kleinsten Elemente der folgenden Mengen auf:",
+			"given": [
+				"`M_1 := {x | P(x) ^^ ¬Q(x)}`",
+				"`M_2 := {x | Q(x) ^^ R(x)}`",
+				"`M_3 := {x | (¬P(x) ^^ Q(x)) vv R(x)}`",
+				"`M_4 := {x | P(x) vv Q(x) vv R(x)}`"
+			],
+			"solutions": [
+				"`{0,1}`",
+				"`{0,1}`",
+				"`ZZ, QQ^+, RR`",
+				"`QQ^+, RR`"
+			],
+			"hints": ["<s>`P(x) = {30, 42, 66, 70, 78, 102, 105, 110, 114, 130, 138, 154, 165, 170, 182, 190, 195, …}`</s>\n\t`Q(x) = {4, 8, 9, 12, 16, 18, 20, 24, 25, 27, 28, 32, 36, 40, 44, 45, 48, 49, 50, 52, 54, 56, …}`\n\t`R(x) = {6, 8, 9, 60, 66, 68, 69, 80, 86, 88, 89, 90, 96, 98, 99, …}`\n"],
+			"tags": [
+				""
+			]
+		},
+		{
+			"subject": "math",
+			"id": 8,
+			"credits": 4,
+			"setting": "",
+			"task": "Zählen Sie die fünf kleinsten Elemente der folgenden Menge auf und geben Sie eine logische Beschreibung der Mengen analog zu Aufgabe 7 an:",
+			"given": [
+				"`M_1 uu M_2`",
+				"`M_4 nn bar(M_1)`",
+				"( M_1 setminus M_3 )",
+				"( overline{ M_4 setminus M_2} )"
+			],
+			"solutions": [
+				"( M_1 cup M_2 := left {x mid (P(x) wedge \neg Q(x)) \u000bee (Q(x) wedge R(x)) \right } = left { 8, 9, 30, 42 , 60, … \right } )",
+				"<s>( M_4 cap overline M_1 := left {x mid (P(x) \u000bee Q(x) \u000bee R(x)) wedge \neg (P(x) wedge \neg Q(x)) \right } = left {4, 6, 8, 9, 12, … \right } )</s>",
+				"( M_1 setminus M_3 := left { x mid (P(x) wedge \neg Q(x)) wedge \neg (( \neg P(x) wedge Q(x)) \u000bee R(x)) \right } = left {30, 42, 70, 78, 102, … \right } )",
+				"( overline{M_4 setminus M_2} := left {x mid \neg (P(x) \u000bee Q(x) \u000bee R(x)) \u000bee Q(x) wedge R(x) \right } = left {1, 2, 3, 5 , 7, … \right } )"
+			],
+			"note": null,
+			"tags": [
+				""
+			]
+		},
+		{
+			"subject": "math",
+			"id": 9,
+			"credits": 4,
+			"setting": "<p>Seien `M, U` Menge mit `O/ ⊂ U sube M`. Betrachten Sie die folgenden Aussageformen über dem Universum aller\n   Teilmengen `X sube M`.\n   Beachten Sie dabei, dass das Universum in dieser Aufgabe Mengen enthält und es sich daher bei den `M_i` um Mengen\n   von Mengen handelt. Zum Verständnis der Aufgabe können Sie sich geeignete Elemente wählen, z.B. `M = {1,2,3,4}` und ein festes\n   `U`,\n   und damit die zu untersuchenden `M_i` konstruieren.</p>\n<ul>\n\t<li>`E(X): X` enthält mindestens ein Element von `U`</li>\n\t<li>`A(X): X` enthält alle Elemente von `U`</li>\n</ul>",
+			"task": "Vergleichen Sie die folgenden Mengen paarweise.",
+			"given": [
+				"( M_1 = left {X mid E(X) \right } )",
+				"( M_2 = left {X mid A(X) \right } )",
+				"( M_3 = left {X mid A(X) \u000bee \neg E(X) \right } )",
+				"( M_4 = left {X mid \neg A(X) wedge E(X) \right } )"
+			],
+			"solutions": [
+				"`M_1 supe M_2`",
+				"( M_1 subseteq overline M_3 )",
+				"( M_1 supset M_4 )",
+				"`M_2 sub M_3`",
+				"( M_2 subset overline M_4 )",
+				"( M_3 = overline M_4 )"
+			],
+			"note": null,
+			"tags": [
+				""
+			]
+		},
+		{
+			"subject": "math",
+			"id": 10,
+			"credits": 2,
+			"task": "Beweisen sie",
+			"setting": "Für alle Mengen `A, B, C, D sube M` gilt die Aussage: `(A xx B) nn (C xx D) = (A nn C) xx (B nn D)`<br>Zeigen sie zum Training einzeln `sube` und `supe`.",
+			"given": null,
+			"solutions": [
+				"<p>Zu beweisen: `(A xx B) nn (C xx D) sube (A nn C) xx (B nn D)`</p>\n<figure>\n\t`(s, t) in (A xx B) nn (C xx D)` (Deﬁnition Schnittmenge)<br>\n\t`=> (s, t) in A xx B ^^ (s, t) in C xx D` (Deﬁnition Kreuzprodukt)<br>\n\t`=> s in A ^^ t in B ^^ s in C ^^ t in D` (Kommutativität)<br>\n\t`=> s in A ^^ s in C ^^ t in B ^^ t in D` (Deﬁnition Schnittmenge)<br>\n\t`=> s in (A nn C) ^^ t in (B nn D)` (Deﬁnition Kreuzprodukt)<br>\n\t`=> (s, t) in (A nn C) xx (B nn D)`<br>\n\t`=> (A xx B) nn (C xx D) sube (A nn C) xx (B nn D)`<br>\n\t`q.e.d.`\n</figure>\n\n<p>Zu beweisen: `(A xx B) nn (C xx D) supe (A nn C) xx (B nn D)`</p>\n<figure>\n\t`(s, t) in (A nn C) xx (B nn D)`<br>\n\t`=> s in (A nn C) ^^ t in (B nn D)` (Deﬁnition Kreuzprodukts)<br>\n\t`=> s in A ^^ s in C ^^ t in B ^^ t in D` (Deﬁnition Schnittmenge)<br>\n\t`=> s in A ^^ t in B ^^ s in C ^^ t in D` (Kommutativität)<br>\n\t`=> (s, t) in (A xx B) ^^ (s, t) in (C xx D)` (Deﬁnition Kreuzprodukt)<br>\n\t`=> (s, t) in (A xx B) nn (C xx D)` (Deﬁnition Schnittmenge)<br>\n\t`=> (A xx B) nn (C xx D) supe (A nn C) xx (B nn D)`<br>\n\t`q.e.d.`\n</figure>\n<figure>\n\t`(A xx B) nn (C xx D) sube (A nn C) xx (B nn D) ^^ (A xx B) nn (C xx D) supe (A nn C) xx (B nn D)`<br>\n\t`=> (A xx B) nn (C xx D) = (A nn C) xx (B nn D)`<br>\n\t`q.e.d.`\n</figure>"
+			],
+			"note": null,
+			"tags": [
+				"Beweis"
+			]
+		},
+		{
+			"subject": "math",
+			"id": 11,
+			"credits": 2,
+			"setting": "",
+			"task": "Beweisen Sie für alle Relationen `T,R,S sube M^2` die Aussage: `T @ (R uu S) = (T @ R) uu (T @ S)`. Zeigen sie zum Training einzeln `supe` und `sube`.</p>",
+			"given": null,
+			"solutions": [
+				"<p>Zu beweisen: `T @ (R uu S) sube (T @ R) uu (T @ S)`</p>\n<figure>\n\t`(x, y) in T @ (R uu S)` (Deﬁnition Komposition)<br>\n\t`=> EE z in M : (x, z) in T ^^ (z, y) in R uu S` (Deﬁnition Vereinigung)<br>\n\t`=> EE z in M : (x, z) in T ^^ ((z, y) in R vv (z, y) in S)` (Distributivität)<br>\n\t`=> EE z in M : ((x, z) in T ^^ (z, y) in R) vv ((x, z) in T ^^ (z, y) in S)` (Deﬁnition Komposition)<br>\n\t`=> ((x, y) in T @ R) vv ((x, y) in T @ S)` (Deﬁnition Vereinigung)<br>\n\t`=> (x, y) in (T @ R) uu (T @ S)`<br>\n\t`=> T @ (R uu S) sube (T @ R) uu (T @ S)`<br>\n\t`q.e.d.`\n</figure>\n\n<p>Zu beweisen: `T @ (R uu S) supe (T @ R) uu (T @ S)`</p>\n<figure>\n\t`(x, y) in (T @ R) uu (T @ S)`<br> (Deﬁnition Vereinigung)\n\t`=> (x, y) in (T @ R) vv (x, y) in (T @ S)` (Deﬁnition Komposition)<br>\n\t`=> EE z_1, z_2 in M : ((x, z_1) in T ^^ (z_1, y) in R) vv ((x, z_2) in T ^^ (z_2, y) in S)` (`z = (z_1 vv z_2)`)<br>\n\t`=> EE z in M : ((x, z) in T ^^ (z, y) in R) vv ((x, z) in T ^^ (z, y) in S)` (Distributivität)<br>\n\t`=> EE z in M : (x, z) in T ^^ ((z, y) in R vv (z, y) in S)` (Deﬁnition Vereinigung)<br>\n\t`=> EE z in M : (x, z) in T ^^ ((z, y) in R uu S)` (Deﬁnition Komposition)<br>\n\t`=> (x, y) in T @ (R uu S)`<br>\n\t`=> T @ (R uu S) supe (T @ R) uu (T @ S)`<br>\n\t`q.e.d.`\n</figure>\n<figure>\n\t`T @ (R uu S) sube (T @ R) uu (T @ S) ^^ T @ (R uu S) supe (T @ R) uu (T @ S)`<br>\n\t`=> T @ (R uu S) = (T @ R) uu (T @ S)`<br>\n\t`q.e.d.`\n</figure>"
+			],
+			"note": null,
+			"tags": [
+				"Beweis"
+			]
+		},
+		{
+			"subject": "math",
+			"id": 12,
+			"credits": 4,
+			"setting": "<p>Zeichnen Sie in den Graphen `@ -> @ larr @ -> @ -> @` zusätzliche Kanten ein (so wenige wie möglich, jeweils für jede\n   Teilaufgabe), so dass die Kantenrelation folgende Eigenschaften erfüllt:",
+			"task": "Kennzeichnen Sie neue Kanten und begründen Sie kurz.",
+			"given": [
+				"Symmetrie",
+				"Reflexivität",
+				"Transitivität",
+				"Symmetrie und Transitivität"
+			],
+			"solutions": [
+				"<p>Gerichtete Kanten gibt es immer in beide Richtungen.</p><img src='img/12-a.png' alt=' '/>",
+				"<p>Jeder Knoten hat eine Kante zu sich selbst.</p><img src=img/12-b.png alt=' '/>",
+				"<p>Zwei Knoten die über einen weiteren Knoten gerichtet miteinander verbunden sind, sind in die gleiche Richtung verbunden.</p><img src=img/12-c.png>",
+				"<p>Siehe a. und c.</p><img src=img/12-d.png alt=' '/>"
+			],
+			"solutions2": [
+				"1->2; 3->2; 3->4; 4->5",
+				"1->2; 3->2; 3->4; 4->5; 1->1; 2->2; 3->3; 4->4; 5->5",
+				"1->2; 3->2; 3->4; 4->5; 3->5",
+				"1->1; 1->2; 1->3; 1->4; 1->5; 2->1; 2->2; 2->3; 2->4; 2->5; 3->1; 3->2; 3->3; 3->4; 3->5; 4->1; 4->2; 4->3; 4->4; 4->5; 5->1; 5->2; 5->3; 5->4; 5->5"
+			],
+			"note": null,
+			"tags": [
+				"Graph"
+			]
+		},
+		{
+			"subject": "math",
+			"id": 13,
+			"credits": 4,
+			"setting": "Sei E die Kantenrelation des Graphen aus Aufgabe 12.",
+			"task": "Zeichnen Sie jeweils die Kanten der folgenden Kantenrelationen in den Graphen aus Aufgabe 12.",
+			"given": [
+				"`E @ E`",
+				"`E^(−1)`",
+				"`E^(−1) @ E`",
+				"`{ (x,y) | EE z:(z,x) in E ^^ (y,z) inE }`"
+			],
+			"solutions": [
+				"<img src=img/12-c.png alt=''>",
+				"<img src=img/13-b.png alt=''>",
+				"<img src=img/13-c.png alt=''>",
+				"<img src=img/13-d.png alt=''>"
+			],
+			"solutions2": [
+				"1->2; 3->2; 3->4; 4->5; 3->5",
+				"<img src=img/13-b.png alt=''>",
+				"1->2; 3->2; 3->4; 4->5; 2->2; 2->2; 2->4; 4->2; 4->4; 5->5",
+				"1->2; 3->2; 3->4; 4->5; 5->3"
+			],
+			"note": null,
+			"tags": [
+				"Graph"
+			]
+		},
+		{
+			"subject": "math",
+			"id": 14,
+			"credits": 4,
+			"setting": "Wir definieren die folgenden Relationen R über die Menge M aller Foursquare-Nutzer.",
+			"task": "Entscheiden Sie mit einer kurzen natürlichsprachlichen Begründung, welche der Relationen Äquivalenzen sind.",
+			"given": [
+				"`xRy` genau dann, wenn `x` und `y` gegenseitige Foursquare-Freunde sind.",
+				"`xRy` genau dann, wenn `x` und `y` mindestens einen gemeinsamen Foursquare-Freund haben.",
+				"`xRy` genau dann, wenn `x` und `y` die gleiche Anzahl an Foursquare-Checkins haben.",
+				"`xRy` genau dann, wenn `x` und `y` gemeinsam an einer Foursquare-Location eingecheckt haben."
+			],
+			"solutions": [
+				"Keine Äquivalenzrelation, da man nicht mit sich selbst befreundet sein kann und sie somit nicht reflexiv ist.",
+				"Keine Äquivalenzrelation, denn wenn man mit zwei anderen Personen jeweils einen gemeinsamen Freund hat, heißt das nicht, dass diese beiden auch einen gemeinsamen Freund haben müssen.",
+				"Äquivalenzrelation, da man gleich viele check-ins wie man selber hat und wenn man gleich viele hat wie jemand anderes, dieser auch gleich viele hat wie man selbst und wenn man gleich viele hat wie zwei andere diese beiden auch gleich vielehaben.",
+				"Annahme: Man kann zu verschiedenen Zeiten an einem Ort einchecken.<br> Keine Äquivalenzrelation, denn wenn man mit zwei Personen jeweils gemeinsam an einem Ort eingecheckt ist heißt das nicht, dass diese gemeinsam an einem Ort eingecheckt haben müssen."
+			],
+			"note": null,
+			"tags": [
+				"Relation",
+				"Menge"
+			]
+		},
+		{
+			"subject": "math",
+			"id": 15,
+			"credits": 4,
+			"setting": "Sei `M` eine beliebige Menge mit `R sube M^2`",
+			"task": "Zeigen sie:",
+			"given": [
+				"Wenn `R` gleichzeitig reflexiv, symmetrisch und antisymmetrisch ist, folgt `R = id_M`",
+				"Genau dann, wenn `R` transitiv ist, gilt `R @ R sube R`"
+			],
+			"solutions": [
+				"<figure>\n\tSei `(x,y) in R` (Definition reflexiv, symmetrisch, antisymmetrisch)<br>\n\t`=> xRx ^^ xRy ^^ yRx ^^ (xRy ^^ yRx -> x=y)` (`a => b = neg a v b`)<br>\n\t`=> xRx ^^ xRy ^^ yRx ^^ (neg (xRy ^^ yRx) vv x=y)` (De Morgan)<br>\n\t`=> xRx ^^ xRy ^^ yRx ^^ (neg xRy vv neg yRx vv x=y)` (Definition Identitätsrelation: y = x)<br>\n\t`=> xRx ^^ xRx ^^ xRx ^^ (neg xRx vv neg xRx vv x=x)` (Tautolgie)<br>\n\t`=> xRx ^^ xRx ^^ xRx` (Tautologie)<br>\n\t`=> xRx`<br>\n\t`q.e.d.`<br>\n\t<s>Kein abgeschlossener Beweis!</s>\n</figure>",
+				"<figure>\n\t<s>\n\t\t`(x,y) in R @ R` (Definition `@`)<br>\n\t\t`=> EEz : (x,z) in R ^^ (z,y) in R` (Distributivgesetz)<br>\n\t\t`=> EEz : ((x,z) ^^ (z,y)) in R` (Definition Transitivität)<br>\n\t\t`=> (x,y) in R`<br>\n\t\t`q.e.d.`<br>\n\t</s>\n</figure>\n<figure>\n\t<s>Rückrichtung</s>\n</figure>"
+			],
+			"note": null,
+			"tags": [
+				"Beweis",
+				"Menge"
+			]
+		},
+		{
+			"subject": "math",
+			"id": 16,
+			"credits": 4,
+			"setting": "",
+			"task": "Überprüfen sie, ob `Z = {Z_i | i >= 0}` eine gültige Zerlegung der Menge `M` ist und geben sie dann die entsprechende Äquivalenzrelation an:",
+			"given": [
+				"`M = NN` und `Z_i = {x | (i < 13) ^^ EE k((k in NN) ^^ (13k + i = x)}`",
+				"`M = QQ^+` und `Z_i = {x | EE p((p in NN) ^^ (x · i = p))}`",
+				"`M = RR_0^+` und `Z_i={x | (i≤x)^^(x < i+1)}`",
+				"`M = RR_0^+` und `Z_i = {x | i \"ist die Quersumme von\" x}`"
+			],
+			"solutions": [
+				"`R = {(x, y) | x mod 13 = y mod 13}`<br><s>`Z_i = O/ =>` keine Zerlegung</s>",
+				"Nein, keine Zerlegung der Menge, da z.B. 2 in Z1 und Z2 auftaucht",
+				"(R = {(x, y) mid lfloor x \rfloor = lfloor y \rfloor } )",
+				"Nein, da die Quersumme nur für natürliche Zahlen definiert ist und somit nicht alle reelen Zahlen in einer Partition auftauchen."
+			],
+			"note": null,
+			"status": "incorrect",
+			"tags": [
+				""
+			]
+		},
+		{
+			"subject": "math",
+			"id": 17,
+			"credits": 4,
+			"setting": "Sei F linksvollständig und rechtseindeutig, `f = (A, B, F)` und `M sube N sube A`.",
+			"task": "",
+			"given": [
+				"Zeigen Sie `f(M) sube f(N)`",
+				"Finden Sie kleine Mengen A, B, M, N und eine Abbildung `f = (A, B, F)` mit `f(M) sube f(N)`, aber `not (M sube N)`"
+			],
+			"solutions": [
+				"Zu zeigen:<br>\n`f(M) sube f(N)` (Definition Teilmenge)<br>\n`= x in f(M) => x in f(N)`<br>\n<br>\nSei `x in f(M)` (Definition Bild)<br>\n`=> EE m in M : x = f(m)` `(M sube N)`<br>\n`=> EE m in N : x = f(m)` (Definition Bild)<br>\n`=> x in f(N)`<br>\n`q.e.d`",
+				"`A = {1,2,3}`<br>\n`B = {4}`<br>\n`F = {(1,4), (2,4), (3,4)}`<br>\n`M = {1,2}`<br>\n`N = {1,3}`<br>\n<br>\n`f(M) = 4`<br>\n`f(N) = 4`<br>"
+			],
+			"note": null,
+			"tags": [
+				""
+			]
+		},
+		{
+			"subject": "math",
+			"id": 18,
+			"credits": 4,
+			"setting": "Seien A und B nichtleere Mengen und `f : A → B` Abbildung. Für `a,b in A` gelte `a ∼ b <=> f(a) = f(b)`.",
+			"task": "Zeigen Sie:",
+			"given": [
+				"`∼` ist äquivalenz",
+				"`f^(−1)(f(a)) = [a]` für alle `a in A`"
+			],
+			"solutions": [
+				"reflexiv: `f(a) = f(a)`<br>\nsymmetrisch: `f(a) = f(b) => f(b) = f(a)`<br>\ntransitiv: `(f(a) = f(b)) ^^ (f(b) = f(c)) => f(a) = f(c)`<br>\n`=>` ist äquivalenz<br>\n`q.e.d`",
+				"`f^(-1)(f(a))` (Definition Urbild)<br>\n`= {a in A | f(a) in f(a)}` (Angabe)<br>\n`= {a in A | a ~ a}` (Definition Äquivalenzklasse)<br>\n`= [a]`<br>\n`q.e.d`"
+			],
+			"note": null,
+			"tags": [
+				"Beweis"
+			]
+		},
+		{
+			"subject": "math",
+			"id": 19,
+			"credits": 4,
+			"setting": "Seien A, B, C Mengen und `f : A → B` und `g : B → C` Abbildungen. Dann ist `g @ f` Abbildung `A → C`:<",
+			"task": "Zeigen Sie:",
+			"given": [
+				"`f` und `g` surjektiv `=> g @ f` surjektiv",
+				"`f` und `g` injektiv `=> g @ f` injektiv"
+			],
+			"solutions": [
+				"`(g @ f)(A)`<br>\n`= g(f(A))`<br>\n`= g(B)`<br>\n`= C`<br>\n`=> g @ f` ist surjektiv<br>\n`q.e.d`",
+				"Seien `a_1, a_2 in A`<br>\n`=> (g @ f)(a_1) = (g @ f)(a_2)`<br>\n`=> g(f(a_1)) = g(f(a_2))` (g injektiv)<br>\n`=> f(a_1) = f(a_2)` (f injektiv)<br>\n`=> a_1 = a_2`<br>\n`=> g @ f` ist injektiv<br>\n`q.e.d`"
+			],
+			"note": null,
+			"tags": [
+				"Beweis"
+			]
+		},
+		{
+			"subject": "math",
+			"id": 20,
+			"credits": 3,
+			"setting": "`M = {a, b, c}`",
+			"task": "Gebe eine Halbordnung `R` an, so dass `R` die jeweils folgenden Eigenschaften besitzt:",
+			"given": [
+				"`R` ist eine Ordnungsrelation",
+				"Es gibt ein Minimum und zwei maximale Elemente",
+				"Es gibt zwei minimale Elemente und ein Maximum"
+			],
+			"solutions": [
+				"Anordnung der Buchstaben im lateinischen Alphabet:<br>`R = {(a,a), (b,b), (c,c), (a,b), (b,c), (a,c)}`",
+				"`R = {(a,a), (b,b), (c,c), (a,b), (a,c)}`",
+				"`R = {(a,a), (b,b), (c,c), (a,c), (b,c)}`"
+			],
+			"note": null,
+			"tags": [
+				""
+			]
+		},
+		{
+			"subject": "math",
+			"id": 21,
+			"credits": 4,
+			"setting": "",
+			"task": "Erweitere die folgenden Relation `R ⊂ M × M` mit `M = {1, 2, 3, 4, 5, 6, 7})` um so wenig Elemente wie möglich, so dass die neue Relation eine Halbordnung ist. Bestimme die maximalen Ketten der Relation.",
+			"given": [
+				"`R = {(1,1), (3,2), (1,3), (4,5), (5,6)}`",
+				"`R = {(1,2), (2,3), (4,5), (6,5), (7,1)}`"
+			],
+			"solutions": [
+				"`R_(Ho) `\n`= R uu {(2,2), (3,3), (4,4), (5,5), (6,6), (7,7), (1,2), (4,6)}`\n`= {(1,1), (2,2), (3,3), (4,4), (5,5), (6,6), (7,7), (1,3), (3,2), (1,2), (4,5), (5,6), (4,6)}`<br>\n<br>\nMaximale Ketten:<br>\n`K_1 = {1, 3, 2}`<br>\n`K_2 = {4, 5, 6}`<br>\n`K_3 = {7}`",
+				"`R_(Ho) `\n`= R uu {(1,1), (2,2), (3,3), (4,4), (5,5), (6,6), (7,7), (7,2), (7,3), (1,3)}`\n`= {(1,1), (2,2), (3,3), (4,4), (5,5), (6,6), (7,7), (7,1), (1,2), (2,3), (7,2), (7,3), (1,3), (4,5), (6,5)}`<br>\n<br>\nMaximale Ketten:<br>\n`K_1 = {7, 1, 2, 3}`<br>\n`K_2 = {4, 5}`<br>\n`K_3 = {6, 5}`"
+			],
+			"note": null,
+			"tags": [
+				""
+			]
+		},
+		{
+			"subject": "math",
+			"id": 22,
+			"credits": 4,
+			"setting": "Sei `(p_i)_(i in N)` eine Folge, die alle Primzahlen injektiv aufzählt. Sie können nun für jedes `k in NN` jedes beliebige Tupel\n`bar(a) = (a_1, …, a_k) in NN^k` wie folgt auf eine natürliche Zahl abbilden:<br/>\n<br>\n`bar(a) |-> p_1^(a_1) * p_2^(a_2) * … * p_(k-1)^(a_(k-1)) * p_k^(a_(k+1))`<br/>\n<br/>\nDiese Abbildung von `NN^(**) := uu_(k in N) NN^k` nach `NN^+` soll `f` heißen: `f : NN^(**) -> NN^+`\nAußerdem werde das leere Tupel `epsilon in NN^0` auf `1` abgebildet.",
+			"task": "Zeigen Sie:",
+			"given": [
+				"`f` ist injektiv",
+				"`f` ist surjektiv"
+			],
+			"solutions": [
+				"Zu zeigen: `f(a) = f(b) => a = b`<br>\nSei `f(a), f(b), k in NN`<br>\n`f(a) = f(b)`<br>\n`EE bar(a) = (a_1, …, a_k), bar(b) = (b_1, …, b_k) in NN^k :\np_1^(a_1) * p_2^(a_2) * … * p_(k-1)^(a_(k-1)) * p_k^(a_(k+1)) =\np_1^(b_1) * p_2^(b_2) * … * p_(k-1)^(b_(k-1)) * p_k^(b_(k+1))` (Definition der Funktion)<br>\n`=> bar(a) = bar(b)`",
+				"Zu zeigen: `f(A) = NN`<br>\n`NN sube f(A)`<br>\nSei `b, k in NN` <br>\n`=> EE bar(a) in NN^k : f(bar(a)) = b` (Definition: Für jede Zahl existiert eine Primfaktorzerlegung)<br>\n<br>\n`f(A) sube NN` folgt aus der Funktion<br>\n`=> f` ist surjektiv<br>\n`q.e.d`"
+			],
+			"hints": ["Um die Aufgabe besser zu verstehen, legen Sie sich `p_1` bis `p_5` fest und bilden Sie 0 bis 5-Tupel mittels `f` auf natürliche Zahlen ab. So erkennen Sie, warum der letzte Exponent als einziger `a_k + 1` heißt."],
+			"note": null,
+			"tags": [
+				""
+			]
+		},
+		{
+			"subject": "math",
+			"id": 23,
+			"credits": 2,
+			"setting": "`f: P(NN) -> [0, 1]`",
+			"task": "Konstruieren Sie eine Surjektion",
+			"solutions": [
+				"Sei `a_i in {0, …, 9}`<br>\n<br>\n`f: P(NN) -> [0, 1]`<br>\n`= {a_0, a_0a_1, a_0a_1a_2, a_0a_1a_2a_3, …} -> 0,a_0a_1a_2a_3…`<br>\n<br>\nIst surjektiv: `AA p in P(NN) : EE r in RR: f(p) = r`,<br>\naber nicht injektiv: `{1} -> 1` und `{1, 10} -> 1`"
+			],
+			"hints": ["Sie können verwenden, dass es zu jeder reellen Zahl `x in [0, 1]` eine Darstellung<br>\n`x = sum_(i >= 1) 2^(−i)a_i` mit `a_i in {0, 1}` gibt,<br>\ndie Binärdarstellung `0, a_1, a_2, a_3, …` des unendlichen Bruchs.\nSie müssen also nur für `M sube NN` die passenden `a_i` definieren und zeigen, dass Ihre Abbildung surjektiv ist."],
+			"note": null,
+			"tags": null
+		},
+		{
+			"subject": "math",
+			"id": 24,
+			"credits": 4,
+			"setting": "",
+			"task": "Zeigen Sie:",
+			"setting": "`AA m,n in NN : m <= n -> 2^m <= 2^n`",
+			"solutions": [
+				"`2^m <= 2^n` (`log_2`)<br>\n`-= log_2 2^m <= log_2 2^n`<br>\n`-= m <= n`"
+			],
+			"note": null,
+			"tags": ["proof"]
+		},
+		{
+			"subject": "math",
+			"id": 25,
+			"credits": 4,
+			"setting": "",
+			"task": "Beweisen Sie:",
+			"setting": "Beweise sie mittels Widerspruch, dass sich `root 3 2` nicht als Bruch `p / q` darstellen lässt.",
+			"solutions": [
+				"`a in NN`<br>\n`root a 2 = p/q`<br>\n`2 = p^a/q^a`<br>\n`2q^a = p^a`\n`=> 2 | p^a`\n`=> 2 | p`\n`=> EE r in NN : p = 2r`<br>\n`2q^a = (2r)^a`<br>\n`q^a = 2^(a-1)r^a`\n`=> 2 | q^a`\n`=> p not _|_ q`\n`=> ↯`"
+			],
+			"note": null,
+			"hints": ["Nehmen Sie an, dass `p / q` mit `p,q in NN` vollständig gekürzt ist, d.h. `ggT(p,q) = 1`.\nSie können auch verwenden, dass wenn `x | y^2` mit `x, y in NN` gilt und `x` Primzahl ist,\ndann gilt auch `x^2 | y^2` und `x | y`."],
+			"tags": ["proof"]
+		},
+		{
+			"subject": "math",
+			"created": "2013-01-01T12:00",
+			"credits": 3,
+			"difficulty": 0.5,
+			"displayedHints": 0,
+			"hints": null,
+			"id": 26,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
+			"solutions": ["<strong>Induktionsbasis:</strong><br> `n = 0`<br> `sum_(k=1)^0 2k − 1 = 0^2`<br> <br> <strong>Induktionsvoraussetzung:</strong><br> `EE a in NN: sum_(k=1)^a 2k − 1 = a^2`<br> <br> <strong>Induktionsschluss:</strong><br> `sum_(k=1)^(a+1) 2k − 1`<br> `= sum_(k=1)^a 2k − 1 + 2(a + 1) - 1` (Induktionsvoraussetzung)<br> `= a^2 + 2a + 2 - 1`<br> `= a^2 + 2a + 1` (1.Binomische Regel)<br> `= (a + 1)^2`<br> <span class='qed'>∎</span>"],
+			"setting": "",
+			"status": "unapproved",
+			"tags": null,
+			"task": "Zeigen Sie mit Hilfe eines kombinatorischen Beweises, dass folgende Aussage gilt:<br> Wenn sich eine Gruppe von `k` Kindern eine Tüte mit `10k + 1` Bonbons teilt, so gibt es ein Kind, das mindestens `11` Bonbons bekommt."
+		},
+		{
+			"subject": "math",
+			"created": "2013-01-01T12:00",
+			"credits": 3,
+			"difficulty": 0.5,
+			"displayedHints": 0,
+			"hints": null,
+			"id": 27,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
+			"solutions": ["<strong>Induktionsbasis:</strong><br> `n = 0`<br> `sum_(k=1)^0 2k − 1 = 0^2`<br> <br> <strong>Induktionsvoraussetzung:</strong><br> `EE a in NN: sum_(k=1)^a 2k − 1 = a^2`<br> <br> <strong>Induktionsschluss:</strong><br> `sum_(k=1)^(a+1) 2k − 1`<br> `= sum_(k=1)^a 2k − 1 + 2(a + 1) - 1` (Induktionsvoraussetzung)<br> `= a^2 + 2a + 2 - 1`<br> `= a^2 + 2a + 1` (1.Binomische Regel)<br> `= (a + 1)^2`<br> <span class='qed'>∎</span>"],
+			"setting": "",
+			"status": "unapproved",
+			"tags": null,
+			"task": "Zeigen Sie mit Hilfe der vollständigen Induktion, dass für alle natürlichen Zahlen n gilt:<br> `sum_(k=1)^n 2k − 1 = n^2`"
+		},
+		{
+			"subject": "math",
+			"created": "2013-01-01T12:00",
+			"credits": 3,
+			"difficulty": 0.5,
+			"hints": null,
+			"id": 28,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
+			"solutions": ["<strong>Induktionsbasis:</strong><br> `n = 0`<br> a: `sum_(k=0)^0 k^3 = 0`<br> b: `(0^2(0 + 1)^2)/4 − 1 = -1`<br> `=> a != b`<br> <br> <strong>Induktionsvoraussetzung:</strong><br> `EE a in NN: sum_(k=0)^a k^3 = (a^2(a + 1)^2)/4 − 1`<br> <br> <strong>Induktionsschluss:</strong><br> `sum_(k=0)^(a+1) k^3`<br> `= sum_(k=0)^a k^3 + (a + 1)^3`<br> `= (a^2(a + 1)^2)/4 − 1 + (a+1)(a+1)^2`<br> `= (a^2(a + 1)^2)/4 − 1 + (4(a+1)(a+1)^2)/4` (Distributivgesetz)<br> `= ((a + 1)^2 (a^2 + 4(a+1)))/4 − 1` (Distributivgesetz)<br> `= ((a + 1)^2 (a^2 + 4a + 4))/4 − 1` (Binomische Formel)<br> `= ((a + 1)^2 (a + 2)^2)/4 − 1`<br> `= ((a + 1)^2 ((a + 1) + 1)^2)/4 − 1`<br> <span class='qed'>∎</span>"],
+			"setting": "<br> `sum_(k=0)^n k^3 = (n^2(n + 1)^2)/4 − 1`<br> Die Behauptung muss dennoch falsch sein. Man sieht also, dass eine bewiesene Induktionsbasis essenziell für einen vollständigen Induktionsbeweis ist.",
+			"status": "unapproved",
+			"tags": null,
+			"task": "Zeigen Sie, dass bei der folgenden Formel zwar der Induktionsschritt funktioniert, jedoch nicht die Induktionsbasis:"
+		},
+		{
+			"subject": "math",
+			"created": "2013-01-01T12:00",
+			"credits": 3,
+			"difficulty": 0.5,
+			"hints": null,
+			"id": 29,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
+			"solutions": ["Durch das zweite Herausschicken betrachtet man wieder nur eine Person und nicht `n + 1 = 2` Personen. Somit wird die Anforderung an den Induktionsschritt nicht erfüllt und es kann auch keine Aussage über die Richtigkeit der Behauptung gemacht werden."],
+			"setting": "<strong>Behauptung:</strong><br> Auf einer Party mit `n ≥ 1` Gästen haben alle denselben Namen.<br> <br> <strong>Induktionsbasis:</strong><br> Wenn auf einer Party nur ein Gast ist, ist die Aussage wahr (weil es nur einen Namen gibt).<br> <br> <strong>Induktionsschritt: </strong><br> Seien auf einer Party `n + 1` Gäste. Wir schicken einen raus. Dann sind auf dieser Party nur noch `n` Gäste. Nach Induktionsvoraussetzung haben all diese `n` Gäste den gleichen Namen. Nun holen wir den Gast der draußen steht wieder rein und schicken einen anderen Gast raus. Nun haben nach Induktionsvoraussetzung wieder alle den gleichen Namen. Also müssen alle `n + 1` Gäste den gleichen Namen haben. Daraus folgt, dass alle Gäste auf einer Party gleich heißen.",
+			"status": "unapproved",
+			"tags": null,
+			"task": "Warum ist folgender Beweis fehlerhaft?"
+		},
+		{
+			"subject": "math",
+			"created": "2013-01-01T12:00",
+			"credits": 3,
+			"given": [
+				"`n^4 − 4n^2` ist durch `3` teilbar."
+			],
+			"solutions": [
+				"<strong>Induktionsbasis:</strong>\n<br>\n<p>`n = 0`<br>\n   `=> (n^4 - 4n^2) | 3`<br>\n   `=> (0^4 - 4 * 0^2) | 3`<br>\n   `=> 0 | 3`\n</p>\n\n\n<strong>Induktionsvorraussetzung:</strong>\n<br>\n<p>`AA n in NN: (n^4 - 4n^2) | 3`</p>\n\n\n<strong>Induktionsschluss:</strong>\n<br>\n`(n + 1)^4 - 4(n + 1)^2`<br>\n`= n^4 + 4n^3 + 6n^2 + 4n + 1 - 4n^2 + 8n - 4`<br>\n`= n^4 + 4n^3 + 2n^2 - 4n - 3`<br>\n`= (n^4 - 4n^2 ) + (4n^3 + 6n^2 - 4n - 3)`<br>\n`= (n^4 - 4n^2 ) + (3n^3 + 6n^2 - 3n - 3) + (n^3 - n)`<br>\n`= (n^4 - 4n^2 ) + 3(n^3 + 2n^2 - n - 1)+ n(n^2 - 1)`<br>\n`= (n^4 - 4n^2 ) + 3(n^3 + 2n^2 - n - 1) + n (n - 1)(n+1)`<br>\n<br>\n<p>Nun sind alle 3 Summanden durch 3 teilbar:</p>\n<ol>\n\t<li>Nach Induktionsvoraussetzung</li>\n\t<li>Ganzes vielfaches von 3</li>\n\t<li>Von den 3 aufeinanderfolgenden Zahlen `(n-1)`, `n` und `(n+1)`\n\t    muss eine durch 3 teilbar sein\n\t</li>\n</ol>\n<p> Somit ist auch die Summe durch 3 teilbar.</p>"
+			],
+			"hints": ["asdfas", "asdfasdfaesgas", "asefasgawegasg"],
+			"id": 301,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
+			"setting": "Für alle natürlichen Zahlen `N` (inkl. der 0) gilt:",
+			"status": "unapproved",
+			"tags": ["induction"],
+			"task": "Zeigen Sie mit Hilfe der vollständigen Induktion:"
+		},
+		{
+			"subject": "math",
+			"created": "2013-01-01T12:00",
+			"credits": 3,
+			"given": [
+				"Die Potenzmenge einer `n`-elementigen Menge enthält `2^n` Elemente."
+			],
+			"solutions": [
+				"<strong>Induktionsbasis:</strong>\n\n<p>`n = 0`<br>\n   `=> #M = 0`<br>\n   `=> M = O/`<br>\n   `=> P(M) = {O/}`<br>\n   `=> #P(M) = 1 = 2^0`<br>\n</p>\n\n\n<strong>Induktionsvorraussetzung:</strong>\n\n<p>`AA n in NN: #P(M) = 2^n`\n</p>\n\n\n<strong>Induktionsschluss:</strong>\n\n<p>Sei `M_(n+1)` eine Menge für die gelte:<br>\n   `#M_(n+1) = (n+1)`<br>\n   `M_(n+1) = {e_1, e_2, …, e_(n+1)}`<br>\n\t<br>\n   Nun betrachen wir die Teilmenge `M_n`. Es gilt:<br>\n   `P(M_n) = 2^n` (Induktionsvorraussetzung)<br>\n   `P(M_n) = {T(1), …, T(2^n)}`<br>\n\t<br>\n   `=> P(M_(n+1)) = {T(1), …, T(2^n), T(1) uu {e_(n+1)}, …, T(2^n) uu {e_(n+1)} }`<br>\n   `=> #P(M_(n+1))\n   = 2^n + 2\n   = 2 * 2^n\n   = 2^(n+1)`<br>\n</p>\n"
+			],
+			"hints": null,
+			"id": 302,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
+			"setting": "Für alle natürlichen Zahlen `N` (inkl. der 0) gilt:",
+			"status": "unapproved",
+			"tags": ["induction"],
+			"task": "Zeigen Sie mit Hilfe der vollständigen Induktion:"
+		},
+		{
+			"subject": "math",
+			"created": "2013-01-01T12:00",
+			"credits": 1122,
+			"difficulty": 0.5,
+			"displayedHints": 0,
+			"given": [
+				"Es kommt kein Zeichen mehrfach vor.",
+				"Das ’A’ kommt genau k-mal vor.",
+				"Genau ein Zeichen kommt mindestens doppelt vor.",
+				"Genau drei Zeichen kommen jeweils genau doppelt vor."
+			],
+			"hints": null,
+			"id": 31,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
+			"setting": "`(a_1, … , a_n)` mit der Länge `n in N` über `{A, … , Z}`",
+			"status": "incorrect",
+			"solutions": [
+				"<p>a) Nur möglich für `n <= 26`: `26/((26-n)!)`</p>\n\t\t",
+				"<p>b) `((n),(k))` Möglichkeiten für die `A`s und `25^(n-k)` für die restlichen Stellen:`((n),(k)) * 25^(n-k)`</p>",
+				"<p>c) `26 * sum_(k=2)^n( ((n),(k)) * ((25),(n-k)) * k!)`</p>",
+				"<s>d) Missing</s>"
+			],
+			"tags": ["stochastik"],
+			"task": "Nennen sie die Anzahl aller Zeichenfolgen"
+		}
+	]
+}

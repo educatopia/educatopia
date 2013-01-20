@@ -10,6 +10,7 @@
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/screen.css" rel="stylesheet">
 	<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="css/backbone-forms-bootstrap.css" rel="stylesheet" />
 
 	<!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -24,6 +25,129 @@
 </head>
 
 <body>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<!--<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>-->
+			<a class="brand" href="#">educatopia</a>
+
+			<!--<div class="nav-collapse collapse">-->
+			<div>
+				<ul class="nav">
+					<li class="divider-vertical"></li>
+					<li><a name='math' href="#math">math</a></li>
+					<li class="divider-vertical"></li>
+					<!--<li><a href="#programming">programming</a></li>
+					<li><a href="#digital-electroincs">digital electronics</a></li>
+					<li class="divider-vertical"></li>
+					<li><a href="#modelling">modelling</a></li>
+					<li class="divider-vertical"></li>-->
+				</ul>
+
+				<button class="btn btn-small btn-inverse pull-right" data-toggle="modal" data-target="#exerciseModal">
+					<i class="icon-plus icon-white"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id=contentWrapper class="container-fluid">
+
+	<div id="banner" class="hero-unit">
+		<div class="page-header">
+			<h1>1001 Exercises
+				<small>Practice 'till you drop!</small>
+			</h1>
+		</div>
+
+		<p>The goal of this website is to build an extensive library of exercises from a variety of scientific topics such as
+		   Math, Digital Electronics, Modelling, Computer Science, …</p>
+		<p>Please Enjoy!</p>
+	</div>
+
+	<div id='tasks' class="row-fluid">
+		<ul id="sidebar" class="well nav nav-list span2"></ul>
+		<div id="content" class="well span10"></div>
+	</div>
+
+</div>
+
+<footer>
+	<p><a href="http://adriansieber.com">By Adrian Sieber</a><span class="muted">•</span>
+		<a href="https://github.com/adius/educatopia">Github</a><span class="muted">•</span>
+		<a href="https://github.com/adius/educatopia/issues">Issues</a>
+	</p>
+</footer>
+
+
+<!-------------------- Templates -------------------->
+
+<script id="exerciseTemplate" type="text/template">
+	<div class="tabbable span9">
+		<ul class="nav nav-tabs">
+			<li class="active">
+				<a href="#tab1">Task</a>
+			</li>
+			<li class="disabled"><a>Edit</a></li>
+			<li class="disabled"><a>History</a></li>
+		</ul>
+
+		<div class="tab-content">
+			<div id="tab1" class="tab-pane active">
+
+				<% if(status == 'incorrect'){ %>
+				<div class="alert alert-error">
+					<strong>Attention!</strong> There are mistakes in this exercise! Please help to correct them!
+				</div>
+				<% } %>
+
+				<h4><%= task %></h4>
+
+				<hr>
+
+				<div><%= setting %></div>
+
+				<hr>
+
+				<% if(given){ %>
+					<div><%= _.reduce(given, function(a,b){ return a + '</p><p>' + b }) %></div>
+				<% } %>
+
+				<div id="hints"></div>
+
+				<div class="accordion">
+					<div class="accordion-group">
+						<div class="accordion-heading">
+
+							<a href="#collapseOne" class="btn btn-success accordion-toggle" data-toggle="collapse">Solution</a>
+							<!--<a class="accordion-toggle" data-toggle="collapse"  href="#collapseOne">
+								Solution
+							</a>-->
+						</div>
+						<div id="collapseOne" class="accordion-body collapse out">
+							<div class="accordion-inner">
+								<p></p><%= _.reduce(solutions, function(a,b){ return a + '</p><p>' + b }) %></p>
+
+								<% if(_.contains(tags, "proof")) print('<span class="qed">∎</span>') %>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container span3">
+	</div>
+</script>
+
 
 <script id="exerciseSideBarTemplate" type="text/template">
 
@@ -81,20 +205,20 @@
 
 	<li class="nav-header clearfix">Help:
 	                                <%
-	                                var clas = ''
-	                                viewedHints = displayedHints + 1
+		                                var clas = ''
+		                                viewedHints = displayedHints + 1
 
-	                                //console.log('asdf', hints.length, displayedHints)
+		                                if(hints && hints.length > 0){
 
-	                                if(hints && hints.length > 0){
+		                                    if(displayedHints == hints.length ){
+		                                        clas = 'disabled'
+		                                        viewedHints = displayedHints
+		                                    }
 
-	                                if(displayedHints == hints.length ){
-	                                    clas = 'disabled'
-	                                    viewedHints = displayedHints
-	                                }
-
-	                                print('<button id="showHint" class="btn btn-mini pull-right '+
-	                                clas +'">Show Hint ' + viewedHints +'/'+ hints.length + '</button>') } %>
+		                                    print('<button id="showHint" class="btn btn-mini pull-right '+
+		                                            clas +'">Show Hint ' + viewedHints +'/'+ hints.length + '</button>')
+		                                }
+	                                %>
 	</li>
 	<li class="divider"></li>
 
@@ -115,66 +239,29 @@
 	<li class="divider"></li>
 </script>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container-fluid">
-			<!--<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</a>-->
-			<a class="brand" href="#">educatopia</a>
 
-			<!--<div class="nav-collapse collapse">-->
-			<div>
-				<ul class="nav">
-					<li class="divider-vertical"></li>
-					<li><a name='math' href="#math">math</a></li>
-					<!--<li class="divider-vertical"></li>
-					<li><a href="#digital-electroincs">digital electronics</a></li>
-					<li class="divider-vertical"></li>
-					<li><a href="#modelling">modelling</a></li>
-					<li class="divider-vertical"></li>
-					<li><a href="#programming">programming</a></li>-->
-				</ul>
-			</div>
-		</div>
+
+<script id="exerciseFormTemplate" type="text/template">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h3>Submit an Exercise</h3>
 	</div>
-</div>
-
-<div id=contentWrapper class="container-fluid">
-
-	<div id="banner" class="hero-unit">
-		<div class="page-header">
-			<h1>1001 Exercises
-				<small>Practice 'till you drop!</small>
-			</h1>
-		</div>
-
-		<p>The goal of this website is to build an extensive library of exercises from a variety of scientific topics such as
-		   Math, Digital Electronics, Modelling, Computer Science, …</p>
-		<p>Please Enjoy!</p>
+	<div class="modal-body">
 	</div>
-
-	<div id='tasks' class="row-fluid">
-		<ul id="sidebar" class="well nav nav-list span2"></ul>
-		<div id="content" class="well span10"></div>
+	<div class="modal-footer">
+		<button id="exerciseFormSubmit" class="btn btn-primary">Submit</button>
 	</div>
+</script>
 
-</div>
 
-<footer>
-	<p><a href="http://adriansieber.com">By Adrian Sieber</a><span class="muted">•</span>
-		<a href="https://github.com/adius/educatopia">Github</a><span class="muted">•</span>
-		<a href="https://github.com/adius/educatopia/issues">Issues</a>
-	</p>
-</footer>
 
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.3/underscore-min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.9/backbone-min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js "></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://raw.github.com/powmedia/backbone-forms/v0.10.0/distribution/backbone-forms.min.js"></script>
+<script type="text/javascript" src="https://raw.github.com/powmedia/backbone-forms/v0.10.0/distribution/templates/bootstrap.js"></script>
 <script type="text/javascript" src="https://raw.github.com/adius/DOMinate/master/src/dominate.min.js"></script>
 
 <script type="text/javascript" src="lang/de.js"></script>

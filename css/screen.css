@@ -23,6 +23,10 @@ body {
 	margin-top: 3em
 }
 
+.accordion-inner {
+	line-height: 2;
+}
+
 #banner,
 #sidebar,
 #content {
@@ -54,4 +58,28 @@ footer a{
 
 #content .nav a {
 	text-transform: none;
+}
+
+
+/* Exercise Formular*/
+
+#exerciseModal .modal-body {
+	max-height: 500px;
+}
+
+#exerciseModal .form-horizontal .control-label {
+	float: left;
+	width: 100px;
+	padding-top: 5px;
+	text-align: right;
+}
+
+#exerciseModal .form-horizontal .controls {
+	margin-left: 120px;
+}
+
+.qed {
+	position: absolute;
+	right: 30px;
+	bottom: 20px;
 }
