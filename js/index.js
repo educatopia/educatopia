@@ -81,14 +81,14 @@
 	Task = Backbone.Model.extend({
 		defaults: rootExercise,
 		schema: {
-			subject: {type: 'Text', validators: ['required']},
-			task: {type: 'TextArea', editorClass: 'span6', validators: ['required']},
-			setting: {type: 'TextArea', editorClass: 'span6'},
-			solution: {type: 'TextArea', editorClass: 'span6'},
-			credits: {type: 'Number', editorClass: 'span2', editorAttrs: {min: 0}},
-			difficulty: {type: 'Number', editorClass: 'span2', editorAttrs: {min: 0, max: 1}},
-			note: {type: 'Text'},
-			tags: {type: 'Text'}
+			subject: {type: 'Text', validators: ['required'], editorClass: 'input-medium'},
+			task: {type: 'TextArea', editorClass: 'input-xlarge', validators: ['required']},
+			setting: {type: 'TextArea', editorClass: 'input-xlarge'},
+			solution: {type: 'TextArea', editorClass: 'input-xlarge'},
+			credits: {type: 'Number', editorClass: 'input-mini', editorAttrs: {min: 0}},
+			difficulty: {type: 'Number', editorClass: 'input-mini', editorAttrs: {min: 0, max: 1}},
+			note: {type: 'Text', editorClass: 'input-large'},
+			tags: {type: 'Text', editorClass: 'input-large'}
 		},
 		initialize: function() {
 		}
@@ -277,7 +277,7 @@
 		},
 		initialize: function() {
 
-			exerciseFormData = new Task({created: new Date()});
+			exerciseFormData = new Task()//{created: new Date()});
 
 			ExerciseForm = new Backbone.Form({
 				model: exerciseFormData,
@@ -295,6 +295,8 @@
 		showModal: function() {
 
 			if(!ExerciseForm.validate()){
+
+				ExerciseForm.commit()
 
 				var subject = "Exercise Submission",
 					data = encodeURIComponent(JSON.stringify(exerciseFormData.attributes))
