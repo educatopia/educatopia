@@ -7,10 +7,11 @@
 	<meta name="description" content="">
 	<meta name="author" content="Adrian Sieber">
 
-	<link href="css/bootstrap.min.css" rel="stylesheet">
-	<link href="css/screen.css" rel="stylesheet">
-	<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
-	<link href="css/backbone-forms-bootstrap.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/screen.css">
+	<link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+	<link rel="stylesheet" href="css/backbone-forms-bootstrap.css">
+	<link rel="stylesheet" href="css/tomorrow-night.css">
 
 	<!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -42,8 +43,11 @@
 					<li class="divider-vertical"></li>
 					<li><a name='math' href="#math">math</a></li>
 					<li class="divider-vertical"></li>
-					<!--<li><a href="#programming">programming</a></li>
-					<li><a href="#digital-electroincs">digital electronics</a></li>
+					<li><a href="#computer-science">Computer Science</a></li>
+					<li class="divider-vertical"></li>
+					<li><a href="#programming">programming</a></li>
+					<li class="divider-vertical"></li>
+					<!--<li><a href="#digital-electroincs">digital electronics</a></li>
 					<li class="divider-vertical"></li>
 					<li><a href="#modelling">modelling</a></li>
 					<li class="divider-vertical"></li>-->
@@ -132,7 +136,13 @@
 						</div>
 						<div id="collapseOne" class="accordion-body collapse out">
 							<div class="accordion-inner">
-								<p></p><%= _.reduce(solutions, function(a,b){ return a + '</p><p>' + b }) %></p>
+
+								<%if(solutions){ %>
+									<p><%= _.reduce(solutions, function(a,b){ return a + '</p><p>' + b }) %></p>
+								<% }else if(solution){ %>
+									<%= solution  %>
+								<% } %>
+
 
 								<% if(_.contains(tags, "proof")) print('<span class="qed">∎</span>') %>
 
@@ -193,7 +203,8 @@
 
 
 	<li class="nav-header  clearfix">
-		Subject: <span class="label pull-right"><%= subject %></span>
+		Subjects:
+		<% _.each(subjects, function(subject){ %> <span class="label pull-right"><%= subject %></span> <% }) %>
 	</li>
 
 	<li class="nav-header  clearfix">
@@ -258,10 +269,11 @@
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.3/underscore-min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js "></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://raw.github.com/powmedia/backbone-forms/v0.10.0/distribution/backbone-forms.min.js"></script>
 <script type="text/javascript" src="https://raw.github.com/powmedia/backbone-forms/v0.10.0/distribution/templates/bootstrap.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
 <script type="text/javascript" src="https://raw.github.com/adius/DOMinate/master/src/dominate.min.js"></script>
 
 <script type="text/javascript" src="lang/de.js"></script>

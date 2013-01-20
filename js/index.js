@@ -57,10 +57,11 @@
 
 	// Attributes specified by the user
 	specified = {
-		"subject": "",
+		"subjects": [],
 		"setting": "",
 		"task": "",
 		"solution": "",
+		"solutions": null,
 		"credits": 3,
 		"difficulty": 0.5,
 		"given": "",
@@ -124,9 +125,9 @@
 
 			//console.log(this.collection)
 
-			_.each(this.collection, function(task) {
+			_.each(this.collection, function(task, index) {
 
-				this.$el.append(new TasksListItemView({model: task}).render().el);
+				this.$el.append(new TasksListItemView({model: task, id: (index + 1)}).render().el)
 
 			}, this)
 
@@ -148,7 +149,7 @@
 			var check = '',
 				id = this.model.get('id')
 
-			if(!_.compact(this.model.get('solutions')).length)
+			if(!(this.model.has('solution') || this.model.has('solutions')))
 				check = 'muted'
 
 			var showExercise = function(el) {
@@ -168,8 +169,8 @@
 			DOMinate(
 				[this.el,
 					['a.exerciseLink',
-						{id: '#exerciseLink' + id},
-						['small', String(id) + '. Aufgabe',
+						{id: '#exerciseLink' + this.id},
+						['small', String(this.id) + '. Aufgabe',
 							{class: check}
 						],
 						showExercise
@@ -213,6 +214,13 @@
 			this.$el
 				.html(this.template(this.model.toJSON()))
 				.fadeIn()
+
+			console.log(this.$('pre')[0])
+
+			var snippets
+			if(snippets = this.$('pre code')[0])
+				hljs.highlightBlock(snippets)
+
 
 			return this
 		},
@@ -347,7 +355,13 @@
 				success: function(collection) {
 
 					tasksListView = new TasksListView(
-						{'collection': collection.where({subject: subject})}
+						{
+							'collection': collection.filter(function(task){
+
+								return _.contains(task.get("subjects"), subject)
+
+							})
+						}
 					)
 
 					$('#sidebar')

@@ -83,3 +83,9 @@ footer a{
 	right: 30px;
 	bottom: 20px;
 }
+
+
+code {
+	font-size: 11px;
+	line-height: 1;
+}

@@ -11,10 +11,10 @@
 				"<h4>Atomare Ausdrücke</h4>\n<ul>\n\t<li>grün `iff` Karte ist grün</li>\n\t<li>sagtBlau `iff` Spieler sagt blau</li>\n\t<li>gerade `iff` Karte ist gerade</li>\n\t<li>gelb `iff` Karte ist gelb</li>\n</ul>\n\n<h4>Äquivalente aussagenlogische Ausdrücke</h4>\n<ol>\n\t<li>grün `=>` sagtBlau</li>\n\t<li>(gelb `^^` gerade) `=>` grün</li>\n\t<li>(gelb `^^` `not`sagtBlau) `=> not`gerade</li>\n\t<li>`not`sagtBlau `=> not`(gelb `^^` gerade) `^^` `not`grün</li>\n</ol>"
 			],
 			"status": "correct",
-			"subject": "math"
+			"subjects": ["math"]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 2,
 			"credits": 3,
 			"setting": null,
@@ -31,7 +31,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 3,
 			"credits": 3,
 			"setting": null,
@@ -48,7 +48,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 4,
 			"credits": 4,
 			"setting": "<p>In dieser Übung sollen folgende Aussageformen betrachtet werden:</p>\n<ul>\n\t<li>`m(t):` Student hat Mathe am Zeitpunkt `t` verstanden.</li>\n\t<li>`h(t):` Student hat zum Zeitpunkt `t` Hunger.</li>\n\t<li>`d(t):` Zeitpunkt `t` ist am Tag.</li>\n\t<li>`n(t):` Zeitpunkt `t` ist nachts.</li>\n\t<li>`t_1 < t_2`: Zeitpunkt `t_1` trat irgendwann vor `t_2` ein.</li>\n</ul>",
@@ -67,7 +67,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 5,
 			"credits": 4,
 			"setting": null,
@@ -89,7 +89,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 6,
 			"credits": 0,
 			"setting": "Betrachte die vier Universen `{0,1}, ZZ, QQ^+, RR`.",
@@ -111,7 +111,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 7,
 			"credits": 4,
 			"setting": "<p>Betrachten Sie folgende Aussageformen über `NN^+`:</p>\n<ul>\n\t<li>`P(x): x` besitzt genau drei verschiedene Primfaktoren `(a^t * b^y * c^z )`.</li>\n\t<li>`Q(x): x` ist durch das Quadrat einer Primzahl teilbar.</li>\n\t<li>`R(x):` die Dezimaldarstellung von `x` enthält nur Ziffern, die sich ohne Ecken und Spitzen darstellen\n\t    lassen\n\t    (also 0, 6, 8, 9).\n\t</li>\n</ul>",
@@ -134,7 +134,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 8,
 			"credits": 4,
 			"setting": "",
@@ -157,7 +157,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 9,
 			"credits": 4,
 			"setting": "<p>Seien `M, U` Menge mit `O/ ⊂ U sube M`. Betrachten Sie die folgenden Aussageformen über dem Universum aller\n   Teilmengen `X sube M`.\n   Beachten Sie dabei, dass das Universum in dieser Aufgabe Mengen enthält und es sich daher bei den `M_i` um Mengen\n   von Mengen handelt. Zum Verständnis der Aufgabe können Sie sich geeignete Elemente wählen, z.B. `M = {1,2,3,4}` und ein festes\n   `U`,\n   und damit die zu untersuchenden `M_i` konstruieren.</p>\n<ul>\n\t<li>`E(X): X` enthält mindestens ein Element von `U`</li>\n\t<li>`A(X): X` enthält alle Elemente von `U`</li>\n</ul>",
@@ -182,7 +182,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 10,
 			"credits": 2,
 			"task": "Beweisen sie",
@@ -197,7 +197,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 11,
 			"credits": 2,
 			"setting": "",
@@ -212,7 +212,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 12,
 			"credits": 4,
 			"setting": "<p>Zeichnen Sie in den Graphen `@ -> @ larr @ -> @ -> @` zusätzliche Kanten ein (so wenige wie möglich, jeweils für jede\n   Teilaufgabe), so dass die Kantenrelation folgende Eigenschaften erfüllt:",
@@ -241,7 +241,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 13,
 			"credits": 4,
 			"setting": "Sei E die Kantenrelation des Graphen aus Aufgabe 12.",
@@ -270,7 +270,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 14,
 			"credits": 4,
 			"setting": "Wir definieren die folgenden Relationen R über die Menge M aller Foursquare-Nutzer.",
@@ -294,7 +294,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 15,
 			"credits": 4,
 			"setting": "Sei `M` eine beliebige Menge mit `R sube M^2`",
@@ -314,7 +314,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 16,
 			"credits": 4,
 			"setting": "",
@@ -338,7 +338,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 17,
 			"credits": 4,
 			"setting": "Sei F linksvollständig und rechtseindeutig, `f = (A, B, F)` und `M sube N sube A`.",
@@ -357,7 +357,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 18,
 			"credits": 4,
 			"setting": "Seien A und B nichtleere Mengen und `f : A → B` Abbildung. Für `a,b in A` gelte `a ∼ b <=> f(a) = f(b)`.",
@@ -376,7 +376,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 19,
 			"credits": 4,
 			"setting": "Seien A, B, C Mengen und `f : A → B` und `g : B → C` Abbildungen. Dann ist `g @ f` Abbildung `A → C`:<",
@@ -395,7 +395,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 20,
 			"credits": 3,
 			"setting": "`M = {a, b, c}`",
@@ -416,7 +416,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 21,
 			"credits": 4,
 			"setting": "",
@@ -435,7 +435,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 22,
 			"credits": 4,
 			"setting": "Sei `(p_i)_(i in N)` eine Folge, die alle Primzahlen injektiv aufzählt. Sie können nun für jedes `k in NN` jedes beliebige Tupel\n`bar(a) = (a_1, …, a_k) in NN^k` wie folgt auf eine natürliche Zahl abbilden:<br/>\n<br>\n`bar(a) |-> p_1^(a_1) * p_2^(a_2) * … * p_(k-1)^(a_(k-1)) * p_k^(a_(k+1))`<br/>\n<br/>\nDiese Abbildung von `NN^(**) := uu_(k in N) NN^k` nach `NN^+` soll `f` heißen: `f : NN^(**) -> NN^+`\nAußerdem werde das leere Tupel `epsilon in NN^0` auf `1` abgebildet.",
@@ -455,7 +455,7 @@
 			]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 23,
 			"credits": 2,
 			"setting": "`f: P(NN) -> [0, 1]`",
@@ -468,7 +468,7 @@
 			"tags": null
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 24,
 			"credits": 4,
 			"setting": "",
@@ -481,7 +481,7 @@
 			"tags": ["proof"]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"id": 25,
 			"credits": 4,
 			"setting": "",
@@ -495,11 +495,10 @@
 			"tags": ["proof"]
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"created": "2013-01-01T12:00",
 			"credits": 3,
 			"difficulty": 0.5,
-			"displayedHints": 0,
 			"hints": null,
 			"id": 26,
 			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
@@ -510,11 +509,10 @@
 			"task": "Zeigen Sie mit Hilfe eines kombinatorischen Beweises, dass folgende Aussage gilt:<br> Wenn sich eine Gruppe von `k` Kindern eine Tüte mit `10k + 1` Bonbons teilt, so gibt es ein Kind, das mindestens `11` Bonbons bekommt."
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"created": "2013-01-01T12:00",
 			"credits": 3,
 			"difficulty": 0.5,
-			"displayedHints": 0,
 			"hints": null,
 			"id": 27,
 			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
@@ -525,7 +523,7 @@
 			"task": "Zeigen Sie mit Hilfe der vollständigen Induktion, dass für alle natürlichen Zahlen n gilt:<br> `sum_(k=1)^n 2k − 1 = n^2`"
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"created": "2013-01-01T12:00",
 			"credits": 3,
 			"difficulty": 0.5,
@@ -539,7 +537,7 @@
 			"task": "Zeigen Sie, dass bei der folgenden Formel zwar der Induktionsschritt funktioniert, jedoch nicht die Induktionsbasis:"
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"created": "2013-01-01T12:00",
 			"credits": 3,
 			"difficulty": 0.5,
@@ -553,7 +551,7 @@
 			"task": "Warum ist folgender Beweis fehlerhaft?"
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"created": "2013-01-01T12:00",
 			"credits": 3,
 			"given": [
@@ -571,7 +569,7 @@
 			"task": "Zeigen Sie mit Hilfe der vollständigen Induktion:"
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"created": "2013-01-01T12:00",
 			"credits": 3,
 			"given": [
@@ -589,11 +587,10 @@
 			"task": "Zeigen Sie mit Hilfe der vollständigen Induktion:"
 		},
 		{
-			"subject": "math",
+			"subjects": ["math"],
 			"created": "2013-01-01T12:00",
 			"credits": 1122,
 			"difficulty": 0.5,
-			"displayedHints": 0,
 			"given": [
 				"Es kommt kein Zeichen mehrfach vor.",
 				"Das ’A’ kommt genau k-mal vor.",
@@ -613,6 +610,111 @@
 			],
 			"tags": ["stochastik"],
 			"task": "Nennen sie die Anzahl aller Zeichenfolgen"
+		},
+		{
+			"id": 32,
+			"subjects": ["computer-science"],
+			"created": "2013-01-01T12:00",
+			"status": "incorrect",
+			"setting": "`f(x, y, z) = (x ∧ y ∨ z ) ⊕ ( ¬x ∧ y )`,<br>\n`g(x, y, z) = x ∧ ( y ∨ z )`,<br>\n`h(x, y, z) = (x ⊕ y) ∨ (x ∧ y) ∨ z`",
+			"task": "Erzeugen Sie die disjunktive Normalform DNF(f) und die konjunktive Normalform KNF",
+			"solution": "<!--\nx y z | f1 ≡ x∧y∨z | f2 ≡ ¬x∧y | f(x,y,z) f1⊕f2 | g(x,y,z) x∧(y∨z) | f3 ≡ x⊕y | h(x,y,z) f3∨(x∧y) ∨ z\n000000000\n001101001\n010011011\n011110011\n100000011\n101101111\n110101101\n111101101\n-->\n<p>\n\t<s>Table missing</s>\n</p>\n\n\n<h4>DNF</h4>\n<p>`f (x, y, z) ``= (¬x ∧ ¬y ∧ z) ∨ (¬x ∧ y ∧ ¬z) ∨ (x ∧ ¬y ∧ z) ∨ (x ∧ y ∧ ¬z) ∨ (x ∧ y ∧ z) ``= (x ∧ y) ∨ (y ∧ ¬z) ∨ (¬y ∧ z)`</p>\n<p>`g (x, y, z) ``= (x ∧ ¬y ∧ z) ∨ (x ∧ y ∧ ¬z) ∨ (x ∧ y ∧ z) ``= (x∧y)∨(x∧z)`</p>\n<p>`h (x, y, z) ``= (¬x ∧ ¬y ∧ z) ∨ (¬x ∧ y ∧ ¬z) ∨ (¬x ∧ y ∧ z) ∨ (x ∧ ¬y ∧ ¬z) ∨ ``(x ∧ ¬y ∧ z) ∨ (x ∧ y ∧ ¬z) ∨ (x ∧ y ∧ z) ``=\n   x∨y∨z`</p>\n\n<h4>KNF</h4>\n<p>`f (x, y, z) ``= (x ∨ y ∨ z) ∧ (x ∨ ¬y ∨ ¬z) ∧ (¬x ∨ y ∨ z) ``= (x ∨ ¬y ∨ ¬z) ∧ (y ∨ z)`</p>\n<p>`g (x, y, z) ``= (x ∨ y ∨ z) ∧ (x ∨ y ∨ ¬z) ∧ (x ∨ ¬y ∨ z) ∧ (x ∨ ¬y ∨ ¬z) ∧ (¬x ∨ y ∨ z) ``= x ∧ (y ∨ z)`</p>\n<p>`h (x, y, z) ``= x ∨ y ∨ z`</p>",
+			"credits": 3,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "",
+			"tags": null,
+			"prototype": null
+		},
+		{
+			"id": 33,
+			"subjects": [ "math", "computer-science"],
+			"task": "Stellen Sie die Zahlen binär, oktal und hexadezimal dar",
+			"setting": "`68_9, 118_11, 550_6 ,1810_10`",
+			"solution": "<table class=\"table table-striped table-condensed\">\n\t<thead>\n\t<tr>\n\t\t<th>Zahl</th>\n\t\t<th>Binär</th>\n\t\t<th>Oktal</th>\n\t\t<th>Hex</th>\n\t</tr>\n\t</thead>\n\t<tbody>\n\t<tr>\n\t\t<td>`68_9`</td>\n\t\t<td>1111110</td>\n\t\t<td>76</td>\n\t\t<td>3E</td>\n\t</tr>\n\t<tr>\n\t\t<td>`118_11`</td>\n\t\t<td>10001100</td>\n\t\t<td>214</td>\n\t\t<td>8C</td>\n\t</tr>\n\t<tr>\n\t\t<td>`550_6`</td>\n\t\t<td>11010010</td>\n\t\t<td>322</td>\n\t\t<td>D2</td>\n\t</tr>\n\t<tr>\n\t\t<td>`1810_10`</td>\n\t\t<td>11100010010</td>\n\t\t<td>3422</td>\n\t\t<td>712</td>\n\t</tr>\n\t</tbody>\n</table>",
+			"credits": 3,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "",
+			"tags": null,
+			"prototype": null,
+			"status": "unapproved",
+			"created": "2013-01-01T12:00"
+		},
+		{
+			"id": 34,
+			"subjects": ["computer-science"],
+			"task": "Geben Sie die Dezimalzahlen im Zweierkomplement in Binärdarstellung und Hexadezimaldarstellung an",
+			"setting": "`-1, 1, 28, -35, -256, 257`",
+			"solution": "<table class=\"table table-striped table-condensed\">\n\t<thead>\n\t<tr>\n\t\t<th>Dezimal</th>\n\t\t<th>Binär</th>\n\t\t<th>Zweierkomplement</th>\n\t\t<th>Hex</th>\n\t</tr>\n\t</thead>\n\t<tbody>\n\t<tr>\n\t\t<td>-1</td>\n\t\t<td>-1</td>\n\t\t<td>1111 1111 1111 1111</td>\n\t\t<td>FFFF</td>\n\t</tr>\n\t<tr>\n\t\t<td>1</td>\n\t\t<td>1</td>\n\t\t<td>0000 0000 0000 0001</td>\n\t\t<td>0001</td>\n\t</tr>\n\t<tr>\n\t\t<td>28</td>\n\t\t<td>11100</td>\n\t\t<td>0000 0000 0001 1100</td>\n\t\t<td>001C</td>\n\t</tr>\n\t<tr>\n\t\t<td>-35</td>\n\t\t<td>-100011</td>\n\t\t<td>1111 1111 1101 1101</td>\n\t\t<td>FFDD</td>\n\t</tr>\n\t<tr>\n\t\t<td>-256</td>\n\t\t<td>-100000000</td>\n\t\t<td>1111 1111 0000 0000</td>\n\t\t<td>FF00</td>\n\t</tr>\n\t<tr>\n\t\t<td>257</td>\n\t\t<td>100000001</td>\n\t\t<td>0000 0001 0000 0001</td>\n\t\t<td>0101</td>\n\t</tr>\n\t</tbody>\n</table>",
+			"credits": 3,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "",
+			"tags": ["two's complement"],
+			"prototype": null,
+			"status": "unapproved",
+			"created": "2013-01-01T12:00"
+		},
+		{
+			"id": 35,
+			"subjects": ["computer-science"],
+			"task": "Geben sie 5 Symbolfolgen an, die aus folgenden Symbolen erzeugt werden können",
+			"setting": "Terminalsymbole: `a, b, c`<br>\nHilfssymbole: `X, Y, Z`<br>\n<br>\n`X ::= (a b a)^**`<br>\n`Y ::= c | a Y b | b Y a`<br>\n`Z ::= [X] [Y]`",
+			"solution": "<h4>Start X</h4>\n<ol>\n\t<li>leere Zeichenfolge</li>\n\t<li>aba</li>\n\t<li>abaaba</li>\n\t<li>abaabaaba</li>\n\t<li>abaabaabaaba</li>\n</ol>\n\n<hr>\n<h4>Start Y</h4>\n<ol>\n\t<li>c</li>\n\t<li>acb</li>\n\t<li>bca</li>\n\t<li>aacbb</li>\n\t<li>bbcaa</li>\n</ol>\n\n<hr>\n<h4>Start Z</h4>\n<ol>\n\t<li>leere Zeichenfolge</li>\n\t<li>aba</li>\n\t<li>c</li>\n\t<li>abac</li>\n\t<li>ababbcaa</li>\n</ol>",
+			"credits": 3,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "",
+			"tags": ["BNF"],
+			"prototype": null,
+			"status": "unapproved",
+			"created": "2013-01-01T12:00"
+		},
+		{
+			"id": 36,
+			"subjects": ["programming"],
+			"task": "Schreibe ein Shellskript, das 10 Dateien mit eindeutigem Namen erzeugt",
+			"setting": "",
+			"solution": "<pre><code>\n#!/bin/bash\n\ndirname=files\nfilename=file_0\ncounter=0\n\nwhile [ -d \"$dirname\" ]\ndo\n\tdirname=\"${dirname%_*}\"_$counter\n\t(( counter++ ))\ndone\n\nmkdir \"$dirname\"\ncd \"$dirname\"\ncounter=0\n\nfor a in {0..9}\ndo\n\twhile [ -e \"$filename\" ]\n\tdo\n\t\tfilename=\"${filename%_*}\"_$counter\n\t\t(( counter++ ))\n\tdone\n\t\n\ttouch \"$filename\"\ndone\n</code></pre>",
+			"credits": 3,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "",
+			"tags": ["shell", "bash"],
+			"prototype": null,
+			"status": "unapproved",
+			"created": "2013-01-01T12:00"
+		},
+		{
+			"id": 37,
+			"subjects": ["programming"],
+			"task": "Schreibe ein Shellskript, das Im einem Verzeichnis rekursiv nach der Textdatei mit den meisten Wörtern sucht.",
+			"setting": "Der Verzeichnisname soll als Kommandozeilenparameter übergeben werden. Wird kein Parameter übergeben, so soll die Suche im Heimatverzeichnis beginnen.",
+			"solution": "<pre><code>#!/bin/bash\n\nfind ${1:-~} -exec file {} \\; | grep \"text\" | sed -e \"s/:.*$//g\" | tr \\\\n \\\\0 | xargs -0 wc -w | sort | tail -2 | head -1\n</code></pre>",
+			"credits": 3,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "",
+			"tags": ["shell", "bash"],
+			"prototype": null,
+			"status": "unapproved",
+			"created": "2013-01-01T12:00"
+		},
+		{
+			"id": 38,
+			"subjects": [],
+			"task": "",
+			"setting": "",
+			"solution": "",
+			"credits": 3,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "",
+			"tags": null,
+			"prototype": null,
+			"status": "unapproved",
+			"created": "2013-01-01T12:00"
 		}
 	]
 }
