@@ -43,6 +43,26 @@
 		'modelling'
 	]
 
+	var subjectsExtended = {
+		'math': {
+			proposition: "",
+			set: "",
+			proof: "",
+			relation: "",
+			function: ""
+
+		},
+		'programming': {
+
+		},
+		'digital electronics': {
+
+		},
+		'modelling': {
+
+		},
+	}
+
 
 	/*
 	 * Root exercise from which all other exercises inherit
@@ -59,6 +79,7 @@
 	specified = {
 		"subjects": [],
 		"setting": "",
+		"settings": "",
 		"task": "",
 		"solution": "",
 		"solutions": null,
@@ -116,18 +137,15 @@
 	TasksListView = Backbone.View.extend({
 		tagName: 'ul',
 		className: 'nav nav-list',
-		initialize: function() {
-		},
 		render: function() {
 
 			this.$el.empty()
 
+			_.each(this.collection, function(task, i) {
 
-			//console.log(this.collection)
+				i = i + 1
 
-			_.each(this.collection, function(task, index) {
-
-				this.$el.append(new TasksListItemView({model: task, id: (index + 1)}).render().el)
+				this.$el.append(new TasksListItemView({model: task, id: (i <= 9)? '0'+i : i}).render().el)
 
 			}, this)
 
@@ -137,50 +155,37 @@
 
 	TasksListItemView = Backbone.View.extend({
 		tagName: "li",
-		events: {
-			'click .taskLink': function() {
+		events:{
+			"click .exerciseLink": function(){
 
+				var id = this.model.get('id'),
+					task = appRouter.tasksList.get(id),
+					taskView = new TaskView({model: task})
+
+				$('#content')
+					.html(taskView.render().el)
+					.fadeIn('fast')
 			}
 		},
-		initialize: function() {
+		initialize: function(){
+
+			this.check = (!(this.model.get('solution') || this.model.get('solutions')))? 'muted' : ''
+
 		},
 		render: function() {
 
-			var check = '',
-				id = this.model.get('id')
-
-			if(!(this.model.has('solution') || this.model.has('solutions')))
-				check = 'muted'
-
-			var showExercise = function(el) {
-
-				$(el).on('click', function() {
-
-					var task = appRouter.tasksList.get(id),
-						taskView = new TaskView({model: task})
-
-					$('#content')
-						.html(taskView.render().el)
-						.fadeIn('fast')
-
-				})
-			}
-
 			DOMinate(
 				[this.el,
-					['a.exerciseLink',
-						{id: '#exerciseLink' + this.id},
-						['small', String(this.id) + '. Aufgabe',
-							{class: check}
-						],
-						showExercise
+					['small.exerciseLink',
+						['a', String(this.id) + '. Aufgabe',
+							{class: this.check}
+						]
 					]
 				]
 			)
 
 			return this
 		}
-
 	});
 
 	TaskView = Backbone.View.extend({
@@ -302,7 +307,7 @@
 
 		showModal: function() {
 
-			if(!ExerciseForm.validate()){
+			if(!ExerciseForm.validate()) {
 
 				ExerciseForm.commit()
 
@@ -356,7 +361,7 @@
 
 					tasksListView = new TasksListView(
 						{
-							'collection': collection.filter(function(task){
+							'collection': collection.filter(function(task) {
 
 								return _.contains(task.get("subjects"), subject)
 
@@ -412,7 +417,6 @@
 	appRouter = new AppRouter();
 
 	Backbone.history.start()
-
 
 
 	/*

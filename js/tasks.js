@@ -10,6 +10,7 @@
 			"solutions": [
 				"<h4>Atomare Ausdrücke</h4>\n<ul>\n\t<li>grün `iff` Karte ist grün</li>\n\t<li>sagtBlau `iff` Spieler sagt blau</li>\n\t<li>gerade `iff` Karte ist gerade</li>\n\t<li>gelb `iff` Karte ist gelb</li>\n</ul>\n\n<h4>Äquivalente aussagenlogische Ausdrücke</h4>\n<ol>\n\t<li>grün `=>` sagtBlau</li>\n\t<li>(gelb `^^` gerade) `=>` grün</li>\n\t<li>(gelb `^^` `not`sagtBlau) `=> not`gerade</li>\n\t<li>`not`sagtBlau `=> not`(gelb `^^` gerade) `^^` `not`grün</li>\n</ol>"
 			],
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"status": "correct",
 			"subjects": ["math"]
 		},
@@ -26,6 +27,7 @@
 			"solutions": [
 				"<table id=\"table2a\">\n\t<caption>a</caption>\n</table>\n<table id=\"table2b\">\n\t<caption>b</caption>\n</table>"
 			],
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				"Wahrheitstafel"
 			]
@@ -43,6 +45,7 @@
 			"solutions": [
 				"<em>Beweis:</em>\n\n<figure>\n\t`not (p vv q) ^^ (p vv r)` (De Morgan)<br>\n\t`-= (not p ^^ not q) ^^ (p vv r)` (Distributivität)<br>\n\t`-= (not p ^^ not q ^^ p) vv (not p ^^ not q ^^ r)` (Kommutativität)<br>\n\t`-= (p ^^ not p ^^ not q ) vv (not p ^^ not q ^^ r)` (Kontradiktion)<br>\n\t`-= (0 ^^ not q ) vv (not p ^^ not q ^^ r)` (Kontradiktionsregel)<br>\n\t`-= 0 vv (not p ^^ not q ^^ r)` (Kontradiktionsregel)<br>\n\t`-= (not p ^^ not q ^^ r)`<br>\n\t`q.e.d`<br>\n</figure>\n\n<em>Beweis:</em>\n\n<figure>\n\t`(p => q) ^^ (not p => r)` (Tautolgie)<br>\n\t`-= (not p vv q) ^^ (p vv r)` (Distributivität)<br>\n\t`-= not p ^^ (p vv r) vv q ^^ (p vv r)`<br>\n\t`-= r ^^ not p vv q ^^ (p vv r)`<br>\n\t`-= (q ^^ (p vv r)) vv (not p ^^ r)`<br>\n\t`q.e.d`<br>\n</figure>"
 			],
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				"Beweis"
 			]
@@ -62,6 +65,7 @@
 			"solutions": [
 				"<ol>\n\t<li>`AA t : h(t) => not m(t)`</li>\n\t<li>`EE t : n(t) ^^ h(t)`</li>\n\t<li>`EE t_0: ∀t : (t_0 < t) => m(t)`</li>\n\t<li><s>`EE t_0: EE t_1 : AA t : (t_0 < t) ^^ (t < t_1) <=> not m(t)`</s></li>\n</ol>"
 			],
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				"Prädikatenlogik"
 			]
@@ -78,6 +82,7 @@
 				"`∀t_1 ((d(t_1) ^^ EE t_2(m(t_2) ^^ t_2 < t_1 ^^ ∀t_3((t_2 < t_3 ^^ t_3 < t_1) => n(t_3)))) => h(t_1))`",
 				"`∀t_1∀t_2 ((n(t_1) ^^ n(t_2) ^^ EE t_3(t_1 < t_3 ^^ t_3 < t_2 ^^ d(t_3))) => EE t_3(t_1 < t_3 ^^ t_3 < t_2 ^^ h(t_3)))`"
 			],
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"solutions": [
 				"`¬∀t: h(t) ^^ EE t: m(t)` (Negationsregel)<br>\t`≡ EE t: ¬h(t) ^^ EE t: m(t)`<br>\tManchmal hat der Student keinen Hunger und manchmal versteht er Mathe.",
 				"Immer wenn der Student Hunger hat oder es Nacht ist, dann versteht er Mathe nicht.",
@@ -100,6 +105,7 @@
 				"`∀xEE y: ¬(y ≤ x)`",
 				"`∀(x,y): ((¬(y≤x)) => EE z: ¬((z≤x) vv (y≤z)))`"
 			],
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"solutions": [
 				"`{0,1}`",
 				"`{0,1}`",
@@ -122,6 +128,7 @@
 				"`M_3 := {x | (¬P(x) ^^ Q(x)) vv R(x)}`",
 				"`M_4 := {x | P(x) vv Q(x) vv R(x)}`"
 			],
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"solutions": [
 				"`{0,1}`",
 				"`{0,1}`",
@@ -151,7 +158,7 @@
 				"( M_1 setminus M_3 := left { x mid (P(x) wedge \neg Q(x)) wedge \neg (( \neg P(x) wedge Q(x)) \u000bee R(x)) \right } = left {30, 42, 70, 78, 102, … \right } )",
 				"( overline{M_4 setminus M_2} := left {x mid \neg (P(x) \u000bee Q(x) \u000bee R(x)) \u000bee Q(x) wedge R(x) \right } = left {1, 2, 3, 5 , 7, … \right } )"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				""
 			]
@@ -176,7 +183,7 @@
 				"( M_2 subset overline M_4 )",
 				"( M_3 = overline M_4 )"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				""
 			]
@@ -191,7 +198,7 @@
 			"solutions": [
 				"<p>Zu beweisen: `(A xx B) nn (C xx D) sube (A nn C) xx (B nn D)`</p>\n<figure>\n\t`(s, t) in (A xx B) nn (C xx D)` (Deﬁnition Schnittmenge)<br>\n\t`=> (s, t) in A xx B ^^ (s, t) in C xx D` (Deﬁnition Kreuzprodukt)<br>\n\t`=> s in A ^^ t in B ^^ s in C ^^ t in D` (Kommutativität)<br>\n\t`=> s in A ^^ s in C ^^ t in B ^^ t in D` (Deﬁnition Schnittmenge)<br>\n\t`=> s in (A nn C) ^^ t in (B nn D)` (Deﬁnition Kreuzprodukt)<br>\n\t`=> (s, t) in (A nn C) xx (B nn D)`<br>\n\t`=> (A xx B) nn (C xx D) sube (A nn C) xx (B nn D)`<br>\n\t`q.e.d.`\n</figure>\n\n<p>Zu beweisen: `(A xx B) nn (C xx D) supe (A nn C) xx (B nn D)`</p>\n<figure>\n\t`(s, t) in (A nn C) xx (B nn D)`<br>\n\t`=> s in (A nn C) ^^ t in (B nn D)` (Deﬁnition Kreuzprodukts)<br>\n\t`=> s in A ^^ s in C ^^ t in B ^^ t in D` (Deﬁnition Schnittmenge)<br>\n\t`=> s in A ^^ t in B ^^ s in C ^^ t in D` (Kommutativität)<br>\n\t`=> (s, t) in (A xx B) ^^ (s, t) in (C xx D)` (Deﬁnition Kreuzprodukt)<br>\n\t`=> (s, t) in (A xx B) nn (C xx D)` (Deﬁnition Schnittmenge)<br>\n\t`=> (A xx B) nn (C xx D) supe (A nn C) xx (B nn D)`<br>\n\t`q.e.d.`\n</figure>\n<figure>\n\t`(A xx B) nn (C xx D) sube (A nn C) xx (B nn D) ^^ (A xx B) nn (C xx D) supe (A nn C) xx (B nn D)`<br>\n\t`=> (A xx B) nn (C xx D) = (A nn C) xx (B nn D)`<br>\n\t`q.e.d.`\n</figure>"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				"Beweis"
 			]
@@ -206,7 +213,7 @@
 			"solutions": [
 				"<p>Zu beweisen: `T @ (R uu S) sube (T @ R) uu (T @ S)`</p>\n<figure>\n\t`(x, y) in T @ (R uu S)` (Deﬁnition Komposition)<br>\n\t`=> EE z in M : (x, z) in T ^^ (z, y) in R uu S` (Deﬁnition Vereinigung)<br>\n\t`=> EE z in M : (x, z) in T ^^ ((z, y) in R vv (z, y) in S)` (Distributivität)<br>\n\t`=> EE z in M : ((x, z) in T ^^ (z, y) in R) vv ((x, z) in T ^^ (z, y) in S)` (Deﬁnition Komposition)<br>\n\t`=> ((x, y) in T @ R) vv ((x, y) in T @ S)` (Deﬁnition Vereinigung)<br>\n\t`=> (x, y) in (T @ R) uu (T @ S)`<br>\n\t`=> T @ (R uu S) sube (T @ R) uu (T @ S)`<br>\n\t`q.e.d.`\n</figure>\n\n<p>Zu beweisen: `T @ (R uu S) supe (T @ R) uu (T @ S)`</p>\n<figure>\n\t`(x, y) in (T @ R) uu (T @ S)`<br> (Deﬁnition Vereinigung)\n\t`=> (x, y) in (T @ R) vv (x, y) in (T @ S)` (Deﬁnition Komposition)<br>\n\t`=> EE z_1, z_2 in M : ((x, z_1) in T ^^ (z_1, y) in R) vv ((x, z_2) in T ^^ (z_2, y) in S)` (`z = (z_1 vv z_2)`)<br>\n\t`=> EE z in M : ((x, z) in T ^^ (z, y) in R) vv ((x, z) in T ^^ (z, y) in S)` (Distributivität)<br>\n\t`=> EE z in M : (x, z) in T ^^ ((z, y) in R vv (z, y) in S)` (Deﬁnition Vereinigung)<br>\n\t`=> EE z in M : (x, z) in T ^^ ((z, y) in R uu S)` (Deﬁnition Komposition)<br>\n\t`=> (x, y) in T @ (R uu S)`<br>\n\t`=> T @ (R uu S) supe (T @ R) uu (T @ S)`<br>\n\t`q.e.d.`\n</figure>\n<figure>\n\t`T @ (R uu S) sube (T @ R) uu (T @ S) ^^ T @ (R uu S) supe (T @ R) uu (T @ S)`<br>\n\t`=> T @ (R uu S) = (T @ R) uu (T @ S)`<br>\n\t`q.e.d.`\n</figure>"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				"Beweis"
 			]
@@ -235,7 +242,7 @@
 				"1->2; 3->2; 3->4; 4->5; 3->5",
 				"1->1; 1->2; 1->3; 1->4; 1->5; 2->1; 2->2; 2->3; 2->4; 2->5; 3->1; 3->2; 3->3; 3->4; 3->5; 4->1; 4->2; 4->3; 4->4; 4->5; 5->1; 5->2; 5->3; 5->4; 5->5"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				"Graph"
 			]
@@ -264,7 +271,7 @@
 				"1->2; 3->2; 3->4; 4->5; 2->2; 2->2; 2->4; 4->2; 4->4; 5->5",
 				"1->2; 3->2; 3->4; 4->5; 5->3"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				"Graph"
 			]
@@ -287,7 +294,7 @@
 				"Äquivalenzrelation, da man gleich viele check-ins wie man selber hat und wenn man gleich viele hat wie jemand anderes, dieser auch gleich viele hat wie man selbst und wenn man gleich viele hat wie zwei andere diese beiden auch gleich vielehaben.",
 				"Annahme: Man kann zu verschiedenen Zeiten an einem Ort einchecken.<br> Keine Äquivalenzrelation, denn wenn man mit zwei Personen jeweils gemeinsam an einem Ort eingecheckt ist heißt das nicht, dass diese gemeinsam an einem Ort eingecheckt haben müssen."
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				"Relation",
 				"Menge"
@@ -307,7 +314,7 @@
 				"<figure>\n\tSei `(x,y) in R` (Definition reflexiv, symmetrisch, antisymmetrisch)<br>\n\t`=> xRx ^^ xRy ^^ yRx ^^ (xRy ^^ yRx -> x=y)` (`a => b = neg a v b`)<br>\n\t`=> xRx ^^ xRy ^^ yRx ^^ (neg (xRy ^^ yRx) vv x=y)` (De Morgan)<br>\n\t`=> xRx ^^ xRy ^^ yRx ^^ (neg xRy vv neg yRx vv x=y)` (Definition Identitätsrelation: y = x)<br>\n\t`=> xRx ^^ xRx ^^ xRx ^^ (neg xRx vv neg xRx vv x=x)` (Tautolgie)<br>\n\t`=> xRx ^^ xRx ^^ xRx` (Tautologie)<br>\n\t`=> xRx`<br>\n\t`q.e.d.`<br>\n\t<s>Kein abgeschlossener Beweis!</s>\n</figure>",
 				"<figure>\n\t<s>\n\t\t`(x,y) in R @ R` (Definition `@`)<br>\n\t\t`=> EEz : (x,z) in R ^^ (z,y) in R` (Distributivgesetz)<br>\n\t\t`=> EEz : ((x,z) ^^ (z,y)) in R` (Definition Transitivität)<br>\n\t\t`=> (x,y) in R`<br>\n\t\t`q.e.d.`<br>\n\t</s>\n</figure>\n<figure>\n\t<s>Rückrichtung</s>\n</figure>"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				"Beweis",
 				"Menge"
@@ -331,7 +338,7 @@
 				"(R = {(x, y) mid lfloor x \rfloor = lfloor y \rfloor } )",
 				"Nein, da die Quersumme nur für natürliche Zahlen definiert ist und somit nicht alle reelen Zahlen in einer Partition auftauchen."
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"status": "incorrect",
 			"tags": [
 				""
@@ -351,7 +358,7 @@
 				"Zu zeigen:<br>\n`f(M) sube f(N)` (Definition Teilmenge)<br>\n`= x in f(M) => x in f(N)`<br>\n<br>\nSei `x in f(M)` (Definition Bild)<br>\n`=> EE m in M : x = f(m)` `(M sube N)`<br>\n`=> EE m in N : x = f(m)` (Definition Bild)<br>\n`=> x in f(N)`<br>\n`q.e.d`",
 				"`A = {1,2,3}`<br>\n`B = {4}`<br>\n`F = {(1,4), (2,4), (3,4)}`<br>\n`M = {1,2}`<br>\n`N = {1,3}`<br>\n<br>\n`f(M) = 4`<br>\n`f(N) = 4`<br>"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				""
 			]
@@ -370,7 +377,7 @@
 				"reflexiv: `f(a) = f(a)`<br>\nsymmetrisch: `f(a) = f(b) => f(b) = f(a)`<br>\ntransitiv: `(f(a) = f(b)) ^^ (f(b) = f(c)) => f(a) = f(c)`<br>\n`=>` ist äquivalenz<br>\n`q.e.d`",
 				"`f^(-1)(f(a))` (Definition Urbild)<br>\n`= {a in A | f(a) in f(a)}` (Angabe)<br>\n`= {a in A | a ~ a}` (Definition Äquivalenzklasse)<br>\n`= [a]`<br>\n`q.e.d`"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				"Beweis"
 			]
@@ -389,7 +396,7 @@
 				"`(g @ f)(A)`<br>\n`= g(f(A))`<br>\n`= g(B)`<br>\n`= C`<br>\n`=> g @ f` ist surjektiv<br>\n`q.e.d`",
 				"Seien `a_1, a_2 in A`<br>\n`=> (g @ f)(a_1) = (g @ f)(a_2)`<br>\n`=> g(f(a_1)) = g(f(a_2))` (g injektiv)<br>\n`=> f(a_1) = f(a_2)` (f injektiv)<br>\n`=> a_1 = a_2`<br>\n`=> g @ f` ist injektiv<br>\n`q.e.d`"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				"Beweis"
 			]
@@ -410,7 +417,7 @@
 				"`R = {(a,a), (b,b), (c,c), (a,b), (a,c)}`",
 				"`R = {(a,a), (b,b), (c,c), (a,c), (b,c)}`"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				""
 			]
@@ -429,7 +436,7 @@
 				"`R_(Ho) `\n`= R uu {(2,2), (3,3), (4,4), (5,5), (6,6), (7,7), (1,2), (4,6)}`\n`= {(1,1), (2,2), (3,3), (4,4), (5,5), (6,6), (7,7), (1,3), (3,2), (1,2), (4,5), (5,6), (4,6)}`<br>\n<br>\nMaximale Ketten:<br>\n`K_1 = {1, 3, 2}`<br>\n`K_2 = {4, 5, 6}`<br>\n`K_3 = {7}`",
 				"`R_(Ho) `\n`= R uu {(1,1), (2,2), (3,3), (4,4), (5,5), (6,6), (7,7), (7,2), (7,3), (1,3)}`\n`= {(1,1), (2,2), (3,3), (4,4), (5,5), (6,6), (7,7), (7,1), (1,2), (2,3), (7,2), (7,3), (1,3), (4,5), (6,5)}`<br>\n<br>\nMaximale Ketten:<br>\n`K_1 = {7, 1, 2, 3}`<br>\n`K_2 = {4, 5}`<br>\n`K_3 = {6, 5}`"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				""
 			]
@@ -449,7 +456,7 @@
 				"Zu zeigen: `f(A) = NN`<br>\n`NN sube f(A)`<br>\nSei `b, k in NN` <br>\n`=> EE bar(a) in NN^k : f(bar(a)) = b` (Definition: Für jede Zahl existiert eine Primfaktorzerlegung)<br>\n<br>\n`f(A) sube NN` folgt aus der Funktion<br>\n`=> f` ist surjektiv<br>\n`q.e.d`"
 			],
 			"hints": ["Um die Aufgabe besser zu verstehen, legen Sie sich `p_1` bis `p_5` fest und bilden Sie 0 bis 5-Tupel mittels `f` auf natürliche Zahlen ab. So erkennen Sie, warum der letzte Exponent als einziger `a_k + 1` heißt."],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				""
 			]
@@ -464,7 +471,7 @@
 				"Sei `a_i in {0, …, 9}`<br>\n<br>\n`f: P(NN) -> [0, 1]`<br>\n`= {a_0, a_0a_1, a_0a_1a_2, a_0a_1a_2a_3, …} -> 0,a_0a_1a_2a_3…`<br>\n<br>\nIst surjektiv: `AA p in P(NN) : EE r in RR: f(p) = r`,<br>\naber nicht injektiv: `{1} -> 1` und `{1, 10} -> 1`"
 			],
 			"hints": ["Sie können verwenden, dass es zu jeder reellen Zahl `x in [0, 1]` eine Darstellung<br>\n`x = sum_(i >= 1) 2^(−i)a_i` mit `a_i in {0, 1}` gibt,<br>\ndie Binärdarstellung `0, a_1, a_2, a_3, …` des unendlichen Bruchs.\nSie müssen also nur für `M sube NN` die passenden `a_i` definieren und zeigen, dass Ihre Abbildung surjektiv ist."],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": null
 		},
 		{
@@ -477,7 +484,7 @@
 			"solutions": [
 				"`2^m <= 2^n` (`log_2`)<br>\n`-= log_2 2^m <= log_2 2^n`<br>\n`-= m <= n`"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": ["proof"]
 		},
 		{
@@ -490,7 +497,7 @@
 			"solutions": [
 				"`a in NN`<br>\n`root a 2 = p/q`<br>\n`2 = p^a/q^a`<br>\n`2q^a = p^a`\n`=> 2 | p^a`\n`=> 2 | p`\n`=> EE r in NN : p = 2r`<br>\n`2q^a = (2r)^a`<br>\n`q^a = 2^(a-1)r^a`\n`=> 2 | q^a`\n`=> p not _|_ q`\n`=> ↯`"
 			],
-			"note": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"hints": ["Nehmen Sie an, dass `p / q` mit `p,q in NN` vollständig gekürzt ist, d.h. `ggT(p,q) = 1`.\nSie können auch verwenden, dass wenn `x | y^2` mit `x, y in NN` gilt und `x` Primzahl ist,\ndann gilt auch `x^2 | y^2` und `x | y`."],
 			"tags": ["proof"]
 		},
@@ -614,7 +621,6 @@
 		{
 			"id": 32,
 			"subjects": ["computer-science"],
-			"created": "2013-01-01T12:00",
 			"status": "incorrect",
 			"setting": "`f(x, y, z) = (x ∧ y ∨ z ) ⊕ ( ¬x ∧ y )`,<br>\n`g(x, y, z) = x ∧ ( y ∨ z )`,<br>\n`h(x, y, z) = (x ⊕ y) ∨ (x ∧ y) ∨ z`",
 			"task": "Erzeugen Sie die disjunktive Normalform DNF(f) und die konjunktive Normalform KNF",
@@ -622,9 +628,10 @@
 			"credits": 3,
 			"difficulty": 0.5,
 			"hints": null,
-			"note": "",
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": null,
-			"prototype": null
+			"prototype": null,
+			"created": "2013-01-20T12:00"
 		},
 		{
 			"id": 33,
@@ -639,7 +646,7 @@
 			"tags": null,
 			"prototype": null,
 			"status": "unapproved",
-			"created": "2013-01-01T12:00"
+			"created": "2013-01-20T12:00"
 		},
 		{
 			"id": 34,
@@ -654,7 +661,7 @@
 			"tags": ["two's complement"],
 			"prototype": null,
 			"status": "unapproved",
-			"created": "2013-01-01T12:00"
+			"created": "2013-01-20T12:00"
 		},
 		{
 			"id": 35,
@@ -684,7 +691,7 @@
 			"tags": ["shell", "bash"],
 			"prototype": null,
 			"status": "unapproved",
-			"created": "2013-01-01T12:00"
+			"created": "2013-01-20T12:00"
 		},
 		{
 			"id": 37,
@@ -699,22 +706,61 @@
 			"tags": ["shell", "bash"],
 			"prototype": null,
 			"status": "unapproved",
-			"created": "2013-01-01T12:00"
+			"created": "2013-01-20T12:00"
 		},
 		{
 			"id": 38,
-			"subjects": [],
-			"task": "",
-			"setting": "",
+			"subjects": ["math"],
+			"task": "Zeigen Sie mit Hilfe der vollständigen Induktion",
+			"settings": ["Die Fibonacci-Zahlen `F_n, n in NN_0`, sind definiert durch `F_0 = 0`, `F_1 = 1`, `F_(n+2) = F_n + F_(n+1)`"],
+			"given": [
+				"`sum_(k=0)^n F_(2k+1) = F_(2n+2)`",
+				"`F_(n+1)^2 = F_n * F_(n+1) + (-1)^n`"
+			],
+			"solution": "",
+			"credits": 6,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 32",
+			"tags": ["proof", "fibonacci", "induction"],
+			"prototype": null,
+			"status": "unapproved",
+			"created": "2013-01-21T12:00"
+		},
+		{
+			"id": 39,
+			"subjects": ["math"],
+			"task": "Geben sie die Anzahl der verschiedenen Möglichkeiten an (inklusive Begründung)",
+			"setting": "Ein Reisebus transportiert `n` HPI-Studenten nach Berlin. Der Bus hält am Zoo, am Hauptbahnhof und am Alex. Wir interessieren uns für die Zahl der Studenten, die dort jeweils aussteigen.",
 			"solution": "",
 			"credits": 3,
 			"difficulty": 0.5,
 			"hints": null,
-			"note": "",
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 33",
 			"tags": null,
 			"prototype": null,
 			"status": "unapproved",
-			"created": "2013-01-01T12:00"
+			"created": "2013-01-21T12:00"
+		},
+		{
+			"id": 40,
+			"subjects": ["math"],
+			"task": "Ersetze die Laufvariable i durch die Ausdrücke und vereinfache soweit wie möglich",
+			"setting": "Gegeben sei diese Formel: `sum_(i=0)^n x^(i-4)+3i+sqrt(i) * x`",
+			"given":[
+				"`j + 10`",
+				"`3j - 5`",
+				"`j^2 + 3`"
+			],
+			"solution": "",
+			"credits": 3,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 34",
+			"tags": null,
+			"prototype": null,
+			"status": "unapproved",
+			"created": "2013-01-21T12:00"
 		}
 	]
 }

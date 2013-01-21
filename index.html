@@ -53,9 +53,9 @@
 					<li class="divider-vertical"></li>-->
 				</ul>
 
-				<button class="btn btn-small btn-inverse pull-right" data-toggle="modal" data-target="#exerciseModal">
+				<!--<button class="btn btn-small btn-inverse pull-right" data-toggle="modal" data-target="#exerciseModal">
 					<i class="icon-plus icon-white"></i>
-				</button>
+				</button>-->
 			</div>
 		</div>
 	</div>
@@ -115,12 +115,16 @@
 
 				<hr>
 
-				<div><%= setting %></div>
+				<% if(settings){ %>
+					<div><p><%= _.reduce(settings, function(a,b){ return a + '</p><p>' + b }) %></p></div>
+				<% }else if(setting){ %>
+					<div><%= setting %></div>
+				<% } %>
 
 				<hr>
 
 				<% if(given){ %>
-					<div><%= _.reduce(given, function(a,b){ return a + '</p><p>' + b }) %></div>
+					<div><p><%= _.reduce(given, function(a,b){ return a + '</p><p>' + b }) %></p></div>
 				<% } %>
 
 				<div id="hints"></div>
@@ -137,7 +141,7 @@
 						<div id="collapseOne" class="accordion-body collapse out">
 							<div class="accordion-inner">
 
-								<%if(solutions){ %>
+								<% if(solutions){ %>
 									<p><%= _.reduce(solutions, function(a,b){ return a + '</p><p>' + b }) %></p>
 								<% }else if(solution){ %>
 									<%= solution  %>
