@@ -717,7 +717,10 @@
 				"`sum_(k=0)^n F_(2k+1) = F_(2n+2)`",
 				"`F_(n+1)^2 = F_n * F_(n+1) + (-1)^n`"
 			],
-			"solution": "",
+			"solutions": [
+				"Zu zeigen: `sum_(k=0)^n F_(2k+1) = F_(2n+2)`<br>\n\n<strong>Induktionsanfang</strong>\n<br>\n`sum_(k=0)^n F_(2k+1) = F_(2n+2)` (`n = 0`)<br>\n`F_(2 * 0 + 1) = F_(2 * 0 + 2)`<br>\n`F_1 = F_2`<br>\n`q.e.d.`<br>\n<br>\n\t\t\n<strong>Induktionsvorraussetzung</strong>\n<br>\nSei wahr für ein beliebiges aber festes n<br>\n<br>\n\t\t\n<strong>Induktionsschluss</strong>\n<br>\n`sum_(k=0)^(n+1) F_(2k+1)`<br>\n`= sum_(k=0)^n F_(2k+1) + F_2(n+1)+1`<br>\n`= F_(2n+2) + F_(2n+3)`<br>\n`= F_(2n+4)`<br>\n`= F_(2(n+1)+2)`<br>\n`q.e.d.`<br>",
+				"<strong>Gegenbeispiel:</strong>\n<br>\n`F_(n+1)^2 = F_n * F_(n+1) + (-1)^n` (`n = 2`)<br>\n`F_(2+1)^2 = F_2 F_(n+1) + (-1)^n`<br>\n`F_3^2 = F_2 F_3 + (-1)^2`<br>\n`4 = 2+1`<br>\n`4 = 3`<br>\nfalsch!"
+			],
 			"credits": 6,
 			"difficulty": 0.5,
 			"hints": null,
@@ -732,7 +735,7 @@
 			"subjects": ["math"],
 			"task": "Geben sie die Anzahl der verschiedenen Möglichkeiten an (inklusive Begründung)",
 			"setting": "Ein Reisebus transportiert `n` HPI-Studenten nach Berlin. Der Bus hält am Zoo, am Hauptbahnhof und am Alex. Wir interessieren uns für die Zahl der Studenten, die dort jeweils aussteigen.",
-			"solution": "",
+			"solution": "Das Problem wie viele Möglichkeiten es gibt n nicht unterscheidbare Personen auf 3 Ausstiegsmöglichkeiten zu verteilen\nist gleichbedeutend mit der Anzahl der k-Kombinationen aus einer n-Menge zu der Trennstriche dazugehören um die Aufteilung darzustellen<br>\nEs soll angenommer werden, dass alle Personen aussteigen müssen. <br>\n<br>\n`((n+3-1),(n))`",
 			"credits": 3,
 			"difficulty": 0.5,
 			"hints": null,
@@ -747,12 +750,16 @@
 			"subjects": ["math"],
 			"task": "Ersetze die Laufvariable i durch die Ausdrücke und vereinfache soweit wie möglich",
 			"setting": "Gegeben sei diese Formel: `sum_(i=0)^n x^(i-4)+3i+sqrt(i) * x`",
-			"given":[
+			"given": [
 				"`j + 10`",
-				"`3j - 5`",
-				"`j^2 + 3`"
+				"`j/3 - 5`",
+				"`sqrt(j)`"
 			],
-			"solution": "",
+			"solutions": [
+				"`sum_(j+10=0)^n x^(j+10-4) + 3(j+10) + sqrt(j+10) * x`<br>\n`= sum_(j=-10)^n x^(j+6) + 3j + 30 + sqrt(j+10) * x`<br><br>\n",
+				"`sum_(j/3-5=0)^n x^(j/3-5-4) + 3(j/3-5) + sqrt(j/3-5) * x`<br>\n`sum_(j=15)^n x^(j/3-9) + j-15 + sqrt(j/3-5) * x`<br>\n<br>",
+				"`sum_(sqrt(j)=0)^n x^(sqrt(j)-4) + 3sqrt(j) + sqrt(sqrt(j)) * x`<br>\n`sum_(sqrt(j)=0)^n x^(sqrt(j)-4) + 3sqrt(j) + root(4) j * x`<br>\n"
+			],
 			"credits": 3,
 			"difficulty": 0.5,
 			"hints": null,
