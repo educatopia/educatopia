@@ -1,7 +1,5 @@
 {
-	"tasks"
-:
-	[
+	"exercises":[
 		{
 			"id": 1,
 			"task": "Wandle die formulierten Regeln und Schlussfolgerungen in Aussagen um",
@@ -30,7 +28,8 @@
 			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, Wintersemester 2012/2013",
 			"tags": [
 				"Wahrheitstafel"
-			]
+			],
+			"callback": "function(){\n\n\thyperdoc.table('#table2a', [\n\t\t['`a`', '`b`', '`c`', '`a vv b`', '`a vv not c`', '`b ^^ not c`', '`(a vv b) ^^ (a vv not c)`', '`(a vv b) ^^ (a vv not c) => (b ^^ not c)`'],\n\t\t[0, 0, 0, 0, 1, 0, 0, 1],\n\t\t[0, 0, 1, 0, 0, 0, 0, 1],\n\t\t[0, 1, 0, 1, 1, 1, 1, 1],\n\t\t[0, 1, 1, 1, 0, 0, 0, 1],\n\t\t[1, 0, 0, 1, 1, 0, 1, 0],\n\t\t[1, 0, 1, 1, 1, 0, 1, 0],\n\t\t[1, 1, 0, 1, 1, 1, 1, 1],\n\t\t[1, 1, 1, 1, 1, 0, 1, 0]\n\t])\n\n\thyperdoc.table('#table2b', [\n\t\t['`a`', '`b`', '`c`', '`a => b`', '`not b => not a`', '`b ^^ not c`', '`(a => b) ^^ (not b => not a)`', '`(a => b) ^^ (not b => not a) iff (b ^^ not c)`'],\n\t\t[0, 0, 0, 1, 1, 0, 1, 0],\n\t\t[0, 0, 1, 1, 1, 0, 1, 0],\n\t\t[0, 1, 0, 1, 1, 1, 1, 1],\n\t\t[0, 1, 1, 1, 1, 0, 1, 0],\n\t\t[1, 0, 0, 0, 0, 0, 0, 1],\n\t\t[1, 0, 1, 0, 0, 0, 0, 1],\n\t\t[1, 1, 0, 1, 1, 1, 1, 1],\n\t\t[1, 1, 1, 1, 1, 0, 1, 0]\n\t])\n}"
 		},
 		{
 			"subjects": ["math"],
@@ -478,7 +477,6 @@
 			"subjects": ["math"],
 			"id": 24,
 			"credits": 4,
-			"setting": "",
 			"task": "Zeigen Sie:",
 			"setting": "`AA m,n in NN : m <= n -> 2^m <= 2^n`",
 			"solutions": [
@@ -491,7 +489,6 @@
 			"subjects": ["math"],
 			"id": 25,
 			"credits": 4,
-			"setting": "",
 			"task": "Beweisen Sie:",
 			"setting": "Beweise sie mittels Widerspruch, dass sich `root 3 2` nicht als Bruch `p / q` darstellen lässt.",
 			"solutions": [
@@ -718,8 +715,8 @@
 				"`F_(n+1)^2 = F_n * F_(n+1) + (-1)^n`"
 			],
 			"solutions": [
-				"Zu zeigen: `sum_(k=0)^n F_(2k+1) = F_(2n+2)`<br>\n\n<strong>Induktionsanfang</strong>\n<br>\n`sum_(k=0)^n F_(2k+1) = F_(2n+2)` (`n = 0`)<br>\n`F_(2 * 0 + 1) = F_(2 * 0 + 2)`<br>\n`F_1 = F_2`<br>\n`q.e.d.`<br>\n<br>\n\t\t\n<strong>Induktionsvorraussetzung</strong>\n<br>\nSei wahr für ein beliebiges aber festes n<br>\n<br>\n\t\t\n<strong>Induktionsschluss</strong>\n<br>\n`sum_(k=0)^(n+1) F_(2k+1)`<br>\n`= sum_(k=0)^n F_(2k+1) + F_2(n+1)+1`<br>\n`= F_(2n+2) + F_(2n+3)`<br>\n`= F_(2n+4)`<br>\n`= F_(2(n+1)+2)`<br>\n`q.e.d.`<br>",
-				"<strong>Gegenbeispiel:</strong>\n<br>\n`F_(n+1)^2 = F_n * F_(n+1) + (-1)^n` (`n = 2`)<br>\n`F_(2+1)^2 = F_2 F_(n+1) + (-1)^n`<br>\n`F_3^2 = F_2 F_3 + (-1)^2`<br>\n`4 = 2+1`<br>\n`4 = 3`<br>\nfalsch!"
+				"Zu zeigen: `sum_(k=0)^n F_(2k+1) = F_(2n+2)`<br>\n\n<strong>Induktionsanfang</strong>\n<br>\n`sum_(k=0)^n F_(2k+1) = F_(2n+2)` (`n = 0`)<br>\n`F_(2 * 0 + 1) = F_(2 * 0 + 2)`<br>\n`F_1 = F_2`<br>\n<br>\n`sum_(k=0)^n F_(2k+1) = F_(2n+2)` (`n = 1`)<br>\n`F_(2 * 0 + 1) + F_(2 * 1 + 1) = F_(2 * 1 + 2)`<br>\n`F_1 + F_3 = F_4`<br>\n`q.e.d.`<br>\n<br>\n\t\t\n<strong>Induktionsvorraussetzung</strong>\n<br>\nSei wahr für ein beliebiges aber festes n<br>\n<br>\n\t\t\n<strong>Induktionsschluss</strong>\n<br>\n`sum_(k=0)^(n+1) F_(2k+1)`<br>\n`= sum_(k=0)^n F_(2k+1) + F_2(n+1)+1`<br>\n`= F_(2n+2) + F_(2n+3)`<br>\n`= F_(2n+4)`<br>\n`= F_(2(n+1)+2)`<br>\n`q.e.d.`<br>",
+				"<strong>Gegenbeispiel zu b):</strong>\n<br>\n`F_(n+1)^2 = F_n * F_(n+1) + (-1)^n` (`n = 2`)<br>\n`F_(2+1)^2 = F_2 F_(n+1) + (-1)^n`<br>\n`F_3^2 = F_2 F_3 + (-1)^2`<br>\n`4 = 2+1`<br>\n`4 = 3`<br>\nfalsch!"
 			],
 			"credits": 6,
 			"difficulty": 0.5,
@@ -768,6 +765,75 @@
 			"prototype": null,
 			"status": "unapproved",
 			"created": "2013-01-21T12:00"
+		},{
+			"id": 41,
+			"subjects": ["math"],
+			"task": "Berechne die Wahrscheinlichkeit und begründe",
+			"setting": "Urne A enthält 7 rote und 3 schwarze Kugeln, Urne B enthält 3 rote und 2 schwarze Kugeln, Urne C enthält 1 rote und 4 schwarze Kugeln, und Urne D enthält 2 weiße und 2 schwarze Kugeln. Es wird zufällig eine Urne ausgewählt und hieraus eine Kugel gezogen. Ohne Zurücklegen wird beides danach wiederholt.",
+			"settings": "",
+			"given": [
+				"Berechne die Wahrscheinlichkeit als erstes eine rote Kugel zu ziehen",
+				"Es wurde als erstes eine rote Kugel gezogen. Berechne die Wahrscheinlichkeit mit der sie aus Urne A, B, C oder D stammt",
+				"Berechne die Wahrscheinlichkeit auch als zweites eine rote Kugel zu ziehen",
+				"Es wurde als zweites eine rote Kugel gezogen. Berechne die Wahrscheinlichkeit mit der sie aus Urne A, B, C oder D stammt"
+			],
+			"solution": "",
+			"solutions": null,
+			"credits": "1 2 2 2",
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 35",
+			"tags": null,
+			"prototype": null,
+			"created": "2013-01-27T18:00"
+		},{
+			"id": 42,
+			"subjects": ["math"],
+			"task": "Berechne die Anzahl der verschiedenen Blätter für ein Full House und begründe",
+			"setting": "Gegeben sei ein Pokerspiel mit 52 Karten verteilt auf 13 verschiedene Werte und 4 Farben. Ein Blatt besteht aus 5 Karten. Das sog. Full-House beschreibt ein Blatt mit 2 gleichen Werten und 3 gleichen Werten. ",
+			"settings": "",
+			"given": "",
+			"solution": "",
+			"solutions": null,
+			"credits": 3,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 36",
+			"tags": null,
+			"prototype": null,
+			"created": "2013-01-27T18:00"
+		},{
+			"id": 43,
+			"subjects": ["math"],
+			"task": "Berechne die Wahrscheinlichkeit mit der die beiden Lösungen von dem gleichen Korrektor bewertet werden",
+			"setting": "Zwei anonyme Studenten geben identische Lösungen zur Matheübung ab.\nUm dies zu verschleiern, geben sie die Lösungen mit verschiedenen Übungsgruppen ab.\nJedoch gibt es nur drei Korrektoren, auf die die vier Gruppen zufällig verteilt werden.\n(Jeder Korrektor bekommt mindestens eine Gruppe zugeordnet)",
+			"settings": "",
+			"given": "",
+			"solution": "",
+			"solutions": null,
+			"credits": 2,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 37",
+			"tags": null,
+			"prototype": null,
+			"created": "2013-01-27T18:00"
+		},{
+			"id": 44,
+			"subjects": ["math"],
+			"task": "Erläutern sie warum die Summe 10 öfter vorkommt",
+			"setting": "<p>Beim Wurf von `3` fairen Würfeln tritt die Summe `10` öfter auf als die Summe `9`.<br>\nBeide Summen können allerdings jeweils auf genau `6` Arten erzeugt werden:</p>\n\t\t\n`10 = 1 + 3 + 6`<br>\n`= 1 + 4 + 5`<br>\n`= 2 + 2 + 6`<br>\n`= 2 + 3 + 5`<br>\n`= 2 + 4 + 4`<br>\n`= 3 + 3 + 4`<br>\n\n<br>\n\t\t\n`9 = 1 + 2 + 6`<br>\n`= 1 + 3 + 5`<br>\n`= 1 + 4 + 4`<br>\n`= 2 + 2 + 5`<br>\n`= 2 + 3 + 4`<br>\n`= 3 + 3 + 3`",
+			"settings": "",
+			"given": "",
+			"solution": "",
+			"solutions": null,
+			"credits": 1,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 38",
+			"tags": null,
+			"prototype": null,
+			"created": "2013-01-27T18:00"
 		}
 	]
 }

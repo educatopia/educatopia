@@ -37,15 +37,30 @@
 			</a>-->
 			<a class="brand" href="#">educatopia</a>
 
-			<!--<div class="nav-collapse collapse">-->
 			<div>
 				<ul class="nav">
 					<li class="divider-vertical"></li>
-					<li><a name='math' href="#math">math</a></li>
-					<li class="divider-vertical"></li>
-					<li><a href="#computer-science">Computer Science</a></li>
-					<li class="divider-vertical"></li>
-					<li><a href="#programming">programming</a></li>
+					<!--<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Lessons<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+						</ul>
+					</li>-->
+					<li class="dropdown">
+						<a class="dropdown-toggle" href="#">Exercises<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="#exercises/math">math</a></li>
+							<li><a href="#exercises/computer-science">Computer Science</a></li>
+							<li><a href="#exercises/programming">programming</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a class="dropdown-toggle" href="#">Reference<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="#reference/math">math</a></li><!--
+							<li><a href="#reference/computer-science">Computer Science</a></li>
+							<li><a href="#reference/programming">programming</a></li>-->
+						</ul>
+					</li>
 					<li class="divider-vertical"></li>
 					<!--<li><a href="#digital-electroincs">digital electronics</a></li>
 					<li class="divider-vertical"></li>
@@ -62,23 +77,6 @@
 </div>
 
 <div id=contentWrapper class="container-fluid">
-
-	<div id="banner" class="hero-unit">
-		<div class="page-header">
-			<h1>1001 Exercises
-				<small>Practice 'till you drop!</small>
-			</h1>
-		</div>
-
-		<p>The goal of this website is to build an extensive library of exercises from a variety of scientific topics such as
-		   Math, Digital Electronics, Modelling, Computer Science, …</p>
-		<p>Please Enjoy!</p>
-	</div>
-
-	<div id='tasks' class="row-fluid">
-		<ul id="sidebar" class="well nav nav-list span2"></ul>
-		<div id="content" class="well span10"></div>
-	</div>
 
 </div>
 
@@ -167,7 +165,7 @@
 
 	<li class="nav-header clearfix">URL:</li>
 	<li>
-		<% var url = 'educatopia.org/#' + id %>
+		<% var url = 'educatopia.org/#exercises/' + id %>
 		<small class="muted"><a href="http://<%= url %>"><%= url %></a></small>
 	</li>
 	<li class="divider"></li>
@@ -265,6 +263,37 @@
 	</div>
 	<div class="modal-footer">
 		<button id="exerciseFormSubmit" class="btn btn-primary">Submit</button>
+	</div>
+</script>
+
+
+
+<script id="bannerTemplate" type="text/template">
+	<div id="banner" class="hero-unit">
+		<div class="page-header">
+			<h1>1001 Exercises
+				<small>Practice 'till you drop!</small>
+			</h1>
+		</div>
+
+		<p>The goal of this website is to build an extensive library of exercises from a variety of scientific topics such as
+		   Math, Digital Electronics, Modelling, Computer Science, …</p>
+		<p>Please Enjoy!</p>
+	</div>
+</script>
+
+<script id="taskListTemplate" type="text/template">
+	<div id='tasks' class="row-fluid">
+		<ul id="sidebar" class="well nav nav-list span2"></ul>
+		<div id="content" class="well span10"></div>
+	</div>
+</script>
+
+
+<script id="referenceTemplate" type="text/template">
+	<div class="row-fluid">
+		<div id="referenceSidebar" class="span3 well"></div>
+		<div id="referenceContent" class="span8 well"></div>
 	</div>
 </script>
 

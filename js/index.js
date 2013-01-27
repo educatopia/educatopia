@@ -16,7 +16,37 @@
 		specified,
 		rootExercise,
 		ExerciseForm,
-		exerciseFormData;
+		exerciseFormData,
+		ReferenceView,
+		ReferenceListView,
+		subjects = [
+			'math',
+			'programming',
+			'digital electronics',
+			'modelling'
+		],
+		subjectsExtended = {
+			'math': {
+				proposition: "",
+				set: "",
+				proof: "",
+				relation: "",
+				function: ""
+
+			},
+			'programming': {
+
+			},
+			'digital electronics': {
+
+			},
+			'modelling': {
+
+			}
+		},
+		TasksView,
+		ReferenceListItemView,
+		c = console, appView, BannerView
 
 
 	// Add capitalize function to underscore
@@ -35,35 +65,6 @@
 	 })
 	 })*/
 
-
-	var subjects = [
-		'math',
-		'programming',
-		'digital electronics',
-		'modelling'
-	]
-
-	var subjectsExtended = {
-		'math': {
-			proposition: "",
-			set: "",
-			proof: "",
-			relation: "",
-			function: ""
-
-		},
-		'programming': {
-
-		},
-		'digital electronics': {
-
-		},
-		'modelling': {
-
-		},
-	}
-
-
 	/*
 	 * Root exercise from which all other exercises inherit
 	 */
@@ -72,7 +73,8 @@
 	auto = {
 		"id": 0,
 		"created": "2013-01-01T12:00",
-		"status": "unapproved"
+		"status": "unapproved",
+		"callback": ""
 	};
 
 	// Attributes specified by the user
@@ -111,8 +113,6 @@
 			difficulty: {type: 'Number', editorClass: 'input-mini', editorAttrs: {min: 0, max: 1}},
 			note: {type: 'Text', editorClass: 'input-large'},
 			tags: {type: 'Text', editorClass: 'input-large'}
-		},
-		initialize: function() {
 		}
 	});
 
@@ -125,7 +125,7 @@
 		model: Task,
 		url: 'js/tasks.js',
 		parse: function(response) {
-			return response.tasks
+			return response.exercises
 		}
 	});
 
@@ -134,20 +134,28 @@
 	 *	Views
 	 */
 
+	TasksView = Backbone.View.extend({
+		template: _.template($('#taskListTemplate').html()),
+		render: function() {
+			this.$el.html(this.template())
+
+			return this
+		}
+	})
+
 	TasksListView = Backbone.View.extend({
 		tagName: 'ul',
 		className: 'nav nav-list',
 		render: function() {
 
-			this.$el.empty()
-
 			_.each(this.collection, function(task, i) {
 
 				i = i + 1
 
-				this.$el.append(new TasksListItemView({model: task, id: (i <= 9)? '0'+i : i}).render().el)
+				this.$el.append(new TasksListItemView({model: task, id: (i <= 9) ? '0' + i : i}).render().el)
 
 			}, this)
+
 
 			return this
 		}
@@ -155,8 +163,8 @@
 
 	TasksListItemView = Backbone.View.extend({
 		tagName: "li",
-		events:{
-			"click .exerciseLink": function(){
+		events: {
+			"click .exerciseLink": function() {
 
 				var id = this.model.get('id'),
 					task = appRouter.tasksList.get(id),
@@ -167,9 +175,9 @@
 					.fadeIn('fast')
 			}
 		},
-		initialize: function(){
+		initialize: function() {
 
-			this.check = (!(this.model.get('solution') || this.model.get('solutions')))? 'muted' : ''
+			this.muted = (!(this.model.get('solution') || this.model.get('solutions'))) ? 'muted' : ''
 
 		},
 		render: function() {
@@ -178,7 +186,7 @@
 				[this.el,
 					['small.exerciseLink',
 						['a', String(this.id) + '. Aufgabe',
-							{class: this.check}
+							{class: this.muted}
 						]
 					]
 				]
@@ -197,37 +205,6 @@
 			this.model.on('reset', this.render, this)
 
 			this.model.set('displayedHints', 0)
-		},
-		render: function() {
-			this
-				.renderTask()
-				.renderBar()
-
-
-			MathJax.Hub.Queue(["Typeset", MathJax.Hub, this.el])
-
-			return this
-		},
-		renderBar: function() {
-			this.$('.span3')
-				.html(new TaskBarView({model: this.model}).render().el)
-				.fadeIn()
-
-			return this
-		},
-		renderTask: function() {
-			this.$el
-				.html(this.template(this.model.toJSON()))
-				.fadeIn()
-
-			console.log(this.$('pre')[0])
-
-			var snippets
-			if(snippets = this.$('pre code')[0])
-				hljs.highlightBlock(snippets)
-
-
-			return this
 		},
 		showHint: function() {
 			var counter = this.model.get('displayedHints')
@@ -255,6 +232,34 @@
 			}
 
 			this.renderBar()
+		},
+		renderTask: function() {
+			this.$el
+				.html(this.template(this.model.toJSON()))
+				.fadeIn()
+
+			var snippets
+			if(snippets = this.$('pre code')[0])
+				hljs.highlightBlock(snippets)
+
+			return this
+		},
+		renderBar: function() {
+			this.$('.span3')
+				.html(new TaskBarView({model: this.model}).render().el)
+				.fadeIn()
+
+			return this
+		},
+		render: function() {
+			this
+				.renderTask()
+				.renderBar()
+
+
+			MathJax.Hub.Queue(["Typeset", MathJax.Hub, this.el])
+
+			return this
 		}
 	});
 
@@ -271,17 +276,6 @@
 		}
 	});
 
-	AppView = Backbone.View.extend({
-		render: function() {
-
-		}
-	});
-
-
-	/*
-	 *	Exercise Formular
-	 */
-
 	ExerciseFormView = Backbone.View.extend({
 		id: "exerciseModal",
 		className: "modal hide fade",
@@ -296,7 +290,6 @@
 				model: exerciseFormData,
 				idPrefix: 'exerciseForm-'
 			})
-
 		},
 
 		attributes: {
@@ -334,6 +327,98 @@
 		}
 	});
 
+	ReferenceView = Backbone.View.extend({
+
+		id: 'reference',
+
+		template: _.template($('#referenceTemplate').html()),
+
+		render: function() {
+
+			this.$el
+				.html(this.template())
+
+			this.$('.span3')
+				.html(new ReferenceListView({collection: this.options.data}).render().el)
+
+			return this
+		}
+	})
+
+	ReferenceListView = Backbone.View.extend({
+		tagName: 'ul',
+		className: 'nav nav-list affix-top',
+		//attributes: {'data-spy': "affix"},
+		render: function() {
+
+			_.each(this.collection.references.math, function(value, key, list) {
+
+				this.$el.append(new ReferenceListItemView({model: value, id: key}).render().el)
+
+			}, this)
+
+			return this
+		}
+	})
+
+
+	ReferenceListItemView = Backbone.View.extend({
+		tagName: "li",
+		events: {
+			"click a": function() {
+
+				var ref,
+					cont
+
+				ref = $('#referenceContent').html('')
+
+				cont = DOMinate(
+					[ref[0],
+						['ol$list']
+					])
+
+				_.each(this.model, function(item, index) {
+
+					$(cont.list).append($('<li>' + item + '</li><hr>'))
+				})
+
+				MathJax.Hub.Queue(["Typeset", MathJax.Hub, cont.list])
+			}
+		},
+		render: function() {
+
+			DOMinate(
+				[this.el,
+					['a', String(this.id)]
+				]
+			)
+
+			return this
+		}
+	});
+
+	AppView = Backbone.View.extend({
+
+		events: {
+		},
+		initialise: function() {
+
+		},
+
+		render: function() {
+
+		}
+	});
+
+	BannerView = Backbone.View.extend({
+		render: function() {
+
+			this.$el.html(_.template($('#bannerTemplate').html()))
+
+			return this
+		}
+	})
+
 
 	/*
 	 *	Router
@@ -342,32 +427,34 @@
 	AppRouter = Backbone.Router.extend({
 		routes: {
 			"": "home",
-			":subject": "list"
+			"exercises/:subject": "list",
+			"reference/:subject": "reference"
 		},
 		initialize: function() {
 			this.tasksList = new TasksCollection()
 
-			this.route(/^(\d+)$/, "taskDetails")
+			this.route(/^exercises\/(\d+)$/, "taskDetails")
 
 			$('body').append(new ExerciseFormView().render().el)
+
+
 		},
 
 		list: function(subject) {
 
-			var tasksListView
-
 			this.tasksList.fetch({
+				dataType: 'json',
 				success: function(collection) {
 
-					tasksListView = new TasksListView(
-						{
-							'collection': collection.filter(function(task) {
+					var tasksListView = new TasksListView({
+						'collection': collection.filter(function(task) {
 
-								return _.contains(task.get("subjects"), subject)
+							return _.contains(task.get("subjects"), subject)
+						})
+					})
 
-							})
-						}
-					)
+					$('#contentWrapper')
+						.html(new TasksView().render().el)
 
 					$('#sidebar')
 						.html(tasksListView.render().el)
@@ -375,75 +462,68 @@
 				}
 			})
 
-			$('#banner').hide()
-			$('#tasks').show()
+			$('#tasks').fadeIn()
+		},
+
+		reference: function(subject) {
+
+			$.ajax({
+				url: "js/references.js",
+				dataType: "json",
+				context: this,
+				success: function(data) {
+
+					$('#contentWrapper')
+						.empty()
+						.append(new ReferenceView({data: data}).render().el)
+				}
+			}, this)
+
 		},
 
 		taskDetails: function(id) {
 
-			console.log(id)
 
-			if(this.tasksList.length) {
+			if(this.tasksList.length == 0) {
+
+				var self = this
+
+				this.tasksList.fetch({
+					success: function() {
+						console.log('hier')
+						self.taskDetails(id)
+					}
+				})
+
+			} else {
+
+
+				$('#contentWrapper')
+					.html(new TasksView().render().el)
 
 				this.task = this.tasksList.get(id)
 
 				this.taskView = new TaskView({model: this.task})
 
+				console.log(this.taskView.render().el)
+
 				$('#content')
 					.html(this.taskView.render().el)
 					.fadeIn('fast')
-
-			} else {
-
-				this.list()
-				this.tasksList.once('reset', function() {
-					this.taskDetails(id)
-				}, this)
 			}
-
 		},
 
 		home: function() {
-			$('#banner').show()
-			$('#tasks').hide()
-		},
 
-		defaultRoute: function() {
-
+			$('#contentWrapper')
+				.html(new BannerView().render().el)
 		}
-
 	});
 
-	appRouter = new AppRouter();
+	appRouter = new AppRouter()
+	appView = new AppView({el: document.body})
 
 	Backbone.history.start()
-
-
-	/*
-	 hyperdoc.table('#table2a', [
-	 ['`a`', '`b`', '`c`', '`a vv b`', '`a vv not c`', '`b ^^ not c`', '`(a vv b) ^^ (a vv not c)`', '`(a vv b) ^^ (a vv not c) => (b ^^ not c)`'],
-	 [0, 0, 0, 0, 1, 0, 0, 1],
-	 [0, 0, 1, 0, 0, 0, 0, 1],
-	 [0, 1, 0, 1, 1, 1, 1, 1],
-	 [0, 1, 1, 1, 0, 0, 0, 1],
-	 [1, 0, 0, 1, 1, 0, 1, 0],
-	 [1, 0, 1, 1, 1, 0, 1, 0],
-	 [1, 1, 0, 1, 1, 1, 1, 1],
-	 [1, 1, 1, 1, 1, 0, 1, 0]
-	 ])
-
-	 hyperdoc.table('#table2b', [
-	 ['`a`', '`b`', '`c`', '`a => b`', '`not b => not a`', '`b ^^ not c`', '`(a => b) ^^ (not b => not a)`', '`(a => b) ^^ (not b => not a) iff (b ^^ not c)`'],
-	 [0, 0, 0, 1, 1, 0, 1, 0],
-	 [0, 0, 1, 1, 1, 0, 1, 0],
-	 [0, 1, 0, 1, 1, 1, 1, 1],
-	 [0, 1, 1, 1, 1, 0, 1, 0],
-	 [1, 0, 0, 0, 0, 0, 0, 1],
-	 [1, 0, 1, 0, 0, 0, 0, 1],
-	 [1, 1, 0, 1, 1, 1, 1, 1],
-	 [1, 1, 1, 1, 1, 0, 1, 0]
-	 ])
-	 */
 
 	//console.log(international.getUntranslated())
 }())
