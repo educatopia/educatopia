@@ -775,10 +775,15 @@
 				"Berechne die Wahrscheinlichkeit als erstes eine rote Kugel zu ziehen",
 				"Es wurde als erstes eine rote Kugel gezogen. Berechne die Wahrscheinlichkeit mit der sie aus Urne A, B, C oder D stammt",
 				"Berechne die Wahrscheinlichkeit auch als zweites eine rote Kugel zu ziehen",
-				"Es wurde als zweites eine rote Kugel gezogen. Berechne die Wahrscheinlichkeit mit der sie aus Urne A, B, C oder D stammt"
+				"Es wurde auch als zweites eine rote Kugel gezogen. Berechne die Wahrscheinlichkeit mit der sie aus Urne A, B, C oder D stammt"
 			],
 			"solution": "",
-			"solutions": null,
+			"solutions": [
+				"a) `1/4 * 7/10 + 1/4 * 3/5 + 1/4 * 1/5 + 1/4 * 0`<br>\n`= 7/40 + 3/20 + 1/20`<br>\n`= 7/40 + 6/40 + 2/40`<br>\n`= 15/40`<br>\n`= 3/8`<br>"
+				,"b) <table class=\"table table-striped table-condensed\">\n\t<tr>\n\t\t<td>`A`</td>\n\t\t<td>`(7/40)/(15/40) = 7/15`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`B`</td>\n\t\t<td>`6/15 = 2/5`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`C`</td>\n\t\t<td>`2/15`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`D`</td>\n\t\t<td>`0`</td>\n\t</tr>\n</table>"
+				,"c)"
+				,"d)"
+			],
 			"credits": "1 2 2 2",
 			"difficulty": 0.5,
 			"hints": null,
@@ -793,7 +798,7 @@
 			"setting": "Gegeben sei ein Pokerspiel mit 52 Karten verteilt auf 13 verschiedene Werte und 4 Farben. Ein Blatt besteht aus 5 Karten. Das sog. Full-House beschreibt ein Blatt mit 2 gleichen Werten und 3 gleichen Werten. ",
 			"settings": "",
 			"given": "",
-			"solution": "",
+			"solution": "<ul>\n\t<li>13 Möglichkeiten, den Typ (z.B. König) des Drillings auszuwählen</li>\n\t<li>3 aus den 4 Königen</li>\n\t<li>12 Möglichkeiten, den Typ des Paars auszuwählen (einer ist schon verbraucht)</li>\n\t<li>schließlich 2 aus 4 von dem Paar</li>\n</ul>\n\n<br>\n\n`(((13),(1)) * ((4),(3)) * ((12),(1)) * ((4),(2)))/(((52),(5))) ~~ 1.44%`",
 			"solutions": null,
 			"credits": 3,
 			"difficulty": 0.5,
@@ -809,7 +814,7 @@
 			"setting": "Zwei anonyme Studenten geben identische Lösungen zur Matheübung ab.\nUm dies zu verschleiern, geben sie die Lösungen mit verschiedenen Übungsgruppen ab.\nJedoch gibt es nur drei Korrektoren, auf die die vier Gruppen zufällig verteilt werden.\n(Jeder Korrektor bekommt mindestens eine Gruppe zugeordnet)",
 			"settings": "",
 			"given": "",
-			"solution": "",
+			"solution": "Wahrscheinlichkeit die Lösung eines Studenten zu bekommen: `1/2`<br>\nWahrscheinlichkeit dann auch noch die Lösung des zweiten zu bekommen: `1/2 * 1/3 = 1/6`",
 			"solutions": null,
 			"credits": 2,
 			"difficulty": 0.5,
@@ -823,9 +828,8 @@
 			"subjects": ["math"],
 			"task": "Erläutern sie warum die Summe 10 öfter vorkommt",
 			"setting": "<p>Beim Wurf von `3` fairen Würfeln tritt die Summe `10` öfter auf als die Summe `9`.<br>\nBeide Summen können allerdings jeweils auf genau `6` Arten erzeugt werden:</p>\n\t\t\n`10 = 1 + 3 + 6`<br>\n`= 1 + 4 + 5`<br>\n`= 2 + 2 + 6`<br>\n`= 2 + 3 + 5`<br>\n`= 2 + 4 + 4`<br>\n`= 3 + 3 + 4`<br>\n\n<br>\n\t\t\n`9 = 1 + 2 + 6`<br>\n`= 1 + 3 + 5`<br>\n`= 1 + 4 + 4`<br>\n`= 2 + 2 + 5`<br>\n`= 2 + 3 + 4`<br>\n`= 3 + 3 + 3`",
-			"settings": "",
+			"solution": "<h4>Anzahl der Möglichkeiten die Kombinationen zu würfeln:</h4>\n\n\n<table class=\"table table-striped table-condensed\">\n\t<caption>Für 10</caption>\n\t<tr>\n\t\t<td>`1,3,6`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`1,4,5`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,2,6`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,3,5`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,4,4`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`3,3,4`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>Gesamt</td>\n\t\t<td>`27`</td>\n\t</tr>\n</table>\n\n<table class=\"table table-striped table-condensed\">\n\t<caption>Für 9</caption>\n\t<tr>\n\t\t<td>`1,2,6`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`1,3,5`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`1,4,4`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,2,5`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,3,4`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`3,3,3`</td>\n\t\t<td>`((3),(3)) = 1`</td>\n\t</tr>\n\t<tr>\n\t\t<td>Gesamt</td>\n\t\t<td>`25`</td>\n\t</tr>\n</table>\n\t\t\n<p>Es gibt 2 Möglichkeiten mehr die Summe 10 zu würfeln.\n   Somit wird die Summe 10 im Durchschnitt auch öfter gewürfelt werden.</p>\n\n<p>`q.e.d.`</p>",
 			"given": "",
-			"solution": "",
 			"solutions": null,
 			"credits": 1,
 			"difficulty": 0.5,
