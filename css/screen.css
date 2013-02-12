@@ -3,7 +3,7 @@ body {
 }
 
 #sidebar a,
-#referenceSidebar a{
+#referenceSidebar a {
 	cursor: pointer;
 }
 
@@ -40,7 +40,7 @@ a.menu:after, .dropdown-toggle:after {
 }
 
 .accordion-inner {
-	line-height: 3;
+	line-height: 2;
 }
 
 s {
@@ -89,9 +89,11 @@ footer a {
 }
 
 .qed {
-	position: absolute;
-	right: 30px;
-	bottom: 20px;
+	float: right;
+}
+
+.qed:before {
+	content: "\220E"
 }
 
 code {
@@ -99,7 +101,7 @@ code {
 	line-height: 1;
 }
 
-table caption{
+table caption {
 	font-weight: 900;
 	font-size: 120%;
 	line-height: 2;

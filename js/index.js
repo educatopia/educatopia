@@ -46,11 +46,51 @@
 		},
 		TasksView,
 		ReferenceListItemView,
-		c = console, appView, BannerView
+		c = console,
+		appView,
+		BannerView
+
+
+	/*
+	 offlineScripts = [
+	 "components/MathJax/index.js",
+	 "components/jquery/jquery.js",
+	 "components/underscore/underscore.js",
+	 "components/backbone/backbone.js",
+	 "components/backbone-forms/distribution/backbone-forms.js",
+	 "components/bootstrap-template/index.js",
+	 "components/dominate/index.js",
+	 "components/highlight/index.js",
+	 "components/bootstrap/bootstrap.js"
+	 ],
+	 onlineScripts = [
+	 "//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML",
+	 "//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js",
+	 "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js",
+	 "//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js",
+	 "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.0/bootstrap.min.js",
+	 "//raw.github.com/powmedia/backbone-forms/v0.10.0/distribution/backbone-forms.min.js",
+	 "//raw.github.com/powmedia/backbone-forms/v0.10.0/distribution/templates/bootstrap.js",
+	 "//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js",
+	 "//raw.github.com/adius/DOMinate/master/src/dominate.js"
+	 ]
+
+
+	 onlineScripts.forEach(function(script){
+	 var link
+	 link = document.createElement("script")
+	 link.setAttribute("src", "http:" + script)
+	 link.setAttribute("type", "text/javascript")
+
+	 document.body.appendChild(link)
+	 })
+	 */
 
 
 	// Add capitalize function to underscore
-	_.mixin({
+		_
+	.
+	mixin({
 		capitalize: function(string) {
 			return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
 		}
@@ -276,56 +316,58 @@
 		}
 	});
 
-	ExerciseFormView = Backbone.View.extend({
-		id: "exerciseModal",
-		className: "modal hide fade",
-		events: {
-			"click #exerciseFormSubmit": "showModal"
-		},
-		initialize: function() {
+	/*
+	 ExerciseFormView = Backbone.View.extend({
+	 id: "exerciseModal",
+	 className: "modal hide fade",
+	 events: {
+	 "click #exerciseFormSubmit": "showModal"
+	 },
+	 initialize: function() {
 
-			exerciseFormData = new Task()//{created: new Date()});
+	 exerciseFormData = new Task()//{created: new Date()});
 
-			ExerciseForm = new Backbone.Form({
-				model: exerciseFormData,
-				idPrefix: 'exerciseForm-'
-			})
-		},
+	 ExerciseForm = new Backbone.Form({
+	 model: exerciseFormData,
+	 idPrefix: 'exerciseForm-'
+	 })
+	 },
 
-		attributes: {
-			role: "dialog"
-		},
+	 attributes: {
+	 role: "dialog"
+	 },
 
-		template: _.template($('#exerciseFormTemplate').html()),
+	 template: _.template($('#exerciseFormTemplate').html()),
 
-		showModal: function() {
+	 showModal: function() {
 
-			if(!ExerciseForm.validate()) {
+	 if(!ExerciseForm.validate()) {
 
-				ExerciseForm.commit()
+	 ExerciseForm.commit()
 
-				var subject = "Exercise Submission",
-					data = encodeURIComponent(JSON.stringify(exerciseFormData.attributes))
+	 var subject = "Exercise Submission",
+	 data = encodeURIComponent(JSON.stringify(exerciseFormData.attributes))
 
-				window.location = 'mailto:submission@educatopia.org?subject=' + subject + '&body=' + data
-			}
-		},
+	 window.location = 'mailto:submission@educatopia.org?subject=' + subject + '&body=' + data
+	 }
+	 },
 
-		render: function() {
-			this.$el.html(this.template())
+	 render: function() {
+	 this.$el.html(this.template())
 
-			this.$('.modal-body').append(ExerciseForm.render().el)
+	 this.$('.modal-body').append(ExerciseForm.render().el)
 
-			this.$('#exerciseForm-subject').typeahead({
-				source: _.map(subjects, _.capitalize)
-			})
+	 this.$('#exerciseForm-subject').typeahead({
+	 source: _.map(subjects, _.capitalize)
+	 })
 
-			// Fixes backbone-form bug of not being able to set stepsize
-			this.$('#exerciseForm-difficulty').attr('step', 0.1)
+	 // Fixes backbone-form bug of not being able to set stepsize
+	 this.$('#exerciseForm-difficulty').attr('step', 0.1)
 
-			return this
-		}
-	});
+	 return this
+	 }
+	 });
+	 */
 
 	ReferenceView = Backbone.View.extend({
 
@@ -435,7 +477,7 @@
 
 			this.route(/^exercises\/(\d+)$/, "taskDetails")
 
-			$('body').append(new ExerciseFormView().render().el)
+			//$('body').append(new ExerciseFormView().render().el)
 
 
 		},

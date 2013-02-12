@@ -1,5 +1,6 @@
 {
-	"exercises":[
+	"exercises":
+	[
 		{
 			"id": 1,
 			"task": "Wandle die formulierten Regeln und Schlussfolgerungen in Aussagen um",
@@ -710,18 +711,28 @@
 			"subjects": ["math"],
 			"task": "Zeigen Sie mit Hilfe der vollständigen Induktion",
 			"settings": ["Die Fibonacci-Zahlen `F_n, n in NN_0`, sind definiert durch `F_0 = 0`, `F_1 = 1`, `F_(n+2) = F_n + F_(n+1)`"],
-			"given": [
-				"`sum_(k=0)^n F_(2k+1) = F_(2n+2)`",
-				"`F_(n+1)^2 = F_n * F_(n+1) + (-1)^n`"
-			],
-			"solutions": [
-				"Zu zeigen: `sum_(k=0)^n F_(2k+1) = F_(2n+2)`<br>\n\n<strong>Induktionsanfang</strong>\n<br>\n`sum_(k=0)^n F_(2k+1) = F_(2n+2)` (`n = 0`)<br>\n`F_(2 * 0 + 1) = F_(2 * 0 + 2)`<br>\n`F_1 = F_2`<br>\n<br>\n`sum_(k=0)^n F_(2k+1) = F_(2n+2)` (`n = 1`)<br>\n`F_(2 * 0 + 1) + F_(2 * 1 + 1) = F_(2 * 1 + 2)`<br>\n`F_1 + F_3 = F_4`<br>\n`q.e.d.`<br>\n<br>\n\t\t\n<strong>Induktionsvorraussetzung</strong>\n<br>\nSei wahr für ein beliebiges aber festes n<br>\n<br>\n\t\t\n<strong>Induktionsschluss</strong>\n<br>\n`sum_(k=0)^(n+1) F_(2k+1)`<br>\n`= sum_(k=0)^n F_(2k+1) + F_2(n+1)+1`<br>\n`= F_(2n+2) + F_(2n+3)`<br>\n`= F_(2n+4)`<br>\n`= F_(2(n+1)+2)`<br>\n`q.e.d.`<br>",
-				"<strong>Gegenbeispiel zu b):</strong>\n<br>\n`F_(n+1)^2 = F_n * F_(n+1) + (-1)^n` (`n = 2`)<br>\n`F_(2+1)^2 = F_2 F_(n+1) + (-1)^n`<br>\n`F_3^2 = F_2 F_3 + (-1)^2`<br>\n`4 = 2+1`<br>\n`4 = 3`<br>\nfalsch!"
-			],
+			"given": ["`sum_(k=0)^n F_(2k+1) = F_(2n+2)`"],
+			"solutions": ["<p>Sei `p(n) := sum_(k=0)^n F_(2k+1) = F_(2n+2)` mit `Fn:` Fibonacci- Zahl von `n`.<br>\n   Zu zeigen : `AAn in NN : p(n)`\n</p>\n<br>\n\n<strong>Induktionsbasis:</strong><br>\nSei n = 0, zu Zeigen: p(0) ist wahr.<br>\n`sum_(k=0)^0 F_(2k+1) = F_1 = F_2 = F_(2*0+2)`<br>\n<span class=\"qed\"></span>\n<br>\n\n<strong>Induktionsschritt:</strong><br>\nZu zeigen: `AAn ∈ N : p(n) → p(n + 1)`<br>\n<p>Sei `n in N` beliebig aber fest.</p>\n\t\t\n`p(n)`<br>\n`=> sum_(k=0)^n F_(2k+1) = F_(2n+2)` `| +F_(2(n+1)+1)`<br>\n`=> F_(2(n+1)+1) + sum_(k=0)^n F_(2k+1) = F_(2(n+1)+1) + F_(2n+2)`<br>\n`=> F_(2(n+1)+1) + sum_(k=0)^n F_(2k+1) = F_(2n+2) + F_(2n+3)` `|\"Definition\" Fib`<br>\n`=> F_(2(n+1)+1) + sum_(k=0)^n F_(2k+1) = F_(2n+4)` `|\"Defintion\" Sigma`<br>\n`=> sum_(k=0)^(n+1) F_(2k+1) = F_(2(n+1)+2)`<br>\n`=> p(n+1)`<br>\n<span class=\"qed\"></span>\n<br>\n<p>Aus der Induktionsbasis und dem Induktionsschritt folgt die Korrektheit von `p(n)` für alle `n in N`.</p>"],
 			"credits": 6,
 			"difficulty": 0.5,
 			"hints": null,
-			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 32",
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 32a",
+			"tags": ["proof", "fibonacci", "induction"],
+			"prototype": null,
+			"status": "correct",
+			"created": "2013-01-21T12:00"
+		},
+		{
+			"id": 46,
+			"subjects": ["math"],
+			"task": "Zeigen Sie mit Hilfe der vollständigen Induktion",
+			"settings": ["Die Fibonacci-Zahlen `F_n, n in NN_0`, sind definiert durch `F_0 = 0`, `F_1 = 1`, `F_(n+2) = F_n + F_(n+1)`"],
+			"given": ["`F_(n+1)^2 = F_n * F_(n+1) + (-1)^n`"],
+			"solutions": ["<strong>Gegenbeispiel zu b):</strong>\n<br>\n`F_(n+1)^2 = F_n * F_(n+1) + (-1)^n` (`n = 2`)<br>\n`F_(2+1)^2 = F_2 F_(n+1) + (-1)^n`<br>\n`F_3^2 = F_2 F_3 + (-1)^2`<br>\n`4 = 2+1`<br>\n`4 = 3`<br>\nfalsch!"],
+			"credits": 6,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 32b",
 			"tags": ["proof", "fibonacci", "induction"],
 			"prototype": null,
 			"status": "unapproved",
@@ -765,7 +776,8 @@
 			"prototype": null,
 			"status": "unapproved",
 			"created": "2013-01-21T12:00"
-		},{
+		},
+		{
 			"id": 41,
 			"subjects": ["math"],
 			"task": "Berechne die Wahrscheinlichkeit und begründe",
@@ -779,10 +791,10 @@
 			],
 			"solution": "",
 			"solutions": [
-				"a) `1/4 * 7/10 + 1/4 * 3/5 + 1/4 * 1/5 + 1/4 * 0`<br>\n`= 7/40 + 3/20 + 1/20`<br>\n`= 7/40 + 6/40 + 2/40`<br>\n`= 15/40`<br>\n`= 3/8`<br>"
-				,"b) <table class=\"table table-striped table-condensed\">\n\t<tr>\n\t\t<td>`A`</td>\n\t\t<td>`(7/40)/(15/40) = 7/15`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`B`</td>\n\t\t<td>`6/15 = 2/5`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`C`</td>\n\t\t<td>`2/15`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`D`</td>\n\t\t<td>`0`</td>\n\t</tr>\n</table>"
-				,"c)"
-				,"d)"
+				"<p>a) Wahrscheinlichkeit eine bestimmte Urne auszuwählen:<br>\n   `P(A) = P(B) = P(C) = P(D) = 1/4`</p>\n\t\t\n<p>r := rote Kugel ziehen</p>\n\t\t\n`P(r) = P(A nn r) + P(B nn r) + P(C nn r) + P(D nn r)`<br>\n`= 1/4 * 7/10 + 1/4 * 3/5 + 1/4 * 1/5 + 1/4 * 0`<br>\n`= 7/40 + 3/20 + 1/20`<br>\n`= 7/40 + 6/40 + 2/40`<br>\n`= 15/40`<br>\n`= 3/8`<br>"
+				, "b)<br>\n`P_r(A) = (P(A nn r))/(P(r)) = (7/40)/(3/8) = 7/15`<br>\n`P_r(B) = (P(B nn r))/(P(r)) = (3/20)/(3/8) = 2/5`<br>\n`P_r(C) = (P(C nn r))/(P(r)) = (1/20)/(3/8) = 2/15`<br>\n`P_r(D) = 0`<br>"
+				, "c)<br>\n`P(r, r) = 1/4 * (7/10 * 1/4 * (6/9 + 3/5 + 1/5)``+ 3/5 *  1/4 * (7/10 + 2/4 + 1/5)``+ 1/5 * 1/4 * (7/10 + 3/5 + 0) + 0)``= 319/2400`<br>"
+				, "d)<br>\n`P_(2r)(A)`\n`= (P(A nn r_2))/(P(r_2))`\n`= (1/16 * (7/10 * 2/3 + 3/5 * 7/10 + 1/5 * 7/10))/(319/2400)`\n`= (1/16 * 77/75)/(319/2400)`\n`= 154/319`\n`= 14/29`<br>\n\t\t\n`P_(2r)(B)`\n`= (P(B nn r_2))/(P(r_2))`\n`= (1/16 * (7/10 * 3/5 + 3/5 * 2/4 + 1/5 * 3/5))/(319/2400)`\n`= 126/319`<br>\n\n`P_(2r)(C)`\n`= (P(C nn r_2))/(P(r_2))`\n`= (1/16 * (7/10 * 1/5 + 3/5 * 1/5 + 1/5 * 0))/(319/2400)`\n`= 39/319`<br>"
 			],
 			"credits": "1 2 2 2",
 			"difficulty": 0.5,
@@ -791,14 +803,15 @@
 			"tags": null,
 			"prototype": null,
 			"created": "2013-01-27T18:00"
-		},{
+		},
+		{
 			"id": 42,
 			"subjects": ["math"],
 			"task": "Berechne die Anzahl der verschiedenen Blätter für ein Full House und begründe",
 			"setting": "Gegeben sei ein Pokerspiel mit 52 Karten verteilt auf 13 verschiedene Werte und 4 Farben. Ein Blatt besteht aus 5 Karten. Das sog. Full-House beschreibt ein Blatt mit 2 gleichen Werten und 3 gleichen Werten. ",
 			"settings": "",
 			"given": "",
-			"solution": "<ul>\n\t<li>13 Möglichkeiten, den Typ (z.B. König) des Drillings auszuwählen</li>\n\t<li>3 aus den 4 Königen</li>\n\t<li>12 Möglichkeiten, den Typ des Paars auszuwählen (einer ist schon verbraucht)</li>\n\t<li>schließlich 2 aus 4 von dem Paar</li>\n</ul>\n\n<br>\n\n`(((13),(1)) * ((4),(3)) * ((12),(1)) * ((4),(2)))/(((52),(5))) ~~ 1.44%`",
+			"solution": "<ul>\n\t<li>13 Möglichkeiten, den Typ (z.B. König) des Drillings auszuwählen</li>\n\t<li>3 aus den 4 Königen</li>\n\t<li>12 Möglichkeiten, den Typ des Paars auszuwählen (eine ist schon verbraucht)</li>\n\t<li>2 aus 4 von dem Paar</li>\n</ul>\n\n<br>\n`((13),(1)) * ((4),(3)) * ((12),(1)) * ((4),(2)) = 3744`",
 			"solutions": null,
 			"credits": 3,
 			"difficulty": 0.5,
@@ -807,7 +820,8 @@
 			"tags": null,
 			"prototype": null,
 			"created": "2013-01-27T18:00"
-		},{
+		},
+		{
 			"id": 43,
 			"subjects": ["math"],
 			"task": "Berechne die Wahrscheinlichkeit mit der die beiden Lösungen von dem gleichen Korrektor bewertet werden",
@@ -823,21 +837,154 @@
 			"tags": null,
 			"prototype": null,
 			"created": "2013-01-27T18:00"
-		},{
+		},
+		{
 			"id": 44,
 			"subjects": ["math"],
 			"task": "Erläutern sie warum die Summe 10 öfter vorkommt",
 			"setting": "<p>Beim Wurf von `3` fairen Würfeln tritt die Summe `10` öfter auf als die Summe `9`.<br>\nBeide Summen können allerdings jeweils auf genau `6` Arten erzeugt werden:</p>\n\t\t\n`10 = 1 + 3 + 6`<br>\n`= 1 + 4 + 5`<br>\n`= 2 + 2 + 6`<br>\n`= 2 + 3 + 5`<br>\n`= 2 + 4 + 4`<br>\n`= 3 + 3 + 4`<br>\n\n<br>\n\t\t\n`9 = 1 + 2 + 6`<br>\n`= 1 + 3 + 5`<br>\n`= 1 + 4 + 4`<br>\n`= 2 + 2 + 5`<br>\n`= 2 + 3 + 4`<br>\n`= 3 + 3 + 3`",
-			"solution": "<h4>Anzahl der Möglichkeiten die Kombinationen zu würfeln:</h4>\n\n\n<table class=\"table table-striped table-condensed\">\n\t<caption>Für 10</caption>\n\t<tr>\n\t\t<td>`1,3,6`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`1,4,5`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,2,6`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,3,5`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,4,4`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`3,3,4`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>Gesamt</td>\n\t\t<td>`27`</td>\n\t</tr>\n</table>\n\n<table class=\"table table-striped table-condensed\">\n\t<caption>Für 9</caption>\n\t<tr>\n\t\t<td>`1,2,6`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`1,3,5`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`1,4,4`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,2,5`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,3,4`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`3,3,3`</td>\n\t\t<td>`((3),(3)) = 1`</td>\n\t</tr>\n\t<tr>\n\t\t<td>Gesamt</td>\n\t\t<td>`25`</td>\n\t</tr>\n</table>\n\t\t\n<p>Es gibt 2 Möglichkeiten mehr die Summe 10 zu würfeln.\n   Somit wird die Summe 10 im Durchschnitt auch öfter gewürfelt werden.</p>\n\n<p>`q.e.d.`</p>",
+			"solution": "<h4>Anzahl der Möglichkeiten die Kombinationen zu würfeln:</h4>\n\n\n<table class=\"table table-striped table-condensed\">\n\t<caption>Für 10</caption>\n\t<tr>\n\t\t<td>`1,3,6`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`1,4,5`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,2,6`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,3,5`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,4,4`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`3,3,4`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>Gesamt</td>\n\t\t<td>`27`</td>\n\t</tr>\n</table>\n\n<table class=\"table table-striped table-condensed\">\n\t<caption>Für 9</caption>\n\t<tr>\n\t\t<td>`1,2,6`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`1,3,5`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`1,4,4`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,2,5`</td>\n\t\t<td>`3! = 6`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`2,3,4`</td>\n\t\t<td>`((3),(2)) = 3`</td>\n\t</tr>\n\t<tr>\n\t\t<td>`3,3,3`</td>\n\t\t<td>`((3),(3)) = 1`</td>\n\t</tr>\n\t<tr>\n\t\t<td>Gesamt</td>\n\t\t<td>`25`</td>\n\t</tr>\n</table>\n\t\t\n<p>Es gibt 2 Möglichkeiten mehr die Summe 10 zu würfeln.\n   Somit wird die Summe 10 im Durchschnitt auch öfter gewürfelt werden.</p>",
 			"given": "",
 			"solutions": null,
 			"credits": 1,
 			"difficulty": 0.5,
 			"hints": null,
 			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 38",
-			"tags": null,
+			"tags": ["proof"],
 			"prototype": null,
 			"created": "2013-01-27T18:00"
+		},
+		{
+			"id": 45,
+			"subjects": ["math"],
+			"task": "Beweise",
+			"setting": "In einer Gruppe von acht Leuten haben (mindestens) zwei am gleichen Wochentag Geburtstag.",
+			"solution": "`A = \"Personen\"`<br>\n`B = \"Wochentage\"`<br>\n<br>\n`f: A -> B`<br>\n<br>\n`#A = 8`<br>\n`#B = 7`<br>\n<br>\n`#f^(-1)(b) >= |~ (#A)/(#B) ~| >= |~ 8/7 ~| >= 2`",
+			"given": "",
+			"solutions": null,
+			"credits": 1,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013",
+			"tags": ["proof", "pigeonhole principle"],
+			"prototype": null,
+			"created": "2013-02-10T18:00"
+		},
+		{
+			"id": 47,
+			"subjects": ["math"],
+			"task": "Wieviele Studenten sind in der Mensa?",
+			"setting": "In der Mensa sitzen 100 Studenten und essen, 60 Studenten reden und 20 Studenten lesen Zeitung. 23 dieser Studenten essen und reden gleichzeitig, 5 essen und lesen Zeitung, 3 reden und lesen Zeitung und einer isst, redet und liest gleichzeitig.",
+			"solution": "`E = \"Essenden\"`<br>\n`R = \"Redenden\"`<br>\n`L = \"Lesenden\"`<br>\n<br>\n`#E = 100`<br>\n`#R = 60`<br>\n`#L = 20`<br>\n<br>\n<p>Die Studenten, die verschiedenes zugleich machen, finden sich in den Schnittmengen wieder:</p>\n`#(E nn R) = 23`<br>\n`#(E nn L) = 5`<br>\n`#(R nn L) = 3`<br>\n`#(E nn R nn L) = 1`<br>\n<br>\n<p>Die Anzahl der Studenten in der Mensa ist somit `100 + 60 + 20 − 23 − 5 − 3 + 1 = 150`.</p>",
+			"given": "",
+			"solutions": null,
+			"credits": 1,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013",
+			"tags": ["combinatorics"],
+			"prototype": null,
+			"created": "2013-02-10T18:00"
+		},
+		{
+			"id": 48,
+			"subjects": ["math"],
+			"task": "Berechne",
+			"setting": "Berechne die Anzahl der Möglichkeiten beim Lotto 6 aus 49 Zahlen zu ziehen.",
+			"solution": "<p>`[(49),(6)]` liefert die Anzahl aller Permutationen von `6` der `49` Zahlen. <br>\nBeim Lotto kommt es jedoch nicht auf die Reihenfolge in der die Zahlen gezogen werden an.\nDie beiden verschiedenen Permutationen `3, 43, 22, 6, 17, 11` und `22, 11, 17, 6, 43, 3`\nliefern beide die Menge `{3, 6, 11, 17, 22, 43}` als Ergebnis der Ziehung.\nFür jede `6`-elementige Menge gibt es `6!` Permutationen.</p>\n`([(49),(6)])/(6!)`\n`= ((49),(6))`\n`= (49!)/(6! * (49 - 6)!)`\n`= (49 * 48 * 47 * 46 * 45 * 44)/(1 * 2 * 3 * 4 * 5 * 6)`\n`= 13983816`",
+			"given": "",
+			"solutions": null,
+			"credits": 1,
+			"difficulty": 0.5,
+			"hints": null,
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013",
+			"tags": ["combinatorics"],
+			"prototype": null,
+			"created": "2013-02-10T18:00"
+		},
+		{
+			"id": 49,
+			"subjects": ["math"],
+			"task": "Berechne den Erwartungswert und die Standardabweichung fu ̈r folgenden Zufallsvariablen:",
+			"setting": "X sei die Anzahl der Einserpa ̈sche nach dem 10. Wurf von zwei fairen Wu ̈rfeln",
+			"solution": "",
+			"given": "",
+			"solutions": ["<p>Es handelt sich um einen Bernoulli-Versuch und somit können die Formeln für Binominalverteilungen angewendet werden.<br>\n   Anzahl der Würfe: `n = 10` <br>\n   Wahrscheinlichkeit für einen Pasch: `p = 1/36`<br>\n\t<br>\n   Erwartungswert: `E[X] = n * p = 5/18`<br>\n   Standardabweichung: `sigma[X] = sqrt(Var[X]) = sqrt(n * p * q) = sqrt(175/648)`</p>"],
+			"credits": 2,
+			"difficulty": 0.5,
+			"hints": null,
+			"status": "correct",
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 39a",
+			"tags": ["stochastic"],
+			"prototype": null,
+			"created": "2013-02-11T18:00"
+		},
+		{
+			"id": 50,
+			"subjects": ["math"],
+			"task": "Berechne den Erwartungswert und die Standardabweichung fu ̈r folgenden Zufallsvariablen:",
+			"setting": "X sei die Anzahl der Wu ̈rfe von zwei faieren Wu ̈rfeln bis zum ersten Einserpasch.",
+			"solution": "",
+			"given": "",
+			"solutions": ["Wahrscheinlichkeit für einen Pasch: `p=1/36`<br>\n\tEs handelt sich um eine geometrische Verteilung. <br>\n\t\n\tErwartungswert: `E[X] = 1/p = 36`<br>\n\tStandardabweichung: `sigma[X] = sqrt(Var[X]) = sqrt(q/p^2) = sqrt 1260 ~~ 35.5`"],
+			"credits": 2,
+			"difficulty": 0.5,
+			"hints": null,
+			"status": "correct",
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 39b",
+			"tags": ["stochastic"],
+			"prototype": null,
+			"created": "2013-02-11T18:00"
+		},
+		{
+			"id": 51,
+			"subjects": ["math"],
+			"task": "Berechne den Erwartungswert und die Standardabweichung",
+			"setting": "Bei der Herstellung von Smartphones ist mit einem Ausschuss von `5%` zu rechnen.\nEine Kiste Smartphones enthält 100 Stück. <br>\nWie hoch ist der Erwartungswert und die Standardabweichung fu ̈r die Anzahl der defekten Handys X\nund fu ̈r die Anzahl der funktionierenden Handys Y?",
+			"solution": "Es handelt sich um binominal verteilte Zufallsgrößen. <br>\n`n = 100` <br>\n`P(X) = p = 0.05` <br>\n`P(Y) = q = 1 - p = 0.95` <br>\n<br>\n`E[X] = n * p = 5`<br>\n`E[Y] = n * q = 95`<br>\n<br>\n`sigma[X]`\n`= sigma[Y]`\n`= sqrt(Var[x])`\n`= sqrt(n * p * q)`\n`= sqrt(100 * 0.05 * 0.95)`\n`= sqrt(4.75)` \n`~~ 2.18`",
+			"solutions": null,
+			"credits": 2,
+			"difficulty": 0.5,
+			"hints": null,
+			"status": "correct",
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 40a",
+			"tags": ["stochastic"],
+			"prototype": null,
+			"created": "2013-02-11T18:00"
+		},
+		{
+			"id": 52,
+			"subjects": ["math"],
+			"task": "Berechne die Wahrscheinlichkeit",
+			"setting": "Bei der Herstellung von Smartphones ist mit einem Ausschuss von `5%` zu rechnen.\nEine Kiste Smartphones enthält 100 Stück. <br>\nBerechne die Wahrscheinlichkeit, dass die Anzahl der defekten Handys im Bereich\n`U = [mu − sigma, mu + sigma]` mit `mu` Erwartungswert und `sigma` Standardabweichung liegt.",
+			"solution": "`U = [2.82, 7.18]`<br>\n<br>\n`P(X in U)`<br>\n`= sum_(k=3)^7 B(k | 100, 0.05)`<br>\n`= B(3 | 100, 0.05) + B(4 | 100, 0.05) + B(5 | 100, 0.05)``\\ \\ + B(6 | 100, 0.05) + B(7 | 100, 0.05)`<br>\n`~~ 0.7537`",
+			"given": "",
+			"solutions": null,
+			"credits": 2,
+			"difficulty": 0.5,
+			"hints": null,
+			"status": "correct",
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 40b",
+			"tags": ["stochastic"],
+			"prototype": null,
+			"created": "2013-02-11T18:00"
+		},
+		{
+			"id": 53,
+			"subjects": ["math"],
+			"task": "Berechne die Anzahl",
+			"setting": "Bei der Herstellung von Smartphones ist mit einem Ausschuss von `5%` zu rechnen.\nEine Kiste Smartphones enthält 100 Stück.<br>\nBerechne die maximale Anzahl an Handys die in der Kiste vorhanden sein dürfen,\ndamit man mit 90% Sicherheit nur brauchbare Handys hat.",
+			"solution": "`0.95^n >= 90%` `\\ |log` <br>\n`n >= log_(0.95)0.9`<br>\n`n >= (ln 0.9)/(ln 0.95)`<br>\n`n >= 2.0540797…`<br>\n`=> n = 2`",
+			"given": "",
+			"solutions": null,
+			"credits": 2,
+			"difficulty": 0.5,
+			"hints": null,
+			"status": "correct",
+			"note": "HPI, Mathematik I - Diskrete Strukturen und Logik, WS 2012/2013, Nr. 40c",
+			"tags": ["stochastic"],
+			"prototype": null,
+			"created": "2013-02-11T18:00"
 		}
 	]
 }
