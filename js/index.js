@@ -88,9 +88,7 @@
 
 
 	// Add capitalize function to underscore
-		_
-	.
-	mixin({
+	_.mixin({
 		capitalize: function(string) {
 			return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
 		}
@@ -145,14 +143,77 @@
 	Task = Backbone.Model.extend({
 		defaults: rootExercise,
 		schema: {
-			subject: {type: 'Text', validators: ['required'], editorClass: 'input-medium'},
-			task: {type: 'TextArea', editorClass: 'input-xlarge', validators: ['required']},
-			setting: {type: 'TextArea', editorClass: 'input-xlarge'},
-			solution: {type: 'TextArea', editorClass: 'input-xlarge'},
-			credits: {type: 'Number', editorClass: 'input-mini', editorAttrs: {min: 0}},
-			difficulty: {type: 'Number', editorClass: 'input-mini', editorAttrs: {min: 0, max: 1}},
-			note: {type: 'Text', editorClass: 'input-large'},
-			tags: {type: 'Text', editorClass: 'input-large'}
+			task: {
+				type: 'TextArea',
+				validators: ['required'],
+				editorClass: 'input-xlarge',
+				help: 'Detailed description of the task which must be solved. Try to split up large tasks into its sub-tasks.'
+			},
+			approach: {
+				type: 'TextArea',
+				validators: ['required'],
+				editorClass: 'input-xlarge',
+				help: 'All the necessary steps to get to a solution.'
+			},
+			solution: {
+				type: 'Text',
+				validators: ['required'],
+				editorClass: 'input-medium',
+				help: 'Try to keep the solution as short as possible! All further information should be written down in the approach section.'
+			},
+			subject: {
+				type: 'Text',
+				validators: ['required'],
+				editorClass: 'input-medium',
+				help: 'Specify the subject of the exercise. (i.e. Math, Biology, …)'
+			},
+			type: {
+				type: 'Select',
+				options: ['', 'Calculate', 'Explain', 'Name', 'Describe', 'Proof', 'Assign', 'Draw', 'Choose'],
+				validators: ['required'],
+				editorClass: 'input-medium',
+				help: 'What is the main task of the exercise?'
+			},
+			credits: {
+				type: 'Number',
+				editorClass: 'input-mini',
+				editorAttrs: {min: 0},
+				help: 'Valuation of the exercise in terms of difficulty, necessary steps and importance. ' +
+					'Each credit-point relates to a noteworthy accomplishment in the course of solving the task. ' +
+					'Recommended range is 1 - 10 credits.'
+			},
+			difficulty: {
+				type: 'Number',
+				editorClass: 'input-mini',
+				editorAttrs: {min: 0, max: 1, title: 'Tooltip help'},
+				help: 'The difficulty level of the exercise from 0.1 (So easy that everybody can solve it) to 1 (So difficult that nobody can solve it)'
+			},
+			duration: {
+				type: 'Number',
+				editorClass: 'input-mini',
+				editorAttrs: {min: 0},
+				help: 'How long does it take to solve the exercise for an average person?'
+			},
+			tags: {
+				type: 'Text',
+				editorClass: 'input-large',
+				help: 'All the things that should be associated with this exercise'
+			},
+			note: {
+				type: 'TextArea',
+				editorClass: 'input-large',
+				help: 'Any additional information'
+			},
+			hint: {
+				type: 'TextArea',
+				editorClass: 'input-large',
+				help: 'An information which helps one to solve the exercise when he\'s stuck.'
+			},
+			todos: {
+				type: 'TextArea',
+				editorClass: 'input-large',
+				help: 'An information which helps one to solve the exercise when he\'s stuck.'
+			}
 		}
 	});
 
@@ -316,58 +377,81 @@
 		}
 	});
 
-	/*
-	 ExerciseFormView = Backbone.View.extend({
-	 id: "exerciseModal",
-	 className: "modal hide fade",
-	 events: {
-	 "click #exerciseFormSubmit": "showModal"
-	 },
-	 initialize: function() {
 
-	 exerciseFormData = new Task()//{created: new Date()});
+	ExerciseFormView = Backbone.View.extend({
+		id: "exerciseModal",
+		className: "modal hide fade",
+		events: {
+			"click #exerciseFormSubmit": "showModal"
+		},
+		attributes: {
+			role: "dialog"
+		},
 
-	 ExerciseForm = new Backbone.Form({
-	 model: exerciseFormData,
-	 idPrefix: 'exerciseForm-'
-	 })
-	 },
+		template: _.template($('#exerciseFormTemplate').html()),
 
-	 attributes: {
-	 role: "dialog"
-	 },
+		initialize: function() {
 
-	 template: _.template($('#exerciseFormTemplate').html()),
+			exerciseFormData = new Task()//{created: new Date()});
 
-	 showModal: function() {
+			ExerciseForm = new Backbone.Form({
+				model: exerciseFormData,
+				idPrefix: 'exerciseForm-',
+				fieldsets: [
+					{
+						legend: 'Exercise',
+						fields: ['task', 'approach', 'solution']
+					},
+					{
+						legend: 'Details',
+						fields: ['subject', 'type', 'credits', 'difficulty', 'duration', 'hint', 'tags', 'note']
+					}
+				]
+			})
+		},
 
-	 if(!ExerciseForm.validate()) {
+		showModal: function() {
 
-	 ExerciseForm.commit()
+			if(!ExerciseForm.validate()) {
 
-	 var subject = "Exercise Submission",
-	 data = encodeURIComponent(JSON.stringify(exerciseFormData.attributes))
+				ExerciseForm.commit()
 
-	 window.location = 'mailto:submission@educatopia.org?subject=' + subject + '&body=' + data
-	 }
-	 },
+				var subject = "Exercise Submission",
+					data = encodeURIComponent(JSON.stringify(exerciseFormData.attributes))
 
-	 render: function() {
-	 this.$el.html(this.template())
+				window.location = 'mailto:submission@educatopia.org?subject=' + subject + '&body=' + data
+			}
+		},
 
-	 this.$('.modal-body').append(ExerciseForm.render().el)
+		render: function() {
+			this.$el.html(this.template())
 
-	 this.$('#exerciseForm-subject').typeahead({
-	 source: _.map(subjects, _.capitalize)
-	 })
+			this.$('.modal-body').append(ExerciseForm.render().el)
 
-	 // Fixes backbone-form bug of not being able to set stepsize
-	 this.$('#exerciseForm-difficulty').attr('step', 0.1)
+			this.$('#exerciseForm-subject').typeahead({
+				source: _.map(subjects, _.capitalize)
+			})
 
-	 return this
-	 }
-	 });
-	 */
+			//Fixes backbone-form bug of not being able to set stepsize
+			this.$('#exerciseForm-difficulty').attr('step', 0.1)
+
+
+			this
+				//Fixes backbone-form bug of not being able to use template-variables in attributes
+				.$('.icon-question-sign').each(function() {
+					c.log(this)
+					this.title = this.innerHTML
+					this.innerHTML = ''
+				})
+				//initalize tooltips
+				.tooltip()
+
+
+			//this.$('.icon-question-sign')
+
+			return this
+		}
+	});
 
 	ReferenceView = Backbone.View.extend({
 
@@ -477,9 +561,7 @@
 
 			this.route(/^exercises\/(\d+)$/, "taskDetails")
 
-			//$('body').append(new ExerciseFormView().render().el)
-
-
+			$('body').append(new ExerciseFormView().render().el)
 		},
 
 		list: function(subject) {

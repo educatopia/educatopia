@@ -71,7 +71,8 @@ footer a {
 	text-transform: none;
 }
 
-/* Exercise Formular*/
+
+/* Exercise Formular */
 
 #exerciseModal .modal-body {
 	max-height: 500px;
@@ -87,6 +88,11 @@ footer a {
 #exerciseModal .form-horizontal .controls {
 	margin-left: 120px;
 }
+
+#exerciseModal .icon-question-sign{
+	opacity: 0.3
+}
+
 
 .qed {
 	float: right;
