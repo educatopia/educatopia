@@ -1,0 +1,9 @@
+{
+	"name": "Educatopia",
+	"description": "Education for everybody",
+	"version": "0.0.1",
+	"private": true,
+	"dependencies": {
+		"express": "3.1.x"
+	}
+}

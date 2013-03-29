@@ -1,5 +1,6 @@
 (function() {
 
+	var ExercisesView;
 	var appRouter,
 		AppRouter,
 		ExerciseFormView,
@@ -147,7 +148,8 @@
 				type: 'TextArea',
 				validators: ['required'],
 				editorClass: 'input-xlarge',
-				help: 'Detailed description of the task which must be solved. Try to split up large tasks into its sub-tasks.'
+				help: 'Detailed description of the task which must be solved.' +
+					'Try to split up large tasks into its sub-tasks.'
 			},
 			approach: {
 				type: 'TextArea',
@@ -159,7 +161,8 @@
 				type: 'Text',
 				validators: ['required'],
 				editorClass: 'input-medium',
-				help: 'Try to keep the solution as short as possible! All further information should be written down in the approach section.'
+				help: 'Try to keep the solution as short as possible to make it comparable!' +
+					'All further information should be written down in the approach section.'
 			},
 			subject: {
 				type: 'Text',
@@ -178,15 +181,17 @@
 				type: 'Number',
 				editorClass: 'input-mini',
 				editorAttrs: {min: 0},
-				help: 'Valuation of the exercise in terms of difficulty, necessary steps and importance. ' +
-					'Each credit-point relates to a noteworthy accomplishment in the course of solving the task. ' +
+				help: 'Consider difficulty, necessary steps and importance of the exercise. ' +
+					'Each credit-point relates to a noteworthy accomplishment while solving the task. ' +
 					'Recommended range is 1 - 10 credits.'
 			},
 			difficulty: {
 				type: 'Number',
 				editorClass: 'input-mini',
 				editorAttrs: {min: 0, max: 1, title: 'Tooltip help'},
-				help: 'The difficulty level of the exercise from 0.1 (So easy that everybody can solve it) to 1 (So difficult that nobody can solve it)'
+				help: 'The difficulty level of the exercise ranges ' +
+					'from excluded 0 (So easy that everybody can solve it) ' +
+					'to excluded 1 (So difficult that nobody can solve it)'
 			},
 			duration: {
 				type: 'Number',
@@ -215,7 +220,7 @@
 				help: 'An information which helps one to solve the exercise when he\'s stuck.'
 			}
 		}
-	});
+	})
 
 
 	/*
@@ -224,11 +229,8 @@
 
 	TasksCollection = Backbone.Collection.extend({
 		model: Task,
-		url: 'js/tasks.js',
-		parse: function(response) {
-			return response.exercises
-		}
-	});
+		url: '/js/tasks.json'
+	})
 
 
 	/*
@@ -260,7 +262,7 @@
 
 			return this
 		}
-	});
+	})
 
 	TasksListItemView = Backbone.View.extend({
 		tagName: "li",
@@ -295,7 +297,7 @@
 
 			return this
 		}
-	});
+	})
 
 	TaskView = Backbone.View.extend({
 		template: _.template($('#exerciseTemplate').html()),
@@ -362,7 +364,7 @@
 
 			return this
 		}
-	});
+	})
 
 	TaskBarView = Backbone.View.extend({
 		tagName: 'ul',
@@ -375,8 +377,19 @@
 
 			return this
 		}
-	});
+	})
 
+
+	ExercisesView = Backbone.View.extend({
+		id: 'exercise',
+		template: _.template($('#exercisesTemplate').html()),
+		render: function() {
+
+			this.$el.html(this.template())
+
+			return this
+		}
+	})
 
 	ExerciseFormView = Backbone.View.extend({
 		id: "exerciseModal",
@@ -439,7 +452,6 @@
 			this
 				//Fixes backbone-form bug of not being able to use template-variables in attributes
 				.$('.icon-question-sign').each(function() {
-					c.log(this)
 					this.title = this.innerHTML
 					this.innerHTML = ''
 				})
@@ -451,7 +463,8 @@
 
 			return this
 		}
-	});
+	})
+
 
 	ReferenceView = Backbone.View.extend({
 
@@ -461,8 +474,7 @@
 
 		render: function() {
 
-			this.$el
-				.html(this.template())
+			this.$el.html(this.template())
 
 			this.$('.span3')
 				.html(new ReferenceListView({collection: this.options.data}).render().el)
@@ -486,7 +498,6 @@
 			return this
 		}
 	})
-
 
 	ReferenceListItemView = Backbone.View.extend({
 		tagName: "li",
@@ -521,20 +532,21 @@
 
 			return this
 		}
-	});
+	})
+
 
 	AppView = Backbone.View.extend({
 
 		events: {
 		},
-		initialise: function() {
+		initialize: function() {
 
 		},
 
 		render: function() {
 
 		}
-	});
+	})
 
 	BannerView = Backbone.View.extend({
 		render: function() {
@@ -566,25 +578,30 @@
 
 		list: function(subject) {
 
-			this.tasksList.fetch({
-				dataType: 'json',
-				success: function(collection) {
+			this.tasksList.fetch(
+				{
+					dataType: 'json',
+					success: function(collection) {
 
-					var tasksListView = new TasksListView({
-						'collection': collection.filter(function(task) {
+						var tasksListView = new TasksListView(
+							{
+								collection: collection.filter(function(task) {
 
-							return _.contains(task.get("subjects"), subject)
-						})
-					})
+									return _.contains(task.get("subjects"), subject)
+								})
+							}
+						)
 
-					$('#contentWrapper')
-						.html(new TasksView().render().el)
 
-					$('#sidebar')
-						.html(tasksListView.render().el)
-						.fadeIn('fast')
+						$('#contentWrapper')
+							.html(new TasksView().render().el)
+
+						$('#sidebar')
+							.html(tasksListView.render().el)
+							.fadeIn('fast')
+					}
 				}
-			})
+			)
 
 			$('#tasks').fadeIn()
 		},
@@ -592,7 +609,7 @@
 		reference: function(subject) {
 
 			$.ajax({
-				url: "js/references.js",
+				url: "js/references.json",
 				dataType: "json",
 				context: this,
 				success: function(data) {
@@ -642,7 +659,7 @@
 			$('#contentWrapper')
 				.html(new BannerView().render().el)
 		}
-	});
+	})
 
 	appRouter = new AppRouter()
 	appView = new AppView({el: document.body})
