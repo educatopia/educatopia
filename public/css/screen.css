@@ -41,6 +41,7 @@ a.menu:after, .dropdown-toggle:after {
 
 .accordion-inner {
 	line-height: 2;
+	overflow: scroll;
 }
 
 s {
@@ -112,4 +113,8 @@ table caption {
 	font-size: 120%;
 	line-height: 2;
 	text-align: left;
+}
+
+.alert{
+	overflow: scroll;
 }

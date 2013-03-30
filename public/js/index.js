@@ -112,7 +112,7 @@
 	auto = {
 		"id": 0,
 		"created": "2013-01-01T12:00",
-		"status": "unapproved",
+		"flags": "",
 		"callback": ""
 	};
 
@@ -229,7 +229,10 @@
 
 	TasksCollection = Backbone.Collection.extend({
 		model: Task,
-		url: '/js/tasks.json'
+		url: '/js/tasks.js',
+		parse: function(response) {
+			return response.exercises
+		}
 	})
 
 
@@ -631,7 +634,6 @@
 
 				this.tasksList.fetch({
 					success: function() {
-						console.log('hier')
 						self.taskDetails(id)
 					}
 				})
