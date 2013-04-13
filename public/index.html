@@ -103,19 +103,19 @@
 		<div class="tab-content">
 			<div id="tab1" class="tab-pane active">
 
-				<% if(_.contains(flags, "unapproved")){ %>
+				<% if(_.contains(data.flags, "unapproved")){ %>
 				<div class="alert alert-warning">
 					<strong>Unapproved</strong> This exercise was not yet verified to be correct
 				</div>
 				<% } %>
 
-				<% if(_.contains(flags, "incorrect")){ %>
+				<% if(_.contains(data.flags, "incorrect")){ %>
 				<div class="alert alert-error">
 					<strong>Attention!</strong> There are mistakes in this exercise! Please help to correct them!
 				</div>
 				<% } %>
 
-				<div><%= task %></div>
+				<div><%= data.task %></div>
 
 				<div id="hints"></div>
 
@@ -131,14 +131,14 @@
 						<div id="collapseOne" class="accordion-body collapse out">
 							<div class="accordion-inner">
 
-								<% if(solutions){ %>
-									<p><%= _.reduce(solutions, function(a,b){ return a + '</p><p>' + b }) %></p>
-								<% }else if(solution){ %>
+								<% if(data.solutions && data.solutions.length > 0){ %>
+									<p><%= _.reduce(data.solutions, function(a,b){ return a + '</p><p>' + b }) %></p>
+								<% }else if(data.solution){ %>
 									<%= solution  %>
 								<% } %>
 
 
-								<% if(_.contains(tags, "proof")) print('<span class="qed" title="Quod Erat Demonstrandum"></span>') %>
+								<% if(_.contains(data.tags, "proof")) print('<span class="qed" title="Quod Erat Demonstrandum"></span>') %>
 
 							</div>
 						</div>
@@ -157,24 +157,24 @@
 
 	<li class="nav-header clearfix">URL:</li>
 	<li>
-		<% var url = 'educatopia.org/#exercises/' + id %>
+		<% var url = 'educatopia.org/#exercises/' + data.id %>
 		<small class="muted"><a href="http://<%= url %>"><%= url %></a></small>
 	</li>
 	<li class="divider"></li>
 
 	<li class="nav-header clearfix">
-		Difficulty: <span class="pull-right"><%= difficulty * 10 %>/10</span>
+		Difficulty: <span class="pull-right"><% (data.difficulty)? print(data.difficulty * 10) : print(0) %>/10</span>
 	</li>
 	<li>
 		<div class="progress">
-			<div class="bar" style="width:<% print( (difficulty * 100) + '%') %>"></div>
+			<div class="bar" style="width:<% print( (data.difficulty * 100) + '%') %>"></div>
 		</div>
 	</li>
 	<li class="divider"></li>
 
 
 	<li class="nav-header clearfix">
-		Credits: <span class="badge  pull-right"><%= credits %></span>
+		Credits: <span class="badge  pull-right"><%= data.credits %></span>
 	</li>
 	<li class="divider"></li>
 
@@ -187,13 +187,13 @@
 
 	<li class="nav-header  clearfix">
 		Subjects:
-		<% _.each(subjects, function(subject){ %> <span class="label pull-right"><%= subject %></span> <% }) %>
+		<% _.each(data.subjects, function(subject){ %> <span class="label pull-right"><%= subject %></span> <% }) %>
 	</li>
 	<li class="divider"></li>
 
 	<li class="nav-header  clearfix">
 		Tags:
-		<% _.each(tags, function(tag){ %> <span class="label pull-right"><%= tag %></span> <% }) %>
+		<% _.each(data.tags, function(tag){ %> <span class="label pull-right"><%= tag %></span> <% }) %>
 	</li>
 	<li class="divider"></li>
 
@@ -201,17 +201,17 @@
 	<li class="nav-header clearfix">Help:
 	                                <%
 		                                var clas = ''
-		                                viewedHints = displayedHints + 1
+		                                viewedHints = data.displayedHints + 1
 
-		                                if(hints && hints.length > 0){
+		                                if(data.hints && data.hints.length > 0){
 
-		                                    if(displayedHints == hints.length ){
+		                                    if(data.displayedHints == data.hints.length ){
 		                                        clas = 'disabled'
-		                                        viewedHints = displayedHints
+		                                        viewedHints = data.displayedHints
 		                                    }
 
 		                                    print('<button id="showHint" class="btn btn-mini pull-right '+
-		                                            clas +'">Show Hint ' + viewedHints +'/'+ hints.length + '</button>')
+		                                            clas +'">Show Hint ' + viewedHints +'/'+ data.hints.length + '</button>')
 		                                }
 	                                %>
 	</li>
@@ -222,14 +222,19 @@
 	</li>
 	<li>
 		<small class="muted">
-			<%= note %>
+			<%= data.note %>
 		</small>
 	</li>
 	<li class="divider"></li>
 
 
 	<li class="nav-header clearfix">
-		Created: <span class="pull-right"><% print(created.split('T').join(' ')) %></span>
+		Created: <span class="pull-right"><%
+
+		var timestamp = data.id.substring(0,8),
+			date = new Date( parseInt( timestamp, 16 ) * 1000 )
+
+		print(date.toISOString().substr(0,19).split('T').join(' ')) %></span>
 	</li>
 	<li class="divider"></li>
 </script>
@@ -284,13 +289,16 @@
 
 
 
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.0/bootstrap.min.js"></script>
-<script type="text/javascript" src="//raw.github.com/powmedia/backbone-forms/v0.11.0/distribution/backbone-forms.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="//raw.github.com/powmedia/backbone-forms/v0.12.0/distribution/backbone-forms.min.js"></script>
+<script type="text/javascript" src="//raw.github.com/powmedia/backbone-forms/v0.12.0/distribution/editors/list.min.js"></script>
 <script type="text/javascript" src="js/bootstrap-template.js"></script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
 <script type="text/javascript" src="//raw.github.com/adius/DOMinate/v1.0.0/src/dominate.min.js"></script>
 

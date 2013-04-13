@@ -1,7 +1,4 @@
-{
-	"exercises"
-:
-	[
+[
 		{
 			"id": 1,
 			"task": "<p>Für diese Übung wird zunächst das Kartenspiel Uno betrachtet. Das Spiel wird mit Karten in den 4 Farben rot,\n   blau, grün, gelb gespielt, die die Werte 0 bis 9 haben. Dazu gibt es noch weitere Karten in den Farben für den\n   Wechsel der Spielrichtung, das Ziehen von Strafkarten und das Aussetzen des nächsten Spielers. Neben den\n   Farbkarten gibt es noch schwarze Karten, einmal den Farbwunsch und dann noch Farbwunsch und Karte ziehen\n   kombiniert.<br>\n   Dabei gelten die folgende Grundregeln:</p>\n\n<ul>\n\t<li>Karten der gleichen Farbe dürfen aufeinander gelegt werden.</li>\n\t<li>Karten des gleichen Wertes dürfen aufeinander gelegt werden.</li>\n\t<li>Schwarze Karten dürfen nur auf farbige Karten gelegt werden.</li>\n</ul>\n\n<p>Das Uno-Spiel mit diesen Regeln ist recht langweilig. Von daher werden im Folgenden einige Zusatzregeln eingeführt. Wandle die\n   folgenden formulierten Regeln und Schlussfolgerungen in Aussagen um.</p>\n\n<ol>\n\t<li>Wenn die Farbe einer Karte grün ist, dann sagt der Spieler blau.</li>\n\t<li>Jede gelbe Karte, die gerade ist, hat die Farbe grün.</li>\n\t<li>Wenn die Karte gelb ist, und der Spieler nicht blau sagt, dann war die Karte ungerade oder eine\n\t    Sonderkarte.\n\t</li>\n\t<li>Wenn der Spieler nicht blau sagt, dann ist weder die Karte gelb und gerade noch ist die Farbe grün.</li>\n</ol>\n\n<p>Lege dazu für die atomaren Ausdrücke jeweils eine Variable fest und erzeugen Sie dann die entsprechenden\n   aussagenlogischen Ausdrücke. Verwende für die gesamte Aufgabe nicht mehr als 4 atomare Ausdrücke. Eine der\n   oben genannten Aussagen ist dabei kein atomarer Ausdruck.</p>\n\n<strong>Wandle die formulierten Regeln und Schlussfolgerungen in Aussagen um.</strong>",
@@ -824,4 +821,3 @@
 			"created": "2013-02-11T18:00"
 		}
 	]
-}

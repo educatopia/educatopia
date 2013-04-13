@@ -36,7 +36,14 @@ exports.findById = function(req, res) {
 
 exports.findAll = function(req, res) {
 	db.collection('exercises', function(err, collection) {
-		collection.find().toArray(function(err, items) {
+		collection.find().sort({_id: 1}).toArray(function(err, items) {
+
+			items.forEach(function(item){
+				item.urlid = item.id
+				item.id = item._id
+				delete item._id
+			})
+
 			res.send(items)
 		})
 	})
@@ -53,7 +60,7 @@ exports.add = function(req, res) {
 			if(err) {
 				res.send({'error': 'An error has occurred'})
 			} else {
-				console.log('Success: ' + JSON.stringify(result[0]))
+				console.log('Success: ' + JSON.stringify(result))
 				res.send(result[0])
 			}
 		})

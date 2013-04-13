@@ -1,16 +1,16 @@
 (function() {
 
-	var ExercisesView;
+	var ExercisesTableView;
 	var appRouter,
 		AppRouter,
 		ExerciseFormView,
 		AppView,
-		TaskBarView,
-		TaskView,
-		TasksListItemView,
-		TasksListView,
-		Task,
-		TasksCollection,
+		ExerciseBarView,
+		ExerciseView,
+		ExercisesListItemView,
+		ExercisesListView,
+		Exercise,
+		Exercises,
 		international = i18n(dictionary),
 		t8 = international.map,
 		auto,
@@ -45,7 +45,7 @@
 
 			}
 		},
-		TasksView,
+		ExercisesView,
 		ReferenceListItemView,
 		c = console,
 		appView,
@@ -93,7 +93,7 @@
 		capitalize: function(string) {
 			return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
 		}
-	});
+	})
 
 
 	/*$('.nav-collapse a').each(function(index, link) {
@@ -104,45 +104,13 @@
 	 })
 	 })*/
 
-	/*
-	 * Root exercise from which all other exercises inherit
-	 */
 
-	// Automatically created attributes
-	auto = {
-		"id": 0,
-		"created": "2013-01-01T12:00",
-		"flags": "",
-		"callback": ""
-	};
-
-	// Attributes specified by the user
-	specified = {
-		"subjects": [],
-		"setting": "",
-		"settings": "",
-		"task": "",
-		"solution": "",
-		"solutions": null,
-		"credits": 3,
-		"difficulty": 0.5,
-		"given": "",
-		"hints": null,
-		"note": "",
-		"tags": null,
-		"prototype": null
-	}
-
-	// Merge to root exercise
-	rootExercise = _.extend(auto, specified)
-
-
-	/*
+	/* ======
 	 * Models
 	 */
 
-	Task = Backbone.Model.extend({
-		defaults: rootExercise,
+	Exercise = Backbone.Model.extend({
+		url: '/api/exercises',
 		schema: {
 			task: {
 				type: 'TextArea',
@@ -153,19 +121,17 @@
 			},
 			approach: {
 				type: 'TextArea',
-				validators: ['required'],
 				editorClass: 'input-xlarge',
 				help: 'All the necessary steps to get to a solution.'
 			},
 			solution: {
 				type: 'Text',
-				validators: ['required'],
 				editorClass: 'input-medium',
 				help: 'Try to keep the solution as short as possible to make it comparable!' +
 					'All further information should be written down in the approach section.'
 			},
-			subject: {
-				type: 'Text',
+			subjects: {
+				type: 'List',
 				validators: ['required'],
 				editorClass: 'input-medium',
 				help: 'Specify the subject of the exercise. (i.e. Math, Biology, …)'
@@ -188,7 +154,7 @@
 			difficulty: {
 				type: 'Number',
 				editorClass: 'input-mini',
-				editorAttrs: {min: 0, max: 1, title: 'Tooltip help'},
+				editorAttrs: {min: 0, max: 1, step: 0.1, title: 'Tooltip help'},
 				help: 'The difficulty level of the exercise ranges ' +
 					'from excluded 0 (So easy that everybody can solve it) ' +
 					'to excluded 1 (So difficult that nobody can solve it)'
@@ -200,7 +166,7 @@
 				help: 'How long does it take to solve the exercise for an average person?'
 			},
 			tags: {
-				type: 'Text',
+				type: 'List',
 				editorClass: 'input-large',
 				help: 'All the things that should be associated with this exercise'
 			},
@@ -209,100 +175,33 @@
 				editorClass: 'input-large',
 				help: 'Any additional information'
 			},
-			hint: {
-				type: 'TextArea',
+			hints: {
+				type: 'List',
 				editorClass: 'input-large',
-				help: 'An information which helps one to solve the exercise when he\'s stuck.'
-			},
-			todos: {
-				type: 'TextArea',
-				editorClass: 'input-large',
-				help: 'An information which helps one to solve the exercise when he\'s stuck.'
+				help: 'Any information which helps one to solve the exercise when he\'s stuck.'
 			}
 		}
 	})
 
 
-	/*
+	/* ===========
 	 * Collections
 	 */
 
-	TasksCollection = Backbone.Collection.extend({
-		model: Task,
-		url: '/js/tasks.js',
-		parse: function(response) {
-			return response.exercises
-		}
+	Exercises = Backbone.Collection.extend({
+		model: Exercise,
+		url: '/api/exercises'
+		/*parse: function(response) {
+		 return response.exercises
+		 }*/
 	})
 
 
-	/*
-	 *	Views
+	/* =====
+	 * Views
 	 */
 
-	TasksView = Backbone.View.extend({
-		template: _.template($('#taskListTemplate').html()),
-		render: function() {
-			this.$el.html(this.template())
-
-			return this
-		}
-	})
-
-	TasksListView = Backbone.View.extend({
-		tagName: 'ul',
-		className: 'nav nav-list',
-		render: function() {
-
-			_.each(this.collection, function(task, i) {
-
-				i = i + 1
-
-				this.$el.append(new TasksListItemView({model: task, id: (i <= 9) ? '0' + i : i}).render().el)
-
-			}, this)
-
-
-			return this
-		}
-	})
-
-	TasksListItemView = Backbone.View.extend({
-		tagName: "li",
-		events: {
-			"click .exerciseLink": function() {
-
-				var id = this.model.get('id'),
-					task = appRouter.tasksList.get(id),
-					taskView = new TaskView({model: task})
-
-				$('#content')
-					.html(taskView.render().el)
-					.fadeIn('fast')
-			}
-		},
-		initialize: function() {
-
-			this.muted = (!(this.model.get('solution') || this.model.get('solutions'))) ? 'muted' : ''
-
-		},
-		render: function() {
-
-			DOMinate(
-				[this.el,
-					['small.exerciseLink',
-						['a', String(this.id) + '. Aufgabe',
-							{class: this.muted}
-						]
-					]
-				]
-			)
-
-			return this
-		}
-	})
-
-	TaskView = Backbone.View.extend({
+	ExerciseView = Backbone.View.extend({
 		template: _.template($('#exerciseTemplate').html()),
 		events: {
 			"click #showHint": "showHint"
@@ -339,12 +238,13 @@
 
 			this.renderBar()
 		},
-		renderTask: function() {
+		renderExercise: function() {
 			this.$el
-				.html(this.template(this.model.toJSON()))
+				.html(this.template({data: this.model.toJSON()}))
 				.fadeIn()
 
 			var snippets
+
 			if(snippets = this.$('pre code')[0])
 				hljs.highlightBlock(snippets)
 
@@ -352,14 +252,14 @@
 		},
 		renderBar: function() {
 			this.$('.span3')
-				.html(new TaskBarView({model: this.model}).render().el)
+				.html(new ExerciseBarView({model: this.model}).render().el)
 				.fadeIn()
 
 			return this
 		},
 		render: function() {
 			this
-				.renderTask()
+				.renderExercise()
 				.renderBar()
 
 
@@ -369,12 +269,80 @@
 		}
 	})
 
-	TaskBarView = Backbone.View.extend({
+	ExercisesView = Backbone.View.extend({
+		template: _.template($('#taskListTemplate').html()),
+		render: function() {
+			this.$el.html(this.template())
+
+			return this
+		}
+	})
+
+	ExercisesListView = Backbone.View.extend({
+		tagName: 'ul',
+		className: 'nav nav-list',
+		render: function() {
+
+			_.each(this.collection, function(exercise, i) {
+
+				i = i + 1
+
+				this.$el.append(
+					new ExercisesListItemView({
+							model: exercise,
+							id: (i <= 9) ? '0' + i : i
+						}
+					).render().el)
+
+			}, this)
+
+
+			return this
+		}
+	})
+
+	ExercisesListItemView = Backbone.View.extend({
+		tagName: "li",
+		events: {
+			"click .exerciseLink": function() {
+
+				var id = this.model.get('id'),
+					task = appRouter.tasksList.get(id),
+					taskView = new ExerciseView({model: task})
+
+				$('#content')
+					.html(taskView.render().el)
+					.fadeIn('fast')
+			}
+		},
+		initialize: function() {
+
+			this.muted = (!(this.model.get('solution') || this.model.get('solutions'))) ? 'muted' : ''
+
+		},
+		render: function() {
+
+			DOMinate(
+				[this.el,
+					['small.exerciseLink',
+						['a', String(this.id) + '. Aufgabe',
+							{class: this.muted}
+						]
+					]
+				]
+			)
+
+			return this
+		}
+	})
+
+
+	ExerciseBarView = Backbone.View.extend({
 		tagName: 'ul',
 		className: 'nav nav-list',
 		template: _.template($('#exerciseSideBarTemplate').html()),
 		render: function() {
-			this.$el.html(this.template(this.model.toJSON()))
+			this.$el.html(this.template({data: this.model.toJSON()}))
 
 			this.$("[rel=tooltip]").tooltip();
 
@@ -383,7 +351,7 @@
 	})
 
 
-	ExercisesView = Backbone.View.extend({
+	ExercisesTableView = Backbone.View.extend({
 		id: 'exercise',
 		template: _.template($('#exercisesTemplate').html()),
 		render: function() {
@@ -392,7 +360,7 @@
 
 			return this
 		}
-	})
+	});
 
 	ExerciseFormView = Backbone.View.extend({
 		id: "exerciseModal",
@@ -408,19 +376,30 @@
 
 		initialize: function() {
 
-			exerciseFormData = new Task()//{created: new Date()});
-
 			ExerciseForm = new Backbone.Form({
-				model: exerciseFormData,
+				model: new Exercise(),
 				idPrefix: 'exerciseForm-',
 				fieldsets: [
 					{
 						legend: 'Exercise',
-						fields: ['task', 'approach', 'solution']
+						fields: [
+							'task',
+							'approach',
+							'solution'
+						]
 					},
 					{
 						legend: 'Details',
-						fields: ['subject', 'type', 'credits', 'difficulty', 'duration', 'hint', 'tags', 'note']
+						fields: [
+							'subjects',
+							'type',
+							'credits',
+							'difficulty',
+							'duration',
+							'hints',
+							'tags',
+							'note'
+						]
 					}
 				]
 			})
@@ -432,10 +411,14 @@
 
 				ExerciseForm.commit()
 
-				var subject = "Exercise Submission",
-					data = encodeURIComponent(JSON.stringify(exerciseFormData.attributes))
-
-				window.location = 'mailto:submission@educatopia.org?subject=' + subject + '&body=' + data
+				ExerciseForm.model.save("", "", {
+					success: function() {
+						$('#exerciseModal').modal('hide')
+					},
+					error: function() {
+						alert("Something went wrong!")
+					}
+				})
 			}
 		},
 
@@ -444,7 +427,7 @@
 
 			this.$('.modal-body').append(ExerciseForm.render().el)
 
-			this.$('#exerciseForm-subject').typeahead({
+			this.$('#exerciseForm-subjects').typeahead({
 				source: _.map(subjects, _.capitalize)
 			})
 
@@ -453,12 +436,7 @@
 
 
 			this
-				//Fixes backbone-form bug of not being able to use template-variables in attributes
-				.$('.icon-question-sign').each(function() {
-					this.title = this.innerHTML
-					this.innerHTML = ''
-				})
-				//initalize tooltips
+				.$('.icon-question-sign')
 				.tooltip()
 
 
@@ -572,7 +550,7 @@
 			"reference/:subject": "reference"
 		},
 		initialize: function() {
-			this.tasksList = new TasksCollection()
+			this.tasksList = new Exercises()
 
 			this.route(/^exercises\/(\d+)$/, "taskDetails")
 
@@ -581,13 +559,12 @@
 
 		list: function(subject) {
 
-			this.tasksList.fetch(
-				{
+			this.tasksList.fetch({
 					dataType: 'json',
 					success: function(collection) {
 
-						var tasksListView = new TasksListView(
-							{
+						var tasksListView = new ExercisesListView({
+
 								collection: collection.filter(function(task) {
 
 									return _.contains(task.get("subjects"), subject)
@@ -597,7 +574,7 @@
 
 
 						$('#contentWrapper')
-							.html(new TasksView().render().el)
+							.html(new ExercisesView().render().el)
 
 						$('#sidebar')
 							.html(tasksListView.render().el)
@@ -642,11 +619,11 @@
 
 
 				$('#contentWrapper')
-					.html(new TasksView().render().el)
+					.html(new ExercisesView().render().el)
 
 				this.task = this.tasksList.get(id)
 
-				this.taskView = new TaskView({model: this.task})
+				this.taskView = new ExerciseView({model: this.task})
 
 				console.log(this.taskView.render().el)
 
