@@ -24,7 +24,8 @@
 			'math',
 			'programming',
 			'digital electronics',
-			'modelling'
+			'modelling',
+			'internet technologies'
 		],
 		subjectsExtended = {
 			'math': {
@@ -127,7 +128,7 @@
 			solution: {
 				type: 'Text',
 				editorClass: 'input-medium',
-				help: 'Try to keep the solution as short as possible to make it comparable!' +
+				help: 'Try to keep the solution as short as possible to make it machine readable! ' +
 					'All further information should be written down in the approach section.'
 			},
 			subjects: {

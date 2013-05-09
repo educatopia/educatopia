@@ -111,8 +111,12 @@ code {
 table caption {
 	font-weight: 900;
 	font-size: 120%;
-	line-height: 2;
+	margin-bottom: 10px;
 	text-align: left;
+}
+
+.table-auto {
+	width: auto;
 }
 
 .alert{

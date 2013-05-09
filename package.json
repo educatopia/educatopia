@@ -1,6 +1,6 @@
 {
-	"name": "Educatopia",
-	"description": "Education for everybody",
+	"name": "educatopia",
+	"description": "education for everybody",
 	"version": "0.0.1",
 	"private": true,
 	"dependencies": {
@@ -8,6 +8,10 @@
 		"jake": "0.5.x",
 		"mongo": "0.1.x",
 		"mongodb": "1.2.x",
-		"uglify-js":  "2.2.x"
+		"uglify-js": "2.2.x"
+	},
+	"engines": {
+		"node": "0.10.x",
+		"npm": "1.2.x"
 	}
 }

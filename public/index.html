@@ -49,8 +49,9 @@
 						<a class="dropdown-toggle" href="#">Exercises<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a href="#exercises/math">math</a></li>
-							<li><a href="#exercises/computer-science">Computer Science</a></li>
+							<li><a href="#exercises/computer-science">computer science</a></li>
 							<li><a href="#exercises/programming">programming</a></li>
+							<li><a href="#exercises/internet-technologies">internet technologies</a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
@@ -130,11 +131,14 @@
 						</div>
 						<div id="collapseOne" class="accordion-body collapse out">
 							<div class="accordion-inner">
+								<%if(data.approach){
+									print(data.approach)
+								}%>
 
 								<% if(data.solutions && data.solutions.length > 0){ %>
 									<p><%= _.reduce(data.solutions, function(a,b){ return a + '</p><p>' + b }) %></p>
 								<% }else if(data.solution){ %>
-									<%= solution  %>
+									<div class="alert alert-success"><%= data.solution %></div>
 								<% } %>
 
 
