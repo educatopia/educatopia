@@ -1,6 +1,5 @@
-(function() {
+!function() {
 
-	var ExercisesTableView;
 	var appRouter,
 		AppRouter,
 		ExerciseFormView,
@@ -50,7 +49,7 @@
 		ReferenceListItemView,
 		c = console,
 		appView,
-		BannerView
+		BannerView, ExerciseEditView,ExercisesTableView, ExerciseEditForm
 
 
 	/*
@@ -116,13 +115,15 @@
 			task: {
 				type: 'TextArea',
 				validators: ['required'],
-				editorClass: 'input-xlarge',
+				editorClass: 'input-block-level',
+				editorAttrs: {rows: 10},
 				help: 'Detailed description of the task which must be solved.' +
 					'Try to split up large tasks into its sub-tasks.'
 			},
 			approach: {
 				type: 'TextArea',
-				editorClass: 'input-xlarge',
+				editorClass: 'input-block-level',
+				editorAttrs: {rows: 10},
 				help: 'All the necessary steps to get to a solution.'
 			},
 			solution: {
@@ -149,7 +150,7 @@
 				editorClass: 'input-mini',
 				editorAttrs: {min: 0},
 				help: 'Consider difficulty, necessary steps and importance of the exercise. ' +
-					'Each credit-point relates to a noteworthy accomplishment while solving the task. ' +
+					'Each credit-point represents a noteworthy accomplishment while solving the task. ' +
 					'Recommended range is 1 - 10 credits.'
 			},
 			difficulty: {
@@ -173,7 +174,8 @@
 			},
 			note: {
 				type: 'TextArea',
-				editorClass: 'input-large',
+				editorClass: 'input-block-level',
+				editorAttrs: {rows: 5},
 				help: 'Any additional information'
 			},
 			hints: {
@@ -239,10 +241,21 @@
 
 			this.renderBar()
 		},
+
+		renderEdit: function(){
+
+			this
+				.$('#tab2')
+				.html(new ExerciseEditView({model: this.model}).render().el)
+
+			return this
+		},
+
 		renderExercise: function() {
-			this.$el
+
+			this
+				.$el
 				.html(this.template({data: this.model.toJSON()}))
-				.fadeIn()
 
 			var snippets
 
@@ -251,20 +264,100 @@
 
 			return this
 		},
+
 		renderBar: function() {
+
 			this.$('.span3')
 				.html(new ExerciseBarView({model: this.model}).render().el)
-				.fadeIn()
 
 			return this
 		},
+
 		render: function() {
 			this
 				.renderExercise()
 				.renderBar()
-
+				.renderEdit()
 
 			MathJax.Hub.Queue(["Typeset", MathJax.Hub, this.el])
+
+			return this
+		}
+	})
+
+	ExerciseEditView = Backbone.View.extend({
+		tagName: "div",
+		id: "exerciseEdit",
+		events: {
+			//"click #exerciseEditSubmit": "showModal"
+		},
+		//template: _.template($('#exerciseEditTemplate').html()),
+
+		initialize: function() {
+
+			console.log(this.model)
+
+			ExerciseEditForm = new Backbone.Form({
+				model: this.model,
+				idPrefix: 'exerciseEdit-',
+				fieldsets: [
+					{
+						fields: [
+							'task',
+							'approach',
+							'solution'
+						]
+					},
+					{
+						legend: 'Details',
+						fields: [
+							'subjects',
+							'type',
+							'credits',
+							'difficulty',
+							'duration',
+							'hints',
+							'tags',
+							'note'
+						]
+					}
+				]
+			})
+		},
+
+		showModal: function() {
+
+			/*if(!ExerciseForm.validate()) {
+
+				ExerciseForm.commit()
+
+				ExerciseForm.model.save("", "", {
+					success: function() {
+						$('#exerciseModal').modal('hide')
+					},
+					error: function() {
+						alert("Something went wrong!")
+					}
+				})
+			}*/
+		},
+
+		render: function() {
+
+			this.$el.html(ExerciseEditForm.render().el)
+
+			this.$el.append('<button type="submit" class="btn">Submit</button>')
+
+			this.$('#exerciseForm-subjects').typeahead({
+				source: _.map(subjects, _.capitalize)
+			})
+
+			//Fixes backbone-form bug of not being able to set stepsize
+			this.$('#exerciseEdit-difficulty').attr('step', 0.1)
+
+			this
+				.$('.icon-question-sign')
+				.tooltip()
 
 			return this
 		}
@@ -313,7 +406,26 @@
 
 				$('#content')
 					.html(taskView.render().el)
-					.fadeIn('fast')
+					.fadeIn()
+
+				$('#tabHandlers a:first').click(function (e) {
+					e.preventDefault()
+					$(this).tab('show')
+				})
+
+				$('#tabHandlers li:nth-of-type(2) a').click(function (e) {
+					e.preventDefault()
+
+					new ExerciseEditView().render()
+
+					$(this).tab('show')
+				})
+
+				$('#tabHandlers a:last').click(function (e) {
+				    e.preventDefault()
+					$(this).tab('show')
+				 })
+
 			}
 		},
 		initialize: function() {
@@ -337,7 +449,6 @@
 		}
 	})
 
-
 	ExerciseBarView = Backbone.View.extend({
 		tagName: 'ul',
 		className: 'nav nav-list',
@@ -350,7 +461,6 @@
 			return this
 		}
 	})
-
 
 	ExercisesTableView = Backbone.View.extend({
 		id: 'exercise',
@@ -540,8 +650,8 @@
 	})
 
 
-	/*
-	 *	Router
+	/* ======
+	 * Router
 	 */
 
 	AppRouter = Backbone.Router.extend({
@@ -626,8 +736,6 @@
 
 				this.taskView = new ExerciseView({model: this.task})
 
-				console.log(this.taskView.render().el)
-
 				$('#content')
 					.html(this.taskView.render().el)
 					.fadeIn('fast')
@@ -647,4 +755,4 @@
 	Backbone.history.start()
 
 	//console.log(international.getUntranslated())
-}())
+}()

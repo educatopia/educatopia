@@ -93,12 +93,12 @@
 
 <script id="exerciseTemplate" type="text/template">
 	<div class="tabbable span9">
-		<ul class="nav nav-tabs">
+		<ul id="tabHandlers" class="nav nav-tabs">
 			<li class="active">
 				<a href="#tab1">Exercise</a>
 			</li>
-			<li class="disabled"><a>Edit</a></li>
-			<li class="disabled"><a>History</a></li>
+			<li><a href="#tab2">Edit</a></li>
+			<li><a href="#tab3">History</a></li>
 		</ul>
 
 		<div class="tab-content">
@@ -149,6 +149,10 @@
 					</div>
 				</div>
 			</div>
+			<div id="tab2" class="tab-pane"></div>
+			<div id="tab3" class="tab-pane">
+				<p>;lkj;ljlk</p>
+			</div>
 		</div>
 	</div>
 
@@ -156,13 +160,13 @@
 	</div>
 </script>
 
-
 <script id="exerciseSideBarTemplate" type="text/template">
 
 	<li class="nav-header clearfix">URL:</li>
 	<li>
 		<% var url = 'educatopia.org/#exercises/' + data.id %>
-		<small class="muted"><a href="http://<%= url %>"><%= url %></a></small>
+		<!-- small class="muted"><a href="http://<%= url %>"><%= url %></a></small> -->
+		<input type="text" class="input-block-level" readonly value='<%= url %>'/>
 	</li>
 	<li class="divider"></li>
 
@@ -243,8 +247,6 @@
 	<li class="divider"></li>
 </script>
 
-
-
 <script id="exerciseFormTemplate" type="text/template">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -256,8 +258,6 @@
 		<button id="exerciseFormSubmit" class="btn btn-primary">Submit</button>
 	</div>
 </script>
-
-
 
 <script id="bannerTemplate" type="text/template">
 	<div id="banner" class="hero-unit">
@@ -280,7 +280,6 @@
 	</div>
 </script>
 
-
 <script id="referenceTemplate" type="text/template">
 	<div class="row-fluid">
 		<div id="referenceSidebar" class="span3 well"></div>
@@ -302,7 +301,14 @@
 <script type="text/javascript" src="js/list.min.js"></script>
 <script type="text/javascript" src="js/bootstrap-template.js"></script>
 
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        asciimath2jax: {
+            delimiters: [['´','´'], ['\\(','\\)']]
+        }
+    })
+</script>
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=AM_HTMLorMML"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
 <script type="text/javascript" src="//gitcdn.org/libs/dominate/1.1.0/index.min.js"></script>
 
