@@ -115,39 +115,39 @@
 			task: {
 				type: 'TextArea',
 				validators: ['required'],
-				editorClass: 'input-block-level',
+				editorClass: 'form-control',
 				editorAttrs: {rows: 10},
 				help: 'Detailed description of the task which must be solved.' +
 					'Try to split up large tasks into its sub-tasks.'
 			},
 			approach: {
 				type: 'TextArea',
-				editorClass: 'input-block-level',
+				editorClass: 'form-control',
 				editorAttrs: {rows: 10},
 				help: 'All the necessary steps to get to a solution.'
 			},
 			solution: {
 				type: 'Text',
-				editorClass: 'input-medium',
+				editorClass: 'form-control',
 				help: 'Try to keep the solution as short as possible to make it machine readable! ' +
 					'All further information should be written down in the approach section.'
 			},
 			subjects: {
 				type: 'List',
 				validators: ['required'],
-				editorClass: 'input-medium',
+				editorClass: 'form-control',
 				help: 'Specify the subject of the exercise. (i.e. Math, Biology, …)'
 			},
 			type: {
 				type: 'Select',
 				options: ['', 'Calculate', 'Explain', 'Name', 'Describe', 'Proof', 'Assign', 'Draw', 'Choose'],
 				validators: ['required'],
-				editorClass: 'input-medium',
+				editorClass: 'form-control',
 				help: 'What is the main task of the exercise?'
 			},
 			credits: {
 				type: 'Number',
-				editorClass: 'input-mini',
+				editorClass: 'form-control',
 				editorAttrs: {min: 0},
 				help: 'Consider difficulty, necessary steps and importance of the exercise. ' +
 					'Each credit-point represents a noteworthy accomplishment while solving the task. ' +
@@ -155,7 +155,7 @@
 			},
 			difficulty: {
 				type: 'Number',
-				editorClass: 'input-mini',
+				editorClass: 'form-control',
 				editorAttrs: {min: 0, max: 1, step: 0.1, title: 'Tooltip help'},
 				help: 'The difficulty level of the exercise ranges ' +
 					'from excluded 0 (So easy that everybody can solve it) ' +
@@ -163,24 +163,24 @@
 			},
 			duration: {
 				type: 'Number',
-				editorClass: 'input-mini',
+				editorClass: 'form-control',
 				editorAttrs: {min: 0},
 				help: 'How long does it take to solve the exercise for an average person?'
 			},
 			tags: {
 				type: 'List',
-				editorClass: 'input-large',
+				editorClass: 'form-control',
 				help: 'All the things that should be associated with this exercise'
 			},
 			note: {
 				type: 'TextArea',
-				editorClass: 'input-block-level',
+				editorClass: 'form-control',
 				editorAttrs: {rows: 5},
 				help: 'Any additional information'
 			},
 			hints: {
 				type: 'List',
-				editorClass: 'input-large',
+				editorClass: 'form-control',
 				help: 'Any information which helps one to solve the exercise when he\'s stuck.'
 			}
 		}
@@ -267,7 +267,7 @@
 
 		renderBar: function() {
 
-			this.$('.span3')
+			this.$('#exerciseSidebar')
 				.html(new ExerciseBarView({model: this.model}).render().el)
 
 			return this
@@ -294,8 +294,6 @@
 		//template: _.template($('#exerciseEditTemplate').html()),
 
 		initialize: function() {
-
-			console.log(this.model)
 
 			ExerciseEditForm = new Backbone.Form({
 				model: this.model,
@@ -346,17 +344,19 @@
 
 			this.$el.html(ExerciseEditForm.render().el)
 
-			this.$el.append('<button type="submit" class="btn">Submit</button>')
+			this.$el.append('<button type="submit" class="btn btn-default">Submit</button>')
 
+			/*
 			this.$('#exerciseForm-subjects').typeahead({
 				source: _.map(subjects, _.capitalize)
 			})
+			*/
 
 			//Fixes backbone-form bug of not being able to set stepsize
 			this.$('#exerciseEdit-difficulty').attr('step', 0.1)
 
 			this
-				.$('.icon-question-sign')
+				.$('.glyphicon-question-sign')
 				.tooltip()
 
 			return this
@@ -451,7 +451,7 @@
 
 	ExerciseBarView = Backbone.View.extend({
 		tagName: 'ul',
-		className: 'nav nav-list',
+		className: 'list-group',
 		template: _.template($('#exerciseSideBarTemplate').html()),
 		render: function() {
 			this.$el.html(this.template({data: this.model.toJSON()}))
@@ -538,16 +538,16 @@
 
 			this.$('.modal-body').append(ExerciseForm.render().el)
 
-			this.$('#exerciseForm-subjects').typeahead({
+			/*this.$('#exerciseForm-subjects').typeahead({
 				source: _.map(subjects, _.capitalize)
-			})
+			})*/
 
 			//Fixes backbone-form bug of not being able to set stepsize
 			this.$('#exerciseForm-difficulty').attr('step', 0.1)
 
 
 			this
-				.$('.icon-question-sign')
+				.$('.glyphicon-question-sign')
 				.tooltip()
 
 
@@ -568,8 +568,9 @@
 
 			this.$el.html(this.template())
 
-			this.$('.span3')
-				.html(new ReferenceListView({collection: this.options.data}).render().el)
+			this
+                .$('#referenceSidebar')
+		        .html(new ReferenceListView({collection: this.options.data}).render().el)
 
 			return this
 		}
@@ -577,7 +578,7 @@
 
 	ReferenceListView = Backbone.View.extend({
 		tagName: 'ul',
-		className: 'nav nav-list affix-top',
+		className: 'list-group',
 		//attributes: {'data-spy': "affix"},
 		render: function() {
 
@@ -593,6 +594,7 @@
 
 	ReferenceListItemView = Backbone.View.extend({
 		tagName: "li",
+        className: "list-group-item",
 		events: {
 			"click a": function() {
 
@@ -603,12 +605,13 @@
 
 				cont = DOMinate(
 					[ref[0],
-						['ol$list']
+                        ['div.panel-heading', this.id],
+						['ul.list-group$list']
 					])
 
 				_.each(this.model, function(item, index) {
 
-					$(cont.list).append($('<li>' + item + '</li><hr>'))
+					$(cont.list).append($('<li class=list-group-item>' + item + '</li>'))
 				})
 
 				MathJax.Hub.Queue(["Typeset", MathJax.Hub, cont.list])

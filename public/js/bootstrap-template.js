@@ -3,69 +3,59 @@
  * 
  * 'data-*' attributes control where elements are placed
  */
-;(function(Form) {
+!function(Form) {
 
-  
-  /**
-   * Bootstrap templates for Backbone Forms
-   */
-  Form.template = _.template('\
-    <form class="form-horizontal" data-fieldsets></form>\
-  ');
+	/**
+	 * Bootstrap templates for Backbone Forms
+	 */
+	Form.template = _.template('\
+		<form class="form-horizontal" data-fieldsets></form>\
+	')
 
+	Form.Fieldset.template = _.template('\
+		<fieldset data-fields>\
+			<% if (legend) { %>\
+				<legend><%= legend %></legend>\
+			<% } %>\
+		</fieldset>\
+	')
 
-  Form.Fieldset.template = _.template('\
-    <fieldset data-fields>\
-      <% if (legend) { %>\
-        <legend><%= legend %></legend>\
-      <% } %>\
-    </fieldset>\
-  ');
+	Form.Field.template = _.template('\
+		<div class="form-group field-<%= key %>">\
+			<label class="col-lg-2 control-label" for="<%= editorId %>">\
+				<%= title %>\
+				<span class="glyphicon glyphicon-question-sign" title="<%= help %>" data-container="body"></span>\
+			</label>\
+			<div class="col-lg-10" data-editor></div>\
+		</div>\
+	')
 
+	Form.NestedField.template = _.template('\
+		<div class="field-<%= key %>">\
+			<div title="<%= title %>" class="input-xlarge">\
+				<span data-editor></span>\
+				<div class="help-inline" data-error></div>\
+			</div>\
+			<div class="help-block"><%= help %></div>\
+		</div>\
+	')
 
-  Form.Field.template = _.template('\
-    <div class="control-group field-<%= key %>">\
-      <label class="control-label" for="<%= editorId %>"><%= title %>\
-        <i class="icon-question-sign" data-toggle="tooltip" title="<%= help %>"></i>\
-      </label>\
-      <div class="controls">\
-        <span data-editor></span>\
-        <div class="help-inline" data-error></div>\
-      </div>\
-    </div>\
-  ');
+	Form.editors.List.template = _.template('\
+		<div class="bbf-list">\
+			<ul class="row list-unstyled" data-items></ul>\
+			<button class="btn btn-default bbf-add" data-action="add">Add</button>\
+		</div>\
+	')
 
+	Form.editors.List.Item.template = _.template('\
+		<li class="row col-lg-8">\
+			<div data-editor class="col-lg-11"></div>\
+			<button type="button" class="close bbf-del" data-action="remove">&times;</button>\
+		</li>\
+	')
 
-  Form.NestedField.template = _.template('\
-    <div class="field-<%= key %>">\
-      <div title="<%= title %>" class="input-xlarge">\
-        <span data-editor></span>\
-        <div class="help-inline" data-error></div>\
-      </div>\
-      <div class="help-block"><%= help %></div>\
-    </div>\
-  ');
+	Form.editors.List.Object.template = Form.editors.List.NestedModel.template = _.template('\
+		<div class="bbf-list-modal"><%= summary %></div>\
+	')
 
-
-  Form.editors.List.template = _.template('\
-    <div class="bbf-list">\
-      <ul class="unstyled clearfix" data-items></ul>\
-      <button class="btn bbf-add" data-action="add">Add</button>\
-    </div>\
-  ');
-
-
-  Form.editors.List.Item.template = _.template('\
-    <li class="clearfix">\
-      <div class="pull-left" data-editor></div>\
-      <button type="button" class="btn bbf-del" data-action="remove">&times;</button>\
-    </li>\
-  ');
-  
-
-  Form.editors.List.Object.template = Form.editors.List.NestedModel.template = _.template('\
-    <div class="bbf-list-modal"><%= summary %></div>\
-  ');
-
-
-})(Backbone.Form);
+}(Backbone.Form)
