@@ -478,7 +478,8 @@
                     date = new Date( parseInt( timestamp, 16 ) * 1000 ),
                     datetime = date.toISOString().substr(0,19).split('T'),
                     date = datetime[0],
-                    time = datetime[1]
+                    time = datetime[1],
+                    url = '#exercises/' + e.id
 
                 this
                     .$("#exercisesTable tbody")
@@ -487,7 +488,7 @@
                              <td>'+ (i + 1) +'</td>\
                              <td>' + e.subjects + '</td>\
                              <td>' + e.type + '</td>\
-                             <td>' + e.task.substr(0,30) + '…</td>\
+                             <td><a href="' + url +'">' + e.task.substr(0,30) + '…</a></td>\
                              <td>' + e.difficulty + '</td>\
                              <td>' + e.credits + '</td>\
                              <td>' + e.hints.length + '</td>\
