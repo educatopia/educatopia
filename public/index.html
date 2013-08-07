@@ -33,7 +33,7 @@
 
         <ul class="navbar-nav nav">
             <li class="dropdown">
-                <a class="dropdown-toggle" href="#">Exercises<b class="caret"></b></a>
+                <a class="dropdown-toggle" href="#exercises">Exercises<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="#exercises/math">math</a></li>
                     <li><a href="#exercises/computer-science">computer science</a></li>
@@ -264,7 +264,27 @@
     </div>
 </script>
 
-<script id=exercisesTemplate type="text/template"></script>
+<script id=exercisesTemplate type="text/template">
+    <table id="exercisesTable"  class="table table-striped table-bordered table-condensed">
+        <thead>
+        <tr>
+            <th>Nr</th>
+            <th>Subject</th>
+            <th>Type</th>
+            <th>Task</th>
+            <th>Difficulty</th>
+            <th>Credits'</th>
+            <th>Hints</th>
+            <th>Note</th>
+            <th>Date</th>
+            <th>Time</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</script>
 
 
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
