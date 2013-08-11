@@ -663,10 +663,14 @@
 		},
 		initialize: function () {
 
+			console.log($('#newExercise')[0])
+
+			$('#newExercise').click(function(){
+				alert('test')
+			})
 		},
 
 		render: function () {
-
 		}
 	})
 

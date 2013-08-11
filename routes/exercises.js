@@ -4,7 +4,7 @@ var Server = mongo.Server,
     Db = mongo.Db,
     BSON = mongo.BSONPure
 
-var db = new Db('educatopia', new Server("127.0.0.1", 27017, {auto_reconnect: true}), {w: 1})
+var db = new Db('educatopiadev', new Server("127.0.0.1", 27017, {auto_reconnect: true}), {w: 1})
 
 db.open(function (err, db) {
     if (!err) {
