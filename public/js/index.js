@@ -1,10 +1,11 @@
 !function () {
 
+	var ExerciseTabView;
 	var appRouter,
 		AppRouter,
 		ExerciseFormView,
 		AppView,
-		ExerciseBarView,
+		ExerciseSidebarView,
 		ExerciseView,
 		ExercisesListItemView,
 		ExercisesListView,
@@ -49,7 +50,10 @@
 		ReferenceListItemView,
 		c = console,
 		appView,
-		BannerView, ExerciseEditView, ExercisesTableView, ExerciseEditForm
+		BannerView,
+		ExerciseEditView,
+		ExercisesTableView,
+		ExerciseEditForm
 
 
 	/*
@@ -140,7 +144,7 @@
 			},
 			type: {
 				type: 'Select',
-				options: ['', 'Calculate', 'Explain', 'Name', 'Describe', 'Proof', 'Assign', 'Draw', 'Choose'],
+				options: ['', 'Calculate', 'Explain', 'Name', 'Describe', 'Proof', 'Assign', 'Draw', 'Choose', 'Transform'],
 				validators: ['required'],
 				editorClass: 'form-control',
 				help: 'What is the main task of the exercise?'
@@ -202,56 +206,44 @@
 
 	ExerciseView = Backbone.View.extend({
 		template: _.template($('#exerciseTemplate').html()),
-		events: {
-			"click #showHint": "showHint"
-		},
 		initialize: function () {
-			this.model.on('reset', this.render, this)
 
-			this.model.set('displayedHints', 0)
-		},
-		showHint: function () {
-			var counter = this.model.get('displayedHints')
+			if(this.model){
 
-			if (counter < this.model.get('hints').length) {
+				this.model.on('reset', this.render, this)
 
-				var hints = $('#hints')
-
-				if (counter == 0)
-					$('<hr>')
-						.hide()
-						.appendTo(hints)
-						.slideDown('fast')
-
-
-				var el = $('<div class="alert alert-info">' + this.model.get('hints')[counter] + '</div>')
-					.hide()
-					.appendTo(hints)
-					.slideDown('fast')
-
-				MathJax.Hub.Queue(["Typeset", MathJax.Hub, el[0]])
-
-				counter++
-				this.model.set('displayedHints', counter)
+				this.model.set('displayedHints', 0)
 			}
-
-			this.renderBar()
 		},
+		/*events: {
+			*//*"click #tabHandlers": function(e){
+				e.preventDefault()
+				alert("test")
+			},*//*
+			"click #tabHandlers  li:nth-of-type(1) a": function(e){
+				e.preventDefault()
+				$(this).tab('show')
+			},
 
-		renderEdit: function () {
+			'click #tabHandlers li:nth-of-type(2) a': function (e) {
+				e.preventDefault()
 
-			this
-				.$('#tab2')
-				.html(new ExerciseEditView({model: this.model}).render().el)
+				//new ExerciseEditView().render()
 
-			return this
-		},
+				$(this).tab('show')
+			},
+
+			'click #tabHandlers li:nth-of-type(3) a': function (e) {
+				e.preventDefault()
+				$(this).tab('show')
+			}
+		},*/
 
 		renderExercise: function () {
 
 			this
 				.$el
-				.html(this.template({data: this.model.toJSON()}))
+				.html(this.template({data: null}))
 
 			var snippets
 
@@ -261,21 +253,64 @@
 			return this
 		},
 
-		renderBar: function () {
+		renderExerciseTab: function(){
 
-			this.$('#exerciseSidebar')
-				.html(new ExerciseBarView({model: this.model}).render().el)
+			this
+				.$('#tab1')
+				.html(new ExerciseTabView({model: this.model}).render().el)
+
+			return this
+
+		},
+
+		renderEdit: function () {
+
+			if(this.model){
+				this
+					.$('#tab2')
+					.html(new ExerciseEditView({model: this.model}).render().el)
+			} else {
+				this
+					.$('#tab2')
+					.html(new ExerciseEditView().render().el)
+			}
+
+			return this
+		},
+
+		renderSidebar: function () {
+
+			this
+				.$('#exerciseSidebar')
+				.html(new ExerciseSidebarView({model: this.model}).render().el)
 
 			return this
 		},
 
 		render: function () {
-			this
-				.renderExercise()
-				.renderBar()
-				.renderEdit()
+
+			this.renderExercise()
+
+			if(this.model){
+				this
+					.renderExerciseTab()
+					.renderSidebar()
+			}
+
+			this.renderEdit()
 
 			MathJax.Hub.Queue(["Typeset", MathJax.Hub, this.el])
+
+			return this
+		}
+	})
+
+	ExerciseTabView = Backbone.View.extend({
+		tagName: "div",
+		template: _.template($('#exerciseTabTemplate').html()),
+		render: function () {
+
+			this.$el.html(this.template({data: this.model.toJSON()}))
 
 			return this
 		}
@@ -285,14 +320,14 @@
 		tagName: "div",
 		id: "exerciseEdit",
 		events: {
-			//"click #exerciseEditSubmit": "showModal"
+			"click #exerciseEditSubmit": "submit"
 		},
 		//template: _.template($('#exerciseEditTemplate').html()),
 
 		initialize: function () {
 
 			ExerciseEditForm = new Backbone.Form({
-				model: this.model,
+				model: this.model ? this.model : new Exercise(),
 				idPrefix: 'exerciseEdit-',
 				fieldsets: [
 					{
@@ -319,28 +354,34 @@
 			})
 		},
 
-		showModal: function () {
+		submit: function () {
 
-			/*if(!ExerciseForm.validate()) {
+			console.log(ExerciseEditForm)
 
-			 ExerciseForm.commit()
+			var errors = ExerciseEditForm.validate()
 
-			 ExerciseForm.model.save("", "", {
-			 success: function() {
-			 $('#exerciseModal').modal('hide')
-			 },
-			 error: function() {
-			 alert("Something went wrong!")
-			 }
-			 })
-			 }*/
+			if (!errors) {
+
+				ExerciseEditForm.commit()
+
+				ExerciseEditForm.model.save("", "", {
+					success: function () {
+						alert("works")
+					},
+					error: function () {
+						alert("Something went wrong!")
+					}
+				})
+			} else {
+				console.log(errors)
+			}
 		},
 
 		render: function () {
 
 			this.$el.html(ExerciseEditForm.render().el)
 
-			this.$el.append('<button type="submit" class="btn btn-default">Submit</button>')
+			this.$el.append('<button id=exerciseEditSubmit type="submit" class="btn btn-default">Submit</button>')
 
 			/*
 			 this.$('#exerciseForm-subjects').typeahead({
@@ -358,6 +399,51 @@
 			return this
 		}
 	})
+
+	ExerciseSidebarView = Backbone.View.extend({
+		tagName: 'ul',
+		className: 'list-group',
+		template: _.template($('#exerciseSideBarTemplate').html()),
+		events: {
+			"click #showHint": "showHint"
+		},
+		showHint: function () {
+
+			var counter = this.model.get('displayedHints')
+
+			if (counter < this.model.get('hints').length) {
+
+				var hints = $('#hints')
+
+				if (counter == 0)
+					$('<hr>')
+						.hide()
+						.appendTo(hints)
+						.slideDown('fast')
+
+
+				var el = $('<div class="alert alert-info">' + this.model.get('hints')[counter] + '</div>')
+					.hide()
+					.appendTo(hints)
+					.slideDown('fast')
+
+				MathJax.Hub.Queue(["Typeset", MathJax.Hub, el[0]])
+
+				counter++
+				this.model.set('displayedHints', counter)
+			}
+
+			this.renderBar()
+		},
+		render: function () {
+			this.$el.html(this.template({data: this.model.toJSON()}))
+
+			this.$("[rel=tooltip]").tooltip();
+
+			return this
+		}
+	})
+
 
 	ExercisesView = Backbone.View.extend({
 		template: _.template($('#taskListTemplate').html()),
@@ -403,25 +489,6 @@
 				$('#content')
 					.html(taskView.render().el)
 					.fadeIn()
-
-				$('#tabHandlers a:first').click(function (e) {
-					e.preventDefault()
-					$(this).tab('show')
-				})
-
-				$('#tabHandlers li:nth-of-type(2) a').click(function (e) {
-					e.preventDefault()
-
-					new ExerciseEditView().render()
-
-					$(this).tab('show')
-				})
-
-				$('#tabHandlers a:last').click(function (e) {
-					e.preventDefault()
-					$(this).tab('show')
-				})
-
 			}
 		},
 		initialize: function () {
@@ -440,19 +507,6 @@
 					]
 				]
 			)
-
-			return this
-		}
-	})
-
-	ExerciseBarView = Backbone.View.extend({
-		tagName: 'ul',
-		className: 'list-group',
-		template: _.template($('#exerciseSideBarTemplate').html()),
-		render: function () {
-			this.$el.html(this.template({data: this.model.toJSON()}))
-
-			this.$("[rel=tooltip]").tooltip();
 
 			return this
 		}
@@ -488,6 +542,7 @@
                              <td>' + e.difficulty + '</td>\
                              <td>' + e.credits + '</td>\
                              <td>' + e.hints.length + '</td>\
+                             <td>' + e.flags.length + '</td>\
                              <td>' + e.note.substr(0, 30) + '…</td>\
                              <td>' + date + '</td>\
                              <td>' + time + '</td>\
@@ -544,6 +599,7 @@
 		},
 
 		showModal: function () {
+
 
 			if (!ExerciseForm.validate()) {
 
@@ -663,10 +719,13 @@
 		},
 		initialize: function () {
 
-			console.log($('#newExercise')[0])
+			$('#newExercise').click(function () {
 
-			$('#newExercise').click(function(){
-				alert('test')
+				var emptyExercise = new ExerciseView({model: null})
+
+				$('#content')
+					.html(emptyExercise.render().el)
+					.fadeIn('fast')
 			})
 		},
 
@@ -699,7 +758,7 @@
 
 			this.route(/^exercises\/(\d+)$/, "taskDetails")
 
-			$('body').append(new ExerciseFormView().render().el)
+			//$('body').append(new ExerciseFormView().render().el)
 		},
 
 		list: function (subject) {

@@ -13,7 +13,7 @@ app.configure(function() {
 app.get('/api/exercises', exercises.findAll)
 app.get('/api/exercises/:id', exercises.findById)
 app.post('/api/exercises', exercises.add)
-app.put('/api/exercises/:id', exercises.update)
+app.put('/api/exercises', exercises.update)
 app.delete('/api/exercises/:id', exercises.delete)
 
 app.listen(3000)
