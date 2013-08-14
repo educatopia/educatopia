@@ -213,31 +213,9 @@
 				this.model.on('reset', this.render, this)
 
 				this.model.set('displayedHints', 0)
+				//TODO: Remove from model before saving
 			}
 		},
-		/*events: {
-			*//*"click #tabHandlers": function(e){
-				e.preventDefault()
-				alert("test")
-			},*//*
-			"click #tabHandlers  li:nth-of-type(1) a": function(e){
-				e.preventDefault()
-				$(this).tab('show')
-			},
-
-			'click #tabHandlers li:nth-of-type(2) a': function (e) {
-				e.preventDefault()
-
-				//new ExerciseEditView().render()
-
-				$(this).tab('show')
-			},
-
-			'click #tabHandlers li:nth-of-type(3) a': function (e) {
-				e.preventDefault()
-				$(this).tab('show')
-			}
-		},*/
 
 		renderExercise: function () {
 
@@ -290,14 +268,25 @@
 		render: function () {
 
 			this.renderExercise()
+			this.renderEdit()
 
 			if(this.model){
 				this
 					.renderExerciseTab()
 					.renderSidebar()
-			}
+			}else{
+				this.$el
+					.addClass("well")
+					.addClass("col-lg-12")
 
-			this.renderEdit()
+				this.$('#tabHandlers li:nth-of-type(1)')
+					.removeClass("active")
+
+				this.$('#tabHandlers li:nth-of-type(2)')
+					.addClass("active")
+
+				this.$("#tab2").css("display", "block")
+			}
 
 			MathJax.Hub.Queue(["Typeset", MathJax.Hub, this.el])
 
@@ -356,14 +345,11 @@
 
 		submit: function () {
 
-			console.log(ExerciseEditForm)
+			//TODO: Display Error messages next to input-fields (should work automagical)
 
-			var errors = ExerciseEditForm.validate()
+			var errors = ExerciseEditForm.commit({validate: true})
 
 			if (!errors) {
-
-				ExerciseEditForm.commit()
-
 				ExerciseEditForm.model.save("", "", {
 					success: function () {
 						alert("works")
@@ -721,10 +707,8 @@
 
 			$('#newExercise').click(function () {
 
-				var emptyExercise = new ExerciseView({model: null})
-
-				$('#content')
-					.html(emptyExercise.render().el)
+				$('#contentWrapper')
+					.html(new ExerciseView().render().el)
 					.fadeIn('fast')
 			})
 		},
