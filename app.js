@@ -10,11 +10,13 @@ app.configure(function() {
 	app.use(express.static(path.join(__dirname, 'public')))
 })
 
-app.get('/api/exercises', exercises.findAll)
-app.get('/api/exercises/:id', exercises.findById)
+app.get('/api/exercises', exercises.getAll)
+app.get('/api/exercises/:id', exercises.getById)
+app.get('/api/exercises/history/:id', exercises.getHistoryById)
 app.post('/api/exercises', exercises.add)
 app.put('/api/exercises', exercises.update)
 app.delete('/api/exercises/:id', exercises.delete)
+
 
 app.listen(3000)
 console.log('Listening on port 3000...')

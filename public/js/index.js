@@ -53,7 +53,7 @@
 		BannerView,
 		ExerciseEditView,
 		ExercisesTableView,
-		ExerciseEditForm
+		ExerciseEditForm, ExerciseHistoryForm, ExerciseHistoryView
 
 
 	/*
@@ -115,6 +115,25 @@
 
 	Exercise = Backbone.Model.extend({
 		url: '/api/exercises',
+		parse: function (item) {
+
+			// Add missing fields
+
+			item.task = item.task || ""
+			item.approach = item.approach || ""
+			item.solution = item.solution || ""
+			item.subjects = item.subjects || ""
+			item.type = item.type || ""
+			item.credits = item.credits || ""
+			item.difficulty = item.difficulty || ""
+			item.duration = item.duration || ""
+			item.tags = item.tags || ""
+			item.note = item.note || ""
+			item.hints = item.hints || ""
+			item.flags = item.flags || ""
+
+			return item
+		},
 		schema: {
 			task: {
 				type: 'TextArea',
@@ -196,9 +215,6 @@
 	Exercises = Backbone.Collection.extend({
 		model: Exercise,
 		url: '/api/exercises'
-		/*parse: function(response) {
-		 return response.exercises
-		 }*/
 	})
 
 
@@ -208,7 +224,7 @@
 		template: _.template($('#exerciseTemplate').html()),
 		initialize: function () {
 
-			if(this.model){
+			if (this.model) {
 
 				this.model.on('reset', this.render, this)
 
@@ -231,7 +247,7 @@
 			return this
 		},
 
-		renderExerciseTab: function(){
+		renderExerciseTab: function () {
 
 			this
 				.$('#tab1')
@@ -243,7 +259,7 @@
 
 		renderEdit: function () {
 
-			if(this.model){
+			if (this.model) {
 				this
 					.$('#tab2')
 					.html(new ExerciseEditView({model: this.model}).render().el)
@@ -252,6 +268,17 @@
 					.$('#tab2')
 					.html(new ExerciseEditView().render().el)
 			}
+
+			return this
+		},
+
+		renderHistory: function () {
+
+			//new ExerciseHistoryView({model: this.model}).render()
+
+			this
+				.$('#tab3')
+				.html(new ExerciseHistoryView({model: this.model}).render().el)
 
 			return this
 		},
@@ -269,12 +296,13 @@
 
 			this.renderExercise()
 			this.renderEdit()
+			this.renderHistory()
 
-			if(this.model){
+			if (this.model) {
 				this
 					.renderExerciseTab()
 					.renderSidebar()
-			}else{
+			} else {
 				this.$el
 					.addClass("well")
 					.addClass("col-lg-12")
@@ -345,7 +373,9 @@
 
 		submit: function () {
 
-			//TODO: Display Error messages next to input-fields (should work automagical)
+			// TODO: Timestamp and user of modification
+
+			// TODO: Display Error messages next to input-fields (should work automagical)
 
 			var errors = ExerciseEditForm.commit({validate: true})
 
@@ -358,7 +388,8 @@
 						alert("Something went wrong!")
 					}
 				})
-			} else {
+			}
+			else {
 				console.log(errors)
 			}
 		},
@@ -517,6 +548,9 @@
 					time = datetime[1],
 					url = '#exercises/' + e.id
 
+
+				// TODO: Move to templates
+
 				this
 					.$("#exercisesTable tbody")
 					.append('\
@@ -621,6 +655,49 @@
 
 
 			//this.$('.icon-question-sign')
+
+			return this
+		}
+	})
+
+	ExerciseHistoryView = Backbone.View.extend({
+		template: _.template($('#exerciseHistoryTemplate').html()),
+		render: function () {
+
+			this.$el.html(this.template())
+
+			var url = '/api/exercises/history/' + this.model.id,
+				_this = this
+
+			$.getJSON(
+				url,
+				function (data) {
+
+					data.forEach(function (exercise, i) {
+
+						/*var timestamp = exercise.id.substring(0, 8),
+						 date = new Date(parseInt(timestamp, 16) * 1000),
+						 datetime = date.toISOString().substr(0, 19).split('T'),
+						 date = datetime[0],
+						 time = datetime[1],
+						 url = '#exercises/' + e.id*/
+
+
+						// TODO: Move to templates
+
+						_this
+							.$("tbody")
+							.append('\
+								 <tr>\
+									 <td>' + (i + 1) + '</td>\
+									 <td>Time</td>\
+									 <td>User</td>\
+								 </tr>\
+							')
+
+					}, this)
+				}
+			)
 
 			return this
 		}
