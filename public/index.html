@@ -278,6 +278,7 @@
             <th>Difficulty</th>
             <th>Credits</th>
             <th>Hints</th>
+            <th>Tags</th>
             <th>Flags</th>
             <th>Note</th>
             <th>Date</th>
@@ -285,6 +286,25 @@
         </tr>
         </thead>
         <tbody>
+
+        <% exercises.forEach(function(exercise, i){ %>
+
+        <tr>
+            <td><%= (i + 1) %></td>
+            <td><%= exercise.subjects %></td>
+            <td><%= exercise.type %></td>
+            <td><a href="<%= exercise.url %>"><%= exercise.task.substr(0, 30) %>…</a></td>
+            <td><%= exercise.difficulty  %></td>
+            <td><%= exercise.credits %></td>
+            <td><%= exercise.hints.length %></td>
+            <td><%= exercise.tags.length %></td>
+            <td><%= exercise.flags.length %></td>
+            <td><%= exercise.note.substr(0, 30) %>…</td>
+            <td><%= exercise.date %></td>
+            <td><%= exercise.time %></td>
+        </tr>
+
+        <% }) %>
 
         </tbody>
     </table>
@@ -300,6 +320,16 @@
         </tr>
         </thead>
         <tbody>
+
+        <% exercises.forEach(function(exercise, i){ %>
+
+        <tr>
+            <td><%= (i + 1) %></td>
+            <td>Time</td>
+            <td>User</td>
+        </tr>
+
+        <% }) %>
 
         </tbody>
     </table>

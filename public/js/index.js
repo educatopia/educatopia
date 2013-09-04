@@ -455,7 +455,7 @@
 		render: function () {
 			this.$el.html(this.template({data: this.model.toJSON()}))
 
-			this.$("[rel=tooltip]").tooltip();
+			this.$("[rel=tooltip]").tooltip()
 
 			return this
 		}
@@ -534,42 +534,24 @@
 		template: _.template($('#exercisesTemplate').html()),
 		render: function () {
 
-			this.$el.html(this.template())
+			var exercises = []
 
 			_.each(this.collection.models, function (exercise, i) {
 
-				var e = exercise.attributes
+				var enhancedExercise = exercise.attributes,
+					timestamp = enhancedExercise.id.substring(0, 8),
+					datetime = new Date(parseInt(timestamp, 16) * 1000).toISOString().substr(0, 19).split('T')
 
+				enhancedExercise.url = '#exercises/' + enhancedExercise.id
+				enhancedExercise.date = datetime[0]
+				enhancedExercise.time = datetime[1]
 
-				var timestamp = e.id.substring(0, 8),
-					date = new Date(parseInt(timestamp, 16) * 1000),
-					datetime = date.toISOString().substr(0, 19).split('T'),
-					date = datetime[0],
-					time = datetime[1],
-					url = '#exercises/' + e.id
+				exercises.push(enhancedExercise)
 
-
-				// TODO: Move to templates
-
-				this
-					.$("#exercisesTable tbody")
-					.append('\
-                         <tr>\
-                             <td>' + (i + 1) + '</td>\
-                             <td>' + e.subjects + '</td>\
-                             <td>' + e.type + '</td>\
-                             <td><a href="' + url + '">' + e.task.substr(0, 30) + '…</a></td>\
-                             <td>' + e.difficulty + '</td>\
-                             <td>' + e.credits + '</td>\
-                             <td>' + e.hints.length + '</td>\
-                             <td>' + e.flags.length + '</td>\
-                             <td>' + e.note.substr(0, 30) + '…</td>\
-                             <td>' + date + '</td>\
-                             <td>' + time + '</td>\
-                         </tr>\
-                    ')
 
 			}, this)
+
+			this.$el.html(this.template({exercises: exercises}))
 
 			return this
 		}
@@ -664,26 +646,18 @@
 		template: _.template($('#exerciseHistoryTemplate').html()),
 		render: function () {
 
-			this.$el.html(this.template())
-
-			var url = '/api/exercises/history/' + this.model.id,
+			var exercises = [],
+				url = '/api/exercises/history/' + this.model.id,
 				_this = this
 
 			$.getJSON(
 				url,
 				function (data) {
 
-					data.forEach(function (exercise, i) {
+					_this.$el.html(_this.template({exercises: data}))
 
-						/*var timestamp = exercise.id.substring(0, 8),
-						 date = new Date(parseInt(timestamp, 16) * 1000),
-						 datetime = date.toISOString().substr(0, 19).split('T'),
-						 date = datetime[0],
-						 time = datetime[1],
-						 url = '#exercises/' + e.id*/
+					/*data.forEach(function (exercise, i) {
 
-
-						// TODO: Move to templates
 
 						_this
 							.$("tbody")
@@ -695,9 +669,11 @@
 								 </tr>\
 							')
 
-					}, this)
+					}, this)*/
 				}
 			)
+
+
 
 			return this
 		}
