@@ -1,4 +1,5 @@
-var mongo = require('mongodb')
+var mongo = require('mongodb'),
+	marked = require('marked')
 
 var Server = mongo.Server,
 	Db = mongo.Db,
@@ -41,6 +42,22 @@ exports.getById = function (req, res) {
 				if (!err) {
 
 					item.current.id = id
+
+					console.log('test')
+
+					marked(item.current.task, function (err, content) {
+
+						if (!err) {
+
+							console.log(content)
+
+							item.current.task = content
+
+						}
+
+						else
+							throw err
+					})
 
 					res.send(item.current)
 				}
@@ -104,6 +121,18 @@ exports.getAll = function (req, res) {
 								}
 							}
 
+							/*marked(item.current.task, function (err, content) {
+
+							 if (!err){
+							 console.log(content)
+
+							 temp.task = content
+							 }
+
+							 else
+							 throw err
+							 })*/
+
 							tempArray.push(temp)
 						})
 
@@ -123,12 +152,13 @@ exports.add = function (req, res) {
 
 	db.collection('exercises', function (err, collection) {
 		collection.insert(exercise, {safe: true}, function (err, result) {
-			if (err) {
-				res.send({'error': 'An error has occurred'})
-			} else {
+
+			if (!err) {
 				c.log('Success: ' + JSON.stringify(result))
 				res.send(result[0])
 			}
+			else
+				res.send({'error': 'An error has occurred'})
 		})
 	})
 }
@@ -172,7 +202,7 @@ exports.update = function (req, res) {
 
 				if (!err) {
 
-					if(item.history)
+					if (item.history)
 						temp.history = item.history
 
 					else

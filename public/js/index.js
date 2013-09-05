@@ -1,7 +1,7 @@
-!function () {
+!function (window, document) {
 
-	var ExerciseTabView;
-	var appRouter,
+	var ExerciseTabView,
+		appRouter,
 		AppRouter,
 		ExerciseFormView,
 		AppView,
@@ -54,6 +54,24 @@
 		ExerciseEditView,
 		ExercisesTableView,
 		ExerciseEditForm, ExerciseHistoryForm, ExerciseHistoryView
+
+
+	marked.setOptions({
+		gfm: true,
+		/*highlight: function (code, lang, callback) {
+		 pygmentize({ lang: lang, format: 'html' }, code, function (err, result) {
+		 if (err) return callback(err);
+		 callback(null, result.toString());
+		 });
+		 },*/
+		tables: true,
+		breaks: true,
+		pedantic: false,
+		sanitize: true,
+		smartLists: true,
+		smartypants: false,
+		langPrefix: 'lang-'
+	})
 
 
 	/*
@@ -121,7 +139,7 @@
 
 			item.task = item.task || ""
 			item.approach = item.approach || ""
-			item.solution = item.solution || ""
+			item.solutions = item.solutions || ""
 			item.subjects = item.subjects || ""
 			item.type = item.type || ""
 			item.credits = item.credits || ""
@@ -149,10 +167,11 @@
 				editorAttrs: {rows: 10},
 				help: 'All the necessary steps to get to a solution.'
 			},
-			solution: {
-				type: 'Text',
+			solutions: {
+				type: 'List',
 				editorClass: 'form-control',
-				help: 'Try to keep the solution as short as possible to make it machine readable! ' +
+				help: 'The different solutions should be equally correct.' +
+					'Try to keep them as short as possible to make them machine readable! ' +
 					'All further information should be written down in the approach section.'
 			},
 			subjects: {
@@ -231,15 +250,18 @@
 				this.model.set('displayedHints', 0)
 				//TODO: Remove from model before saving
 			}
+			else
+				this.model = new Exercise()
+
 		},
 
 		renderExercise: function () {
 
+			var snippets
+
 			this
 				.$el
 				.html(this.template({data: null}))
-
-			var snippets
 
 			if (snippets = this.$('pre code')[0])
 				hljs.highlightBlock(snippets)
@@ -327,7 +349,33 @@
 		template: _.template($('#exerciseTabTemplate').html()),
 		render: function () {
 
-			this.$el.html(this.template({data: this.model.toJSON()}))
+			var data
+
+			if (!this.model.isNew()) {
+
+				data = this.model.toJSON()
+
+				marked(data.task, function (err, content) {
+
+					if (!err)
+						data.task = content
+
+					else
+						throw err
+				})
+
+				marked(data.approach, function (err, content) {
+
+					if (!err)
+						data.approach = content
+
+					else
+						throw err
+				})
+
+				this.$el.html(this.template({data: data}))
+
+			}
 
 			return this
 		}
@@ -343,15 +391,17 @@
 
 		initialize: function () {
 
+			this.model = this.model || new Exercise()
+
 			ExerciseEditForm = new Backbone.Form({
-				model: this.model ? this.model : new Exercise(),
+				model: this.model,
 				idPrefix: 'exerciseEdit-',
 				fieldsets: [
 					{
 						fields: [
 							'task',
 							'approach',
-							'solution'
+							'solutions'
 						]
 					},
 					{
@@ -390,7 +440,7 @@
 				})
 			}
 			else {
-				console.log(errors)
+				c.log(errors)
 			}
 		},
 
@@ -412,6 +462,31 @@
 			this
 				.$('.glyphicon-question-sign')
 				.tooltip()
+
+			return this
+		}
+	})
+
+	ExerciseHistoryView = Backbone.View.extend({
+		template: _.template($('#exerciseHistoryTemplate').html()),
+		render: function () {
+
+			var exercises = [],
+				_this = this,
+				url
+
+			if (this.model.id) {
+
+				url = '/api/exercises/history/' + this.model.id
+
+				$.getJSON(
+					url,
+					function (data) {
+						_this.$el.html(_this.template({exercises: data}))
+					}
+				)
+			}
+
 
 			return this
 		}
@@ -453,9 +528,13 @@
 			this.renderBar()
 		},
 		render: function () {
-			this.$el.html(this.template({data: this.model.toJSON()}))
 
-			this.$("[rel=tooltip]").tooltip()
+			if (!this.model.isNew()) {
+
+				this.$el.html(this.template({data: this.model.toJSON()}))
+
+				this.$("[rel=tooltip]").tooltip()
+			}
 
 			return this
 		}
@@ -548,7 +627,6 @@
 
 				exercises.push(enhancedExercise)
 
-
 			}, this)
 
 			this.$el.html(this.template({exercises: exercises}))
@@ -580,7 +658,7 @@
 						fields: [
 							'task',
 							'approach',
-							'solution'
+							'solutions'
 						]
 					},
 					{
@@ -637,43 +715,6 @@
 
 
 			//this.$('.icon-question-sign')
-
-			return this
-		}
-	})
-
-	ExerciseHistoryView = Backbone.View.extend({
-		template: _.template($('#exerciseHistoryTemplate').html()),
-		render: function () {
-
-			var exercises = [],
-				url = '/api/exercises/history/' + this.model.id,
-				_this = this
-
-			$.getJSON(
-				url,
-				function (data) {
-
-					_this.$el.html(_this.template({exercises: data}))
-
-					/*data.forEach(function (exercise, i) {
-
-
-						_this
-							.$("tbody")
-							.append('\
-								 <tr>\
-									 <td>' + (i + 1) + '</td>\
-									 <td>Time</td>\
-									 <td>User</td>\
-								 </tr>\
-							')
-
-					}, this)*/
-				}
-			)
-
-
 
 			return this
 		}
@@ -902,4 +943,5 @@
 	Backbone.history.start()
 
 	//console.log(international.getUntranslated())
-}()
+
+}(window, document)
