@@ -148,7 +148,8 @@ exports.add = function (req, res) {
 
 	var exercise = req.body
 
-	c.log('Adding exercise: ' + JSON.stringify(exercise))
+	c.log('Adding exercise:')
+	c.dir(exericse)
 
 	db.collection('exercises', function (err, collection) {
 		collection.insert(exercise, {safe: true}, function (err, result) {
@@ -158,7 +159,8 @@ exports.add = function (req, res) {
 				res.send(result[0])
 			}
 			else
-				res.send({'error': 'An error has occurred'})
+				c.log(err)
+				res.send(err)
 		})
 	})
 }
@@ -194,48 +196,55 @@ exports.update = function (req, res) {
 
 	db.collection('exercises', function (err, collection) {
 
-		// FIXME: Very ugly!
+			// FIXME: Very ugly!
 
-		collection.findOne(
-			{'_id': id},
-			function (err, item) {
+			collection.findOne(
+				{'_id': id},
+				function (err, item) {
 
-				if (!err) {
+					if (!err) {
 
-					if (item.history)
-						temp.history = item.history
+						if (item.history)
+							temp.history = item.history
 
+						else
+							temp.history = []
+
+
+						temp.history.push(item.current)
+						//c.log(temp)
+
+						collection.update(
+							{'_id': id},
+							temp,
+							{safe: true},
+							function (err, result) {
+
+								if (!err) {
+									c.log(result + ' document(s) updated')
+
+									// TODO: remove for production
+
+									setTimeout(function () {
+										res.send({})
+									}, 2000)
+								}
+								else {
+									c.error('Error updating exercise: ' + err)
+									res.send({'error': 'An error has occurred'})
+								}
+							}
+						)
+					}
 					else
-						temp.history = []
+						c.error(err)
+				})
 
 
-					temp.history.push(item.current)
-					//c.log(temp)
+		}
+	)
 
-					collection.update(
-						{'_id': id},
-						temp,
-						{safe: true},
-						function (err, result) {
-
-							if (!err) {
-								c.log(result + ' document(s) updated')
-								res.send({})
-							}
-							else {
-								c.error('Error updating exercise: ' + err)
-								res.send({'error': 'An error has occurred'})
-							}
-						})
-				}
-				else
-					c.error(err)
-			})
-
-
-	})
-
-	//exercise.history.push(exercise.current)
+//exercise.history.push(exercise.current)
 }
 
 

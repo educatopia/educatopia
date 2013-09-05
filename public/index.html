@@ -89,15 +89,15 @@
 <script id=exerciseTabTemplate type="text/template">
 
     <% if(_.contains(data.flags, "unapproved")){ %>
-        <div class="alert alert-warning">
-            <strong>Unapproved</strong> This exercise was not yet verified to be correct
-        </div>
+    <div class="alert alert-warning">
+        <strong>Unapproved</strong> This exercise was not yet verified to be correct
+    </div>
     <% } %>
 
     <% if(_.contains(data.flags, "incorrect")){ %>
-        <div class="alert alert-error">
-            <strong>Attention!</strong> There are mistakes in this exercise! Please help to correct them!
-        </div>
+    <div class="alert alert-error">
+        <strong>Attention!</strong> There are mistakes in this exercise! Please help to correct them!
+    </div>
     <% } %>
 
     <div><%= data.task %></div>
@@ -115,19 +115,29 @@
                     <% if(data.approach){ print(data.approach) } %>
 
                     <% if(data.solutions && data.solutions.length > 0){ %>
-                        <p><%= _.reduce(data.solutions, function(a,b){ return a + '</p><p>' + b }) %></p>
+                    <p><%= _.reduce(data.solutions, function(a,b){ return a + '</p><p>' + b }) %></p>
 
                     <% }else if(data.solution){ %>
-                        <div class="alert alert-success"><%= data.solution %></div>
+                    <div class="alert alert-success"><%= data.solution %></div>
                     <% } %>
 
                     <% if(_.contains(data.tags, "proof"))
-                        print('<span class="qed" title="Quod Erat Demonstrandum"></span>')
+                    print('<span class="qed" title="Quod Erat Demonstrandum"></span>')
                     %>
                 </div>
-             </div>
+            </div>
         </div>
     </div>
+
+</script>
+
+<script id=exerciseEditTemplate type="text/template">
+
+    <button id=exerciseEditSubmit type=submit class="btn btn-default">
+        Submit
+        <span></span>
+    </button>
+    <div class="successInfo alert" ></div>
 
 </script>
 
@@ -218,55 +228,6 @@
 
 </script>
 
-<script id=exerciseFormTemplate type="text/template">
-    <form>
-        <h1>New User</h1>
-
-        <h2>Main Info</h2>
-        <div data-fields="title,name,birthday"></div>
-
-        <h2>Account Info</h2>
-        <h3>Email</h3>
-        <div data-fields="email"></div>
-
-        <h3>Password</h3>
-        <p>Must be at least 8 characters long</p>
-        <div data-editors="password"></div>
-    </form>
-</script>
-
-<script id=bannerTemplate type="text/template">
-    <div id="banner" class="jumbotron">
-        <div class="page-header">
-            <h1>1001 Exercises
-                <small>Practice 'till you drop!</small>
-            </h1>
-        </div>
-
-        <p>The goal of this website is to build an extensive library of exercises from a variety of scientific topics
-            such as
-            Math, Digital Electronics, Modelling, Computer Science, …</p>
-
-        <p>Please Enjoy!</p>
-    </div>
-</script>
-
-<script id=taskListTemplate type="text/template">
-    <div id='tasks' class="row">
-        <div class="col-lg-2">
-            <ul id="sidebar" class="well list-group"></ul>
-        </div>
-        <div id="content" class="well col-lg-10"></div>
-    </div>
-</script>
-
-<script id=referenceTemplate type=text/template>
-    <div class=row>
-        <div id=referenceSidebar class="col-lg-3"></div>
-        <div id=referenceContent class="col-lg-9 panel"></div>
-    </div>
-</script>
-
 <script id=exercisesTemplate type="text/template">
     <table id="exercisesTable"  class="table table-striped table-bordered table-condensed">
         <thead>
@@ -290,7 +251,7 @@
         <% exercises.forEach(function(exercise, i){ %>
 
 
-     <!-- TODO: Repair links -->
+        <!-- TODO: Repair links -->
 
         <tr>
             <td><%= (i + 1) %></td>
@@ -338,12 +299,46 @@
     </table>
 </script>
 
+<script id=bannerTemplate type="text/template">
+    <div id="banner" class="jumbotron">
+        <div class="page-header">
+            <h1>1001 Exercises
+                <small>Practice 'till you drop!</small>
+            </h1>
+        </div>
+
+        <p>The goal of this website is to build an extensive library of exercises from a variety of scientific topics
+            such as
+            Math, Digital Electronics, Modelling, Computer Science, …</p>
+
+        <p>Please Enjoy!</p>
+    </div>
+</script>
+
+<script id=taskListTemplate type="text/template">
+    <div id='tasks' class="row">
+        <div class="col-lg-2">
+            <ul id="sidebar" class="well list-group"></ul>
+        </div>
+        <div id="content" class="well col-lg-10"></div>
+    </div>
+</script>
+
+<script id=referenceTemplate type=text/template>
+    <div class=row>
+        <div id=referenceSidebar class="col-lg-3"></div>
+        <div id=referenceContent class="col-lg-9 panel"></div>
+    </div>
+</script>
+
 
 <!--
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
 -->
+
+<!-- TODO: Load minified versions and source maps -->
 
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/underscore-min.js"></script>
@@ -385,3 +380,4 @@
 
 </body>
 </html>
+

@@ -118,6 +118,10 @@ table caption {
     overflow: scroll;
 }
 
+.alert:empty{
+    display: none;
+}
+
 #exerciseSidebar .progress {
     margin-bottom: 0;
 }

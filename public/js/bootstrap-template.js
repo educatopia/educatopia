@@ -26,7 +26,9 @@
 				<%= title %>\
 				<span class="glyphicon glyphicon-question-sign" title="<%= help %>" data-container="body"></span>\
 			</label>\
-			<div class="col-lg-10" data-editor></div>\
+			<div class="col-lg-10" data-editor>\
+				<div class="alert alert-danger" data-error></div>\
+			</div>\
 		</div>\
 	')
 
@@ -51,6 +53,7 @@
 		<li class="row col-lg-8">\
 			<div data-editor class="col-lg-11"></div>\
 			<button type="button" class="close bbf-del" data-action="remove">&times;</button>\
+			<div class="alert alert-danger" data-error></div>\
 		</li>\
 	')
 

@@ -53,7 +53,9 @@
 		BannerView,
 		ExerciseEditView,
 		ExercisesTableView,
-		ExerciseEditForm, ExerciseHistoryForm, ExerciseHistoryView
+		ExerciseEditForm,
+		ExerciseHistoryForm,
+		ExerciseHistoryView
 
 
 	marked.setOptions({
@@ -382,10 +384,11 @@
 	})
 
 	ExerciseEditView = Backbone.View.extend({
-		tagName: "div",
-		id: "exerciseEdit",
+		tagName: 'div',
+		id: 'exerciseEdit',
+		template: _.template($('#exerciseEditTemplate').html()),
 		events: {
-			"click #exerciseEditSubmit": "submit"
+			"click #exerciseEditSubmit": 'submit'
 		},
 		//template: _.template($('#exerciseEditTemplate').html()),
 
@@ -425,31 +428,64 @@
 
 			// TODO: Timestamp and user of modification
 
-			// TODO: Display Error messages next to input-fields (should work automagical)
+			// TODO: Use HTTP PATCH instead of PUT
 
-			var errors = ExerciseEditForm.commit({validate: true})
+			var errors = ExerciseEditForm.commit({validate: true}),
+				submitSpan = this.$('#exerciseEditSubmit span')
 
 			if (!errors) {
+
+				// TODO: Use spin.js instead of glyphicons
+
+				submitSpan
+					.addClass('glyphicon')
+					.addClass('glyphicon-refresh')
+
+
 				ExerciseEditForm.model.save("", "", {
-					success: function () {
-						alert("works")
+					success: function (model, repsonse, options) {
+						this
+							.$('.successInfo')
+							.removeClass('alert-danger')
+							.addClass('alert-success')
+							.text('The exercise was successfully saved')
+
+						submitSpan
+							.removeClass('glyphicon')
+							.removeClass('glyphicon-refresh')
 					},
-					error: function () {
-						alert("Something went wrong!")
+					error: function (model, repsonse, options) {
+
+						submitSpan
+							.removeClass('glyphicon')
+							.removeClass('glyphicon-refresh')
+
+						this
+							.$('.successInfo')
+							.removeClass('alert-success')
+							.addClass('alert-danger')
+							.text('An error occurred. Please try again later.')
 					}
 				})
 			}
 			else {
-				c.log(errors)
+
+				this
+					.$('.successInfo')
+					.removeClass('alert-success')
+					.addClass('alert-danger')
+					.text('Please correct wrong fields')
 			}
 		},
 
 		render: function () {
 
-			this.$el.html(ExerciseEditForm.render().el)
+			this.$el.html(this.template())
 
-			this.$el.append('<button id=exerciseEditSubmit type="submit" class="btn btn-default">Submit</button>')
+			this.$el.prepend(ExerciseEditForm.render().el)
 
+
+			// TODO: Include standalone-version of typeahead
 			/*
 			 this.$('#exerciseForm-subjects').typeahead({
 			 source: _.map(subjects, _.capitalize)
@@ -457,7 +493,9 @@
 			 */
 
 			//Fixes backbone-form bug of not being able to set stepsize
-			this.$('#exerciseEdit-difficulty').attr('step', 0.1)
+			this
+				.$('#exerciseEdit-difficulty')
+				.attr('step', 0.1)
 
 			this
 				.$('.glyphicon-question-sign')
@@ -630,91 +668,6 @@
 			}, this)
 
 			this.$el.html(this.template({exercises: exercises}))
-
-			return this
-		}
-	})
-
-	ExerciseFormView = Backbone.View.extend({
-		id: "exerciseModal",
-		className: "modal hide fade",
-		events: {
-			"click #exerciseFormSubmit": "showModal"
-		},
-		attributes: {
-			role: "dialog"
-		},
-
-		template: _.template($('#exerciseFormTemplate').html()),
-
-		initialize: function () {
-
-			ExerciseForm = new Backbone.Form({
-				model: new Exercise(),
-				idPrefix: 'exerciseForm-',
-				fieldsets: [
-					{
-						legend: 'Exercise',
-						fields: [
-							'task',
-							'approach',
-							'solutions'
-						]
-					},
-					{
-						legend: 'Details',
-						fields: [
-							'subjects',
-							'type',
-							'credits',
-							'difficulty',
-							'duration',
-							'hints',
-							'tags',
-							'note'
-						]
-					}
-				]
-			})
-		},
-
-		showModal: function () {
-
-
-			if (!ExerciseForm.validate()) {
-
-				ExerciseForm.commit()
-
-				ExerciseForm.model.save("", "", {
-					success: function () {
-						$('#exerciseModal').modal('hide')
-					},
-					error: function () {
-						alert("Something went wrong!")
-					}
-				})
-			}
-		},
-
-		render: function () {
-			this.$el.html(this.template())
-
-			this.$('.modal-body').append(ExerciseForm.render().el)
-
-			/*this.$('#exerciseForm-subjects').typeahead({
-			 source: _.map(subjects, _.capitalize)
-			 })*/
-
-			//Fixes backbone-form bug of not being able to set stepsize
-			this.$('#exerciseForm-difficulty').attr('step', 0.1)
-
-
-			this
-				.$('.glyphicon-question-sign')
-				.tooltip()
-
-
-			//this.$('.icon-question-sign')
 
 			return this
 		}
