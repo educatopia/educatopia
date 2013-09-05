@@ -430,6 +430,8 @@
 
 			// TODO: Use HTTP PATCH instead of PUT
 
+			// TODO: Update history tab after successful update
+
 			var errors = ExerciseEditForm.commit({validate: true}),
 				submitSpan = this.$('#exerciseEditSubmit span')
 

@@ -24,6 +24,24 @@ db.open(function (err, db) {
 		c.error(err)
 })
 
+function deleteEmptyFields(obj){
+
+	for (var key in obj) {
+		if (obj.hasOwnProperty(key))
+			if (obj[key] === "" ||
+				obj[key] === 0 ||
+				obj[key] === null ||
+				obj[key].length === 0 ||
+				obj[key] === undefined) {
+
+				//print(key + ": " + exercise[key])
+				delete obj[key]
+			}
+	}
+
+	return obj
+}
+
 
 //Exports
 
@@ -146,16 +164,20 @@ exports.getAll = function (req, res) {
 
 exports.add = function (req, res) {
 
-	var exercise = req.body
+	var exercise = {}
+
+	exercise.current = deleteEmptyFields(req.body)
 
 	c.log('Adding exercise:')
-	c.dir(exericse)
 
 	db.collection('exercises', function (err, collection) {
+
 		collection.insert(exercise, {safe: true}, function (err, result) {
 
 			if (!err) {
-				c.log('Success: ' + JSON.stringify(result))
+				c.log('Successfully added following exercise:')
+				c.dir(result)
+
 				res.send(result[0])
 			}
 			else
@@ -167,23 +189,10 @@ exports.add = function (req, res) {
 
 exports.update = function (req, res) {
 
-	var exercise = req.body,
+	var exercise = deleteEmptyFields(req.body),
 		id = new BSON.ObjectID(exercise.id),
 		temp = {}
 
-	// Delete all empty fields
-	for (var key in exercise) {
-		if (exercise.hasOwnProperty(key))
-			if (exercise[key] === "" ||
-				exercise[key] === 0 ||
-				exercise[key] === null ||
-				exercise[key].length === 0 ||
-				exercise[key] === undefined) {
-
-				//print(key + ": " + exercise[key])
-				delete exercise[key]
-			}
-	}
 
 	temp['_id'] = id
 
