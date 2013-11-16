@@ -29,29 +29,32 @@
 
 <div class="navbar navbar-inverse navbar-fixed-top">
 
-        <a class="navbar-brand" href="#">educatopia</a>
+    <a class="navbar-brand" href="#">educatopia</a>
 
-        <ul class="navbar-nav nav">
-            <li class="dropdown">
-                <a class="dropdown-toggle" href="#exercises">Exercises<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="#exercises/math">math</a></li>
-                    <li><a href="#exercises/computer-science">computer science</a></li>
-                    <li><a href="#exercises/programming">programming</a></li>
-                    <li><a href="#exercises/internet-technologies">internet technologies</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a class="dropdown-toggle" href="#">Reference<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="#reference/math">math</a></li>
-                    <li class="disabled"><a href="#reference/computer-science">Computer Science</a></li>
-                    <li class="disabled"><a href="#reference/programming">programming</a></li>
-                </ul>
-            </li>
-        </ul>
+    <ul class="navbar-nav nav">
+        <li class="dropdown">
+            <a class="dropdown-toggle" href="#exercises">Exercises<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li><a href="#exercises/math">math</a></li>
+                <li><a href="#exercises/computer-science">computer science</a></li>
+                <li><a href="#exercises/programming">programming</a></li>
+                <li><a href="#exercises/internet-technologies">internet technologies</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" href="#">Reference<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li><a href="#reference/math">math</a></li>
+                <li class="disabled"><a href="#reference/computer-science">Computer Science</a></li>
+                <li class="disabled"><a href="#reference/programming">programming</a></li>
+            </ul>
+        </li>
+    </ul>
 
-        <button id=newExercise type=button class="btn btn-lg btn-link navbar-btn pull-right glyphicon glyphicon-edit"></button>
+    <button id=newExercise type=button class="btn btn-lg btn-link navbar-btn pull-right glyphicon glyphicon-edit"></button>
+    <button class="btn btn-link navbar-btn pull-right"  data-toggle="modal" data-target="#signupModal">Signup</button>
+    <button class="btn btn-link navbar-btn pull-right"  data-toggle="modal" data-target="#loginModal">Login</button>
+
 </div>
 
 <div id=contentWrapper class="container">
@@ -64,6 +67,40 @@
         <a href="https://github.com/adius/educatopia/issues">Issues</a>
     </p>
 </footer>
+
+<div class="modal fade" id="loginModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+                <p>One fine body</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="signupModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Signup</h4>
+            </div>
+            <div class="modal-body">
+                <p>One fine body</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-------------------- Templates -------------------->

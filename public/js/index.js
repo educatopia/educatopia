@@ -55,7 +55,7 @@
 		ExercisesTableView,
 		ExerciseEditForm,
 		ExerciseHistoryForm,
-		ExerciseHistoryView
+		ExerciseHistoryView, LoginView
 
 
 	marked.setOptions({
@@ -511,6 +511,8 @@
 		template: _.template($('#exerciseHistoryTemplate').html()),
 		render: function () {
 
+			// TODO: Listen to change event and redraw
+
 			var exercises = [],
 				_this = this,
 				url
@@ -745,6 +747,78 @@
 
 			return this
 		}
+	})
+
+	LoginView = Backbone.View.extend({
+		events: {
+			"click #loginSubmit": 'submit'
+		},
+		initialize: function () {
+
+			var loginForm = new Backbone.Form({
+				schema: {
+					email: 'text'
+				},
+				idPrefix: 'exerciseEdit-',
+				fieldsets: [
+					{
+						fields: [
+							'task',
+							'approach',
+							'solutions'
+						]
+					},
+					{
+						legend: 'Details',
+						fields: [
+							'subjects',
+							'type',
+							'credits',
+							'difficulty',
+							'duration',
+							'hints',
+							'tags',
+							'note'
+						]
+					}
+				]
+			})
+
+		},
+		submit: function () {
+			alert("TODO")
+		},
+		render: function () {
+
+		}
+	})
+
+
+	ExerciseEditForm = new Backbone.Form({
+		model: this.model,
+		idPrefix: 'exerciseEdit-',
+		fieldsets: [
+			{
+				fields: [
+					'task',
+					'approach',
+					'solutions'
+				]
+			},
+			{
+				legend: 'Details',
+				fields: [
+					'subjects',
+					'type',
+					'credits',
+					'difficulty',
+					'duration',
+					'hints',
+					'tags',
+					'note'
+				]
+			}
+		]
 	})
 
 
