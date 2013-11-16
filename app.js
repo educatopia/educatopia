@@ -1,6 +1,7 @@
-var express = require('express'),
-	path = require('path'),
-	exercises = require('./routes/exercises')
+var express    = require('express');
+var path       = require('path');
+var exercises  = require('./modules/exercises');
+var accounting = require('./modules/accounting');
 
 var app = express()
 
@@ -16,7 +17,6 @@ app.get('/api/exercises/history/:id', exercises.getHistoryById)
 app.post('/api/exercises', exercises.add)
 app.put('/api/exercises', exercises.update)
 app.delete('/api/exercises/:id', exercises.delete)
-
 
 app.listen(3000)
 console.log('Listening on port 3000...')
