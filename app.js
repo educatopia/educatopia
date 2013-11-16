@@ -11,6 +11,8 @@ app.configure(function() {
 	app.use(express.static(path.join(__dirname, 'public')))
 })
 
+app.get('/api/register', accounting.register)
+
 app.get('/api/exercises', exercises.getAll)
 app.get('/api/exercises/:id', exercises.getById)
 app.get('/api/exercises/history/:id', exercises.getHistoryById)

@@ -2,6 +2,7 @@
  * https://github.com/braitsch/node-login/blob/master/app/server/modules/account-manager.js */
 
 // ---- module dependencies ---------------------
+var email   = require('email-dispatcher')
 var crypto 	= require('crypto')
 var MongoDB = require('mongodb').Db
 var Server 	= require('mongodb').Server
@@ -11,7 +12,45 @@ var dbPort 	= 27017
 var dbHost 	= 'localhost'
 var dbName 	= 'educatopia'
 
-// ---- module privates -------------------------
+// ---- module exports --------------------------
+exports.register = function(req, res) {
+    if (isAuthorized(req,res)) return;
+
+    var userData = {fullname: req.param['fullname'], email: req.param['email']}
+
+    addNewAccount(userData, function(message) {
+        if (message === 'email-taken') {
+            res.send({error:true})
+        } else {
+            email.dispatchRegistrationMail(phaseOneData, function(error) {
+                throw error
+            })
+        }
+    })
+
+}
+
+// implements the first phase of the signup, where the user only
+// gives us email and his name
+exports.addNewAccount = function(phaseOneData, callback) {
+    userCollection.findOne({user:phaseOneData.email}, function(error, user) {
+        if (error) throw error
+        
+        if (user) {
+            callback('email-taken')
+        } else {
+            saltAndHash(newData.pass, function(hash){
+                phaseOneData.password = hash
+
+                phaseOneData.date = moment().format('MMMM Do YYYY, h:mm:ss a')
+                phaseOneData.staging = true
+
+                userCollection.insert(phaseOneData, {safe: true}, callback)
+            })
+        }
+    }
+}
+
 exports.isAuthorized = function(req,res) {
     if (req.cookie.user == undefined || req.cookie.pass) {
         return false
@@ -54,25 +93,6 @@ exports.manualLogin = function(user, pass, callback) {
     })
 }
 
-// implements the first phase of the signup, where the user only
-// gives us email and his name
-exports.addNewAccount = function(phaseOneData, callback) {
-    userCollection.findOne({user:phaseOneData.email}, function(e, o) {
-        if (o) {
-            callback('email-taken')
-        } else {
-            saltAndHash(newData.pass, function(hash){
-                phaseOneData.password = hash
-
-                phaseOneData.date = moment().format('MMMM Do YYYY, h:mm:ss a')
-                phaseOneData.staging = true
-
-                userCollection.insert(phaseOneData, {safe: true}, callback)
-                })
-            }
-        }
-    })
-}
 
 exports.updateAccount = function(newData, callback) {
     userCollection.findOne({user:newData.user}, function(e, o){
@@ -149,9 +169,9 @@ db.open(function(e, d) {
     }
 })
 
-var userCollection = db.collection('users')
 
 // ---- module-exclusive functionality ----------
+var userCollection = db.collection('users')
 var generateSalt = function() {
     var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ'
     var salt = ''
