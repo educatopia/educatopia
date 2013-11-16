@@ -27,7 +27,22 @@
 
 <body>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div id=contentWrapper class="container">
+
+</div>
+
+<footer>
+    <p>
+        <a href="http://adriansieber.com">By Adrian Sieber</a><span class="muted">•</span>
+        <a href="https://github.com/adius/educatopia">Github</a><span class="muted">•</span>
+        <a href="https://github.com/adius/educatopia/issues">Issues</a>
+    </p>
+</footer>
+
+
+<!-------------------- Templates -------------------->
+
+<script type="text/template" id=navbarTemplate>
 
     <a class="navbar-brand" href="#">educatopia</a>
 
@@ -51,25 +66,14 @@
         </li>
     </ul>
 
-    <button id=newExercise type=button class="btn btn-lg btn-link navbar-btn pull-right glyphicon glyphicon-edit"></button>
-    <button class="btn btn-link navbar-btn pull-right"  data-toggle="modal" data-target="#signupModal">Signup</button>
-    <button class="btn btn-link navbar-btn pull-right"  data-toggle="modal" data-target="#loginModal">Login</button>
+    <button id=newExercise type=button
+            class="btn btn-lg btn-link navbar-btn pull-right glyphicon glyphicon-edit"></button>
+    <button class="btn btn-link navbar-btn pull-right" data-toggle="modal" data-target="#signupModal">Signup</button>
+    <button class="btn btn-link navbar-btn pull-right" data-toggle="modal" data-target="#loginModal">Login</button>
+</script>
 
-</div>
-
-<div id=contentWrapper class="container">
-
-</div>
-
-<footer>
-    <p><a href="http://adriansieber.com">By Adrian Sieber</a><span class="muted">•</span>
-        <a href="https://github.com/adius/educatopia">Github</a><span class="muted">•</span>
-        <a href="https://github.com/adius/educatopia/issues">Issues</a>
-    </p>
-</footer>
-
-<div class="modal fade" id="loginModal">
-    <div class="modal-dialog">
+<script type="text/template" class="modal fade" id="loginModalTemplate">
+    <div type="text/template" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -83,9 +87,10 @@
             </div>
         </div>
     </div>
-</div>
+</script>
 
-<div class="modal fade" id="signupModal">
+
+<script type="text/template" class="modal fade" id="signupModalTemplate">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -100,10 +105,8 @@
             </div>
         </div>
     </div>
-</div>
+</script>
 
-
-<!-------------------- Templates -------------------->
 
 <script id=exerciseTemplate type="text/template">
     <div class="tabbable col-lg-9">
@@ -152,7 +155,9 @@
                     <% if(data.approach){ print(data.approach) } %>
 
                     <% if(data.solutions && data.solutions.length > 0){ %>
-                    <p><%= _.reduce(data.solutions, function(a,b){ return a + '</p><p>' + b }) %></p>
+                    <p><%= _.reduce(data.solutions, function(a,b){ return a + '</p>
+
+                    <p>' + b }) %></p>
 
                     <% }else if(data.solution){ %>
                     <div class="alert alert-success"><%= data.solution %></div>
@@ -174,7 +179,7 @@
         Submit
         <span></span>
     </button>
-    <div class="successInfo alert" ></div>
+    <div class="successInfo alert"></div>
 
 </script>
 
@@ -187,7 +192,8 @@
     </li>
 
     <li class="list-group-item">
-        Difficulty: <small class=pull-right><% (data.difficulty)? print(data.difficulty * 10) : print(0) %>/10</small>
+        Difficulty:
+        <small class=pull-right><% (data.difficulty)? print(data.difficulty * 10) : print(0) %>/10</small>
 
         <div class="progress">
             <div class="progress-bar" style="width:<% print( (data.difficulty * 100) + '%') %>"></div>
@@ -221,19 +227,21 @@
 
     <% if(data.hints && data.hints.length > 0){ %>
 
-        <li class="list-group-item">
-            <%
-                var clas = ''
-                viewedHints = data.displayedHints + 1
+    <li class="list-group-item">
+        <%
+        var clas = ''
+        viewedHints = data.displayedHints + 1
 
-                if(data.displayedHints == data.hints.length ){
-                    clas = 'disabled'
-                    viewedHints = data.displayedHints
-                }
-            %>
+        if(data.displayedHints == data.hints.length ){
+        clas = 'disabled'
+        viewedHints = data.displayedHints
+        }
+        %>
 
-            <button id="showHint" class="btn btn-info btn-sm btn-block <%= clas %>">Show Hint <%= viewedHints %>/<%= data.hints.length %></button>
-        </li>
+        <button id="showHint" class="btn btn-info btn-sm btn-block <%= clas %>">Show Hint <%= viewedHints %>/<%=
+            data.hints.length %>
+        </button>
+    </li>
 
     <% } %>
 
@@ -266,7 +274,7 @@
 </script>
 
 <script id=exercisesTemplate type="text/template">
-    <table id="exercisesTable"  class="table table-striped table-bordered table-condensed">
+    <table id="exercisesTable" class="table table-striped table-bordered table-condensed">
         <thead>
         <tr>
             <th>Nr</th>
@@ -295,7 +303,7 @@
             <td><%= exercise.subjects %></td>
             <td><%= exercise.type %></td>
             <td><a href="<%= exercise.url %>"><%= exercise.task.substr(0, 30) %>…</a></td>
-            <td><%= exercise.difficulty  %></td>
+            <td><%= exercise.difficulty %></td>
             <td><%= exercise.credits %></td>
             <td><%= exercise.hints.length %></td>
             <td><%= exercise.tags.length %></td>
@@ -388,9 +396,9 @@
 
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
-        asciimath2jax: {
-            delimiters: [['´','´'], ['\\(','\\)']]
-        }
+    asciimath2jax: {
+    delimiters: [['´','´'], ['\\(','\\)']]
+    }
     })
 </script>
 

@@ -55,7 +55,7 @@
 		ExercisesTableView,
 		ExerciseEditForm,
 		ExerciseHistoryForm,
-		ExerciseHistoryView, LoginView
+		ExerciseHistoryView, LoginView, NavbarView
 
 
 	marked.setOptions({
@@ -759,29 +759,7 @@
 				schema: {
 					email: 'text'
 				},
-				idPrefix: 'exerciseEdit-',
-				fieldsets: [
-					{
-						fields: [
-							'task',
-							'approach',
-							'solutions'
-						]
-					},
-					{
-						legend: 'Details',
-						fields: [
-							'subjects',
-							'type',
-							'credits',
-							'difficulty',
-							'duration',
-							'hints',
-							'tags',
-							'note'
-						]
-					}
-				]
+				idPrefix: 'exerciseEdit-'
 			})
 
 		},
@@ -828,12 +806,15 @@
 		},
 		initialize: function () {
 
+			$('body').prepend(new NavbarView().render().el)
+
 			$('#newExercise').click(function () {
 
 				$('#contentWrapper')
 					.html(new ExerciseView().render().el)
 					.fadeIn('fast')
 			})
+
 		},
 
 		render: function () {
@@ -844,6 +825,17 @@
 		render: function () {
 
 			this.$el.html(_.template($('#bannerTemplate').html()))
+
+			return this
+		}
+	})
+
+	NavbarView = Backbone.View.extend({
+		id: "navbar",
+		className: "navbar navbar-inverse navbar-fixed-top",
+		render: function(){
+
+			this.$el.html(_.template($('#navbarTemplate').html()))
 
 			return this
 		}
