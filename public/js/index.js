@@ -55,7 +55,7 @@
 		ExercisesTableView,
 		ExerciseEditForm,
 		ExerciseHistoryForm,
-		ExerciseHistoryView, LoginView, NavbarView
+		ExerciseHistoryView, LoginView, NavbarView, SignupView
 
 
 	marked.setOptions({
@@ -750,17 +750,20 @@
 	})
 
 	LoginView = Backbone.View.extend({
+		id: 'loginModal',
+		className: 'modal fade',
+		template: _.template($('#loginModalTemplate').html()),
 		events: {
 			"click #loginSubmit": 'submit'
 		},
 		initialize: function () {
 
-			var loginForm = new Backbone.Form({
-				schema: {
-					email: 'text'
-				},
-				idPrefix: 'exerciseEdit-'
-			})
+			/*var loginForm = new Backbone.Form({
+			 schema: {
+			 email: 'text'
+			 },
+			 idPrefix: 'exerciseEdit-'
+			 })*/
 
 		},
 		submit: function () {
@@ -768,6 +771,37 @@
 		},
 		render: function () {
 
+			this.$el.html(this.template())
+
+			return this
+		}
+	})
+
+	SignupView = Backbone.View.extend({
+		id: 'signupModal',
+		className: 'modal fade',
+		template: _.template($('#signupModalTemplate').html()),
+		events: {
+			"click #signupSubmit": 'submit'
+		},
+		initialize: function () {
+
+			/*var loginForm = new Backbone.Form({
+			 schema: {
+			 email: 'text'
+			 },
+			 idPrefix: 'exerciseEdit-'
+			 })*/
+
+		},
+		submit: function () {
+			alert("TODO")
+		},
+		render: function () {
+
+			this.$el.html(this.template())
+
+			return this
 		}
 	})
 
@@ -806,6 +840,10 @@
 		},
 		initialize: function () {
 
+		},
+
+		render: function () {
+
 			$('body').prepend(new NavbarView().render().el)
 
 			$('#newExercise').click(function () {
@@ -815,9 +853,22 @@
 					.fadeIn('fast')
 			})
 
-		},
+			$('#loginButton').click(function () {
 
-		render: function () {
+				$('body')
+					.append(new LoginView().render().el)
+
+				$('#loginModal').modal()
+			})
+
+			$('#signupButton').click(function () {
+
+				$('body')
+					.append(new SignupView().render().el)
+
+				$('#signupModal').modal()
+			})
+
 		}
 	})
 
@@ -960,6 +1011,7 @@
 
 	appRouter = new AppRouter()
 	appView = new AppView({el: document.body})
+	appView.render()
 
 	Backbone.history.start()
 

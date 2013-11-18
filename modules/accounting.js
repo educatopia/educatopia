@@ -23,9 +23,9 @@ exports.isAuthorized = function(req,res) {
             } else {
                 return false;
             }
-        }
+        })
     }
-};
+}
 
 /* login validation methods */
 exports.autoLogin = function(user, pass, callback) {
