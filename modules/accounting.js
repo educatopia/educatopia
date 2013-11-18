@@ -2,26 +2,65 @@
  * https://github.com/braitsch/node-login/blob/master/app/server/modules/account-manager.js */
 
 // ---- module dependencies ---------------------
-var crypto 	= require('crypto');
-var MongoDB = require('mongodb').Db;
-var Server 	= require('mongodb').Server;
-var moment 	= require('moment');
+var email   = require('email-dispatcher')
+var crypto 	= require('crypto')
+var MongoDB = require('mongodb').Db
+var Server 	= require('mongodb').Server
+var moment 	= require('moment')
 
-var dbPort 	= 27017;
-var dbHost 	= 'localhost';
-var dbName 	= 'educatopia';
+var dbPort 	= 27017
+var dbHost 	= 'localhost'
+var dbName 	= 'educatopia'
 
-// ---- module privates -------------------------
+// ---- module exports --------------------------
+exports.register = function(req, res) {
+    if (isAuthorized(req,res)) return;
+
+    var userData = {fullname: req.param['fullname'], email: req.param['email']}
+
+    addNewAccount(userData, function(message) {
+        if (message === 'email-taken') {
+            res.send({error:true})
+        } else {
+            email.dispatchRegistrationMail(phaseOneData, function(error) {
+                throw error
+            })
+        }
+    })
+
+}
+
+// implements the first phase of the signup, where the user only
+// gives us email and his name
+exports.addNewAccount = function(phaseOneData, callback) {
+    userCollection.findOne({user:phaseOneData.email}, function(error, user) {
+        if (error) throw error
+        
+        if (user) {
+            callback('email-taken')
+        } else {
+            saltAndHash(newData.pass, function(hash){
+                phaseOneData.password = hash
+
+                phaseOneData.date = moment().format('MMMM Do YYYY, h:mm:ss a')
+                phaseOneData.staging = true
+
+                userCollection.insert(phaseOneData, {safe: true}, callback)
+            })
+        }
+    }
+}
+
 exports.isAuthorized = function(req,res) {
     if (req.cookie.user == undefined || req.cookie.pass) {
-        return false;
+        return false
     } else {
         AM.autoLogin(req.cookies.user, req.cookies.pass, function(o) {
             if (o != null) {
-                req.session.user = o;
-                return true;
+                req.session.user = o
+                return true
             } else {
-                return false;
+                return false
             }
         })
     }
@@ -31,99 +70,78 @@ exports.isAuthorized = function(req,res) {
 exports.autoLogin = function(user, pass, callback) {
     userCollection.findOne({user:user}, function(e, o) {
         if (o){
-            o.pass == pass ? callback(o) : callback(null);
+            o.pass == pass ? callback(o) : callback(null)
         } else {
-            callback(null);
+            callback(null)
         }
-    });
+    })
 }
 
 exports.manualLogin = function(user, pass, callback) {
     userCollection.findOne({user:user}, function(e, o) {
         if (o == null){
-            callback('user-not-found');
+            callback('user-not-found')
         } else {
             validatePassword(pass, o.pass, function(err, res) {
                 if (res){
-                    callback(null, o);
+                    callback(null, o)
                 } else {
-                    callback('invalid-password');
+                    callback('invalid-password')
                 }
-            });
+            })
         }
-    });
+    })
 }
 
-// record insertion, update & deletion methods
-exports.addNewAccount = function(newData, callback) {
-    userCollection.findOne({user:newData.user}, function(e, o) {
-        if (o){
-            callback('username-taken');
-        } else {
-            userCollection.findOne({email:newData.email}, function(e, o) {
-                if (o){
-                    callback('email-taken');
-                } else {
-                    saltAndHash(newData.pass, function(hash){
-                        newData.pass = hash;
-                        // append date stamp when record was created
-                        newData.date = moment().format('MMMM Do YYYY, h:mm:ss a');
-                        userCollection.insert(newData, {safe: true}, callback);
-                    });
-                }
-            });
-        }
-    });
-}
 
 exports.updateAccount = function(newData, callback) {
     userCollection.findOne({user:newData.user}, function(e, o){
-        o.name 		= newData.name;
-        o.email 	= newData.email;
-        o.country 	= newData.country;
+        o.name 		= newData.name
+        o.email 	= newData.email
+        o.country 	= newData.country
 
         if (newData.pass == ''){
             userCollection.save(o, {safe: true}, function(err) {
-                if (err) callback(err);
-                else callback(null, o);
-            });
+                if (err) callback(err)
+                else callback(null, o)
+            })
         } else {
             saltAndHash(newData.pass, function(hash){
-                o.pass = hash;
+                o.pass = hash
                 userCollection.save(o, {safe: true}, function(err) {
-                    if (err) callback(err);
-                    else callback(null, o);
-                });
-            });
+                    if (err) callback(err)
+                    else callback(null, o)
+                })
+            })
         }
-    });
+    })
 }
 
 exports.updatePassword = function(email, newPass, callback) {
     userCollection.findOne({email:email}, function(e, o){
         if (e){
-            callback(e, null);
+            callback(e, null)
         } else {
             saltAndHash(newPass, function(hash){
-                o.pass = hash;
-                userCollection.save(o, {safe: true}, callback);
-            });
+                o.pass = hash
+                userCollection.save(o, {safe: true}, callback)
+            })
         }
-    });
+    })
 }
 
 exports.deleteAccount = function(id, callback) {
-    userCollection.remove({_id: getObjectId(id)}, callback);
+    userCollection.remove({_id: getObjectId(id)}, callback)
 }
 
 exports.getAccountByEmail = function(email, callback) {
-    userCollection.findOne({email:email}, function(e, o){ callback(o); });
+    userCollection.findOne({email:email}, function(e, o){ callback(o) })
 }
 
 exports.validateResetLink = function(email, passHash, callback) {
     userCollection.find({ $and: [{email:email, pass:passHash}] }, function(e, o){
-        callback(o ? 'ok' : null);
-    });
+        callback(o ? 'ok' : null)
+    })
 }
 
 exports.getAllRecords = function(callback) {
@@ -131,54 +149,54 @@ exports.getAllRecords = function(callback) {
             function(e, res) {
                 if (e) callback(e)
                 else callback(null, res)
-            });
-};
+            })
+}
 
 exports.delAllRecords = function(callback) {
     // reset userCollection collection for testing
-    userCollection.remove({}, callback); 
+    userCollection.remove({}, callback) 
 }
 
 // ---- establish the database connection -------
 // attribute definition
-var db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}), {w: 1});
+var db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}), {w: 1})
 
 db.open(function(e, d) {
     if (e) {
-        console.log(e);
+        console.log(e)
     } else {
-        console.log('connected to educatopias database ');
+        console.log('connected to educatopias database ')
     }
-});
+})
 
-var userCollection = db.collection('users');
 
 // ---- module-exclusive functionality ----------
+var userCollection = db.collection('users')
 var generateSalt = function() {
-    var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ';
-    var salt = '';
+    var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ'
+    var salt = ''
 
-    for (var i = 0; i < 10; i++) {
-        var p = Math.floor(Math.random() * set.length);
-        salt += set[p];
+    for (var i = 0 i < 10 i++) {
+        var p = Math.floor(Math.random() * set.length)
+        salt += set[p]
     }
 
-    return salt;
+    return salt
 }
 
 var md5 = function(str) {
-    return crypto.createHash('md5').update(str).digest('hex');
+    return crypto.createHash('md5').update(str).digest('hex')
 }
 
 var saltAndHash = function(pass, callback) {
-    var salt = generateSalt();
-    callback(salt + md5(pass + salt));
+    var salt = generateSalt()
+    callback(salt + md5(pass + salt))
 }
 
 var validatePassword = function(plainPass, hashedPass, callback) {
-    var salt = hashedPass.substr(0, 10);
-    var validHash = salt + md5(plainPass + salt);
-    callback(null, hashedPass === validHash);
+    var salt = hashedPass.substr(0, 10)
+    var validHash = salt + md5(plainPass + salt)
+    callback(null, hashedPass === validHash)
 }
 
 var getObjectId = function(id) {
@@ -190,8 +208,8 @@ var findById = function(id, callback) {
             function(e, res) {
                 if (e) callback(e)
                 else callback(null, res)
-            });
-};
+            })
+}
 
 var findByMultipleFields = function(a, callback) {
     // this takes an array of name/val pairs to search against {fieldName : 'value'}
@@ -199,5 +217,5 @@ var findByMultipleFields = function(a, callback) {
             function(e, results) {
                 if (e) callback(e)
                 else callback(null, results)
-            });
+            })
 }
