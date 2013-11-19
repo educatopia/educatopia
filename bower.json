@@ -1,0 +1,13 @@
+{
+  "name": "educatopia",
+  "dependencies": {
+    "jquery": "~2.0.3",
+    "underscore": "~1.5.2",
+    "MathJax": "latest",
+    "marked": "~0.2.10",
+    "backbone": "~1.1.0",
+    "bootstrap": "~3.0.2",
+    "backbone-forms": "~0.13.0",
+    "highlightjs": "~7.4.0"
+  }
+}

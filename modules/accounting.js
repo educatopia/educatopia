@@ -2,15 +2,15 @@
  * https://github.com/braitsch/node-login/blob/master/app/server/modules/account-manager.js */
 
 // ---- module dependencies ---------------------
-var email   = require('email-dispatcher')
-var crypto 	= require('crypto')
-var MongoDB = require('mongodb').Db
-var Server 	= require('mongodb').Server
-var moment 	= require('moment')
+var email   = require('./email-dispatcher'),
+	crypto 	= require('crypto'),
+	MongoDB = require('mongodb').Db,
+	Server 	= require('mongodb').Server,
+	moment 	= require('moment'),
 
-var dbPort 	= 27017
-var dbHost 	= 'localhost'
-var dbName 	= 'educatopia'
+	dbPort 	= 27017,
+	dbHost 	= 'localhost',
+	dbName 	= 'educatopia'
 
 // ---- module exports --------------------------
 exports.register = function(req, res) {
@@ -21,13 +21,13 @@ exports.register = function(req, res) {
     addNewAccount(userData, function(message) {
         if (message === 'email-taken') {
             res.send({error:true})
-        } else {
+        }
+        else {
             email.dispatchRegistrationMail(phaseOneData, function(error) {
                 throw error
             })
         }
     })
-
 }
 
 // implements the first phase of the signup, where the user only
@@ -38,7 +38,8 @@ exports.addNewAccount = function(phaseOneData, callback) {
         
         if (user) {
             callback('email-taken')
-        } else {
+        }
+        else {
             saltAndHash(newData.pass, function(hash){
                 phaseOneData.password = hash
 
@@ -48,13 +49,14 @@ exports.addNewAccount = function(phaseOneData, callback) {
                 userCollection.insert(phaseOneData, {safe: true}, callback)
             })
         }
-    }
+    })
 }
 
 exports.isAuthorized = function(req,res) {
     if (req.cookie.user == undefined || req.cookie.pass) {
         return false
-    } else {
+    }
+    else {
         AM.autoLogin(req.cookies.user, req.cookies.pass, function(o) {
             if (o != null) {
                 req.session.user = o
@@ -176,7 +178,7 @@ var generateSalt = function() {
     var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ'
     var salt = ''
 
-    for (var i = 0 i < 10 i++) {
+    for (var i = 0; i < 10; i++) {
         var p = Math.floor(Math.random() * set.length)
         salt += set[p]
     }

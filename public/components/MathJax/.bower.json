@@ -1,0 +1,26 @@
+{
+  "name": "MathJax",
+  "main": "./MathJax.js",
+  "homepage": "http://www.mathjax.org/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "keywords": [
+    "math",
+    "js",
+    "LaTeX",
+    "MathML",
+    "AsciiMath"
+  ],
+  "_release": "e46a997466",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "e46a99746640c3e844e1bbb033c39f474dcb94fc"
+  },
+  "_source": "git://github.com/mathjax/MathJax.git",
+  "_target": "*",
+  "_originalSource": "MathJax"
+}

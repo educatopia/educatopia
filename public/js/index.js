@@ -254,19 +254,13 @@
 			}
 			else
 				this.model = new Exercise()
-
 		},
 
 		renderExercise: function () {
 
-			var snippets
-
 			this
 				.$el
 				.html(this.template({data: null}))
-
-			if (snippets = this.$('pre code')[0])
-				hljs.highlightBlock(snippets)
 
 			return this
 		},
@@ -276,6 +270,12 @@
 			this
 				.$('#tab1')
 				.html(new ExerciseTabView({model: this.model}).render().el)
+
+			this
+				.$('pre code')
+				.each(function (i, code) {
+					hljs.highlightBlock(code)
+				})
 
 			return this
 
@@ -359,20 +359,17 @@
 
 				marked(data.task, function (err, content) {
 
-					if (!err)
-						data.task = content
+					if (err) throw err
 
-					else
-						throw err
+					data.task = content
+
 				})
 
 				marked(data.approach, function (err, content) {
 
-					if (!err)
-						data.approach = content
+					if (err) throw err
 
-					else
-						throw err
+					data.approach = content
 				})
 
 				this.$el.html(this.template({data: data}))
@@ -884,7 +881,7 @@
 	NavbarView = Backbone.View.extend({
 		id: "navbar",
 		className: "navbar navbar-inverse navbar-fixed-top",
-		render: function(){
+		render: function () {
 
 			this.$el.html(_.template($('#navbarTemplate').html()))
 
