@@ -2,8 +2,7 @@ body {
     padding-top: 70px;
 }
 
-#sidebar a,
-#referenceSidebar a {
+a {
     cursor: pointer;
 }
 
@@ -98,9 +97,9 @@ footer a {
     content: "\220E"
 }
 
-code {
-    font-size: 11px;
-    line-height: 1;
+pre {
+    background-color: rgb(45,45,45);
+    border: none;
 }
 
 table caption {

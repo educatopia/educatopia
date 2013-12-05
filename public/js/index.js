@@ -55,7 +55,11 @@
 		ExercisesTableView,
 		ExerciseEditForm,
 		ExerciseHistoryForm,
-		ExerciseHistoryView, LoginView, NavbarView, SignupView
+		ExerciseHistoryView,
+		LoginView,
+		NavbarView,
+		SignupView,
+		LoginForm, SignupForm
 
 
 	marked.setOptions({
@@ -751,24 +755,35 @@
 		className: 'modal fade',
 		template: _.template($('#loginModalTemplate').html()),
 		events: {
-			"click #loginSubmit": 'submit'
+			"click .submit": 'submit',
+			"click #forgotPassword": 'forgotPassword'
 		},
 		initialize: function () {
 
-			/*var loginForm = new Backbone.Form({
-			 schema: {
-			 email: 'text'
-			 },
-			 idPrefix: 'exerciseEdit-'
-			 })*/
+			LoginForm = new Backbone.Form({
+				schema: {
+					email: 'Text',
+					password: 'Password'
+				},
+				idPrefix: 'login-'
+			})
 
 		},
 		submit: function () {
-			alert("TODO")
+			console.log(LoginForm.getValue())
+		},
+		forgotPassword: function () {
+			alert('TODO')
 		},
 		render: function () {
 
-			this.$el.html(this.template())
+			this
+				.$el
+				.html(this.template())
+
+			this
+				.$('.modal-body')
+				.prepend(LoginForm.render().el)
 
 			return this
 		}
@@ -779,24 +794,33 @@
 		className: 'modal fade',
 		template: _.template($('#signupModalTemplate').html()),
 		events: {
-			"click #signupSubmit": 'submit'
+			"click .submit": 'submit'
 		},
 		initialize: function () {
 
-			/*var loginForm = new Backbone.Form({
-			 schema: {
-			 email: 'text'
-			 },
-			 idPrefix: 'exerciseEdit-'
-			 })*/
+			SignupForm = new Backbone.Form({
+				schema: {
+					firstName: 'Text',
+					lastName: 'Text',
+					email: 'Text',
+					agreement: 'Checkbox'
+				},
+				idPrefix: 'login-'
+			})
 
 		},
 		submit: function () {
-			alert("TODO")
+			console.log(LoginForm.getValue())
 		},
 		render: function () {
 
-			this.$el.html(this.template())
+			this
+				.$el
+				.html(this.template())
+
+			this
+				.$('.modal-body')
+				.append(SignupForm.render().el)
 
 			return this
 		}

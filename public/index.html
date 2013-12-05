@@ -7,19 +7,14 @@
     <meta name="description" content="">
     <meta name="author" content="Adrian Sieber">
 
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-glyphicons.css">
+    <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="components/backbone-forms/distribution/templates/bootstrap.css">
+    <link rel="stylesheet" href="components/highlightjs/styles/tomorrow-night-eighties.css">
     <link rel="stylesheet" href="css/screen.css">
-    <link rel="stylesheet" href="css/backbone-forms-bootstrap.css">
-<!--
-    <link rel="stylesheet" href="bower_components/highlightjs/styles/tomorrow-night-eighties.css">
--->
-    <link rel="stylesheet" href="css/tomorrow-night.css">
 
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
 
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
@@ -30,14 +25,14 @@
 
 <body>
 
-<div id=contentWrapper class="container">
-
-</div>
+<div id=contentWrapper class="container"></div>
 
 <footer>
     <p>
-        <a href="http://adriansieber.com">By Adrian Sieber</a><span class="muted">•</span>
-        <a href="https://github.com/adius/educatopia">Github</a><span class="muted">•</span>
+        <a href="http://adriansieber.com">By Adrian Sieber</a>
+        <span class="muted">•</span>
+        <a href="https://github.com/adius/educatopia">Github</a>
+        <span class="muted">•</span>
         <a href="https://github.com/adius/educatopia/issues">Issues</a>
     </p>
 </footer>
@@ -49,7 +44,7 @@
 
 <script type="text/template" id=navbarTemplate>
 
-        <a class="navbar-brand" href="#">educatopia</a>
+        <a class="navbar-brand" href="">educatopia</a>
 
         <ul class="navbar-nav nav">
             <li class="dropdown">
@@ -85,10 +80,10 @@
                 <h4 class="modal-title">Login</h4>
             </div>
             <div class="modal-body">
-                <p>One fine body</p>
+                <a id=forgotPassword>Forgot password?</a>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-primary submit">Submit</button>
             </div>
         </div>
     </div>
@@ -102,11 +97,9 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Signup</h4>
             </div>
-            <div class="modal-body">
-                <p>One fine body</p>
-            </div>
+            <div class="modal-body"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-primary submit">Submit</button>
             </div>
         </div>
     </div>
@@ -383,9 +376,9 @@
 <script src="components/backbone/backbone.js"></script>
 <script src="components/bootstrap/dist/js/bootstrap.js"></script>
 
-<script src="js/backbone-forms.min.js"></script>
-<script src="js/list.min.js"></script>
-<script src="js/bootstrap-template.js"></script>
+<script src="components/backbone-forms/distribution/backbone-forms.js"></script>
+<script src="components/backbone-forms/distribution/editors/list.js"></script>
+<script src="components/backbone-forms/distribution/templates/bootstrap.js"></script>
 
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
