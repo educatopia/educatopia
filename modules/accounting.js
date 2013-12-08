@@ -13,18 +13,19 @@ var email   = require('./email-dispatcher'),
 	dbName 	= 'educatopia'
 
 // ---- module exports --------------------------
+
 exports.register = function(req, res) {
     if (isAuthorized(req,res)) return;
 
-    var userData = {fullname: req.param['fullname'], email: req.param['email']}
+    var userData = {fullname: req.query.fullname, email: req.query.email}
 
     addNewAccount(userData, function(message) {
         if (message === 'email-taken') {
             res.send({error:true})
         }
         else {
-            email.dispatchRegistrationMail(phaseOneData, function(error) {
-                throw error
+            email.dispatchRegistrationMail(userData, function(error) {
+                //throw error
             })
         }
     })
@@ -32,44 +33,41 @@ exports.register = function(req, res) {
 
 // implements the first phase of the signup, where the user only
 // gives us email and his name
-exports.addNewAccount = function(phaseOneData, callback) {
-    userCollection.findOne({user:phaseOneData.email}, function(error, user) {
+function addNewAccount(phaseOneData, callback) {
+
+    userCollection.findOne({email:phaseOneData.email}, function(error, user) {
         if (error) throw error
         
         if (user) {
             callback('email-taken')
         }
         else {
-            saltAndHash(newData.pass, function(hash){
-                phaseOneData.password = hash
+            phaseOneData.staging = true
 
-                phaseOneData.date = moment().format('MMMM Do YYYY, h:mm:ss a')
-                phaseOneData.staging = true
-
-                userCollection.insert(phaseOneData, {safe: true}, callback)
-            })
+            userCollection.insert(phaseOneData, {safe: true}, callback)
         }
     })
 }
 
-exports.isAuthorized = function(req,res) {
-    if (req.cookie.user == undefined || req.cookie.pass) {
-        return false
+
+// ---- establish the database connection -------
+// attribute definition
+var db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}), {w: 1})
+
+db.open(function(e, d) {
+    if (e) {
+        console.log(e)
+    } else {
+        console.log('connected to educatopias database ')
     }
-    else {
-        AM.autoLogin(req.cookies.user, req.cookies.pass, function(o) {
-            if (o != null) {
-                req.session.user = o
-                return true
-            } else {
-                return false
-            }
-        })
-    }
-}
+})
+
+
+// ---- module-exclusive functionality ----------
+var userCollection = db.collection('users')
 
 /* login validation methods */
-exports.autoLogin = function(user, pass, callback) {
+function autoLogin(user, pass, callback) {
     userCollection.findOne({user:user}, function(e, o) {
         if (o){
             o.pass == pass ? callback(o) : callback(null)
@@ -79,7 +77,7 @@ exports.autoLogin = function(user, pass, callback) {
     })
 }
 
-exports.manualLogin = function(user, pass, callback) {
+function manualLogin(user, pass, callback) {
     userCollection.findOne({user:user}, function(e, o) {
         if (o == null){
             callback('user-not-found')
@@ -96,7 +94,7 @@ exports.manualLogin = function(user, pass, callback) {
 }
 
 
-exports.updateAccount = function(newData, callback) {
+function updateAccount(newData, callback) {
     userCollection.findOne({user:newData.user}, function(e, o){
         o.name 		= newData.name
         o.email 	= newData.email
@@ -119,7 +117,7 @@ exports.updateAccount = function(newData, callback) {
     })
 }
 
-exports.updatePassword = function(email, newPass, callback) {
+function updatePassword(email, newPass, callback) {
     userCollection.findOne({email:email}, function(e, o){
         if (e){
             callback(e, null)
@@ -132,21 +130,21 @@ exports.updatePassword = function(email, newPass, callback) {
     })
 }
 
-exports.deleteAccount = function(id, callback) {
+function deleteAccount(id, callback) {
     userCollection.remove({_id: getObjectId(id)}, callback)
 }
 
-exports.getAccountByEmail = function(email, callback) {
+function getAccountByEmail(email, callback) {
     userCollection.findOne({email:email}, function(e, o){ callback(o) })
 }
 
-exports.validateResetLink = function(email, passHash, callback) {
+function validateResetLink(email, passHash, callback) {
     userCollection.find({ $and: [{email:email, pass:passHash}] }, function(e, o){
         callback(o ? 'ok' : null)
     })
 }
 
-exports.getAllRecords = function(callback) {
+function getAllRecords(callback) {
     userCollection.find().toArray(
             function(e, res) {
                 if (e) callback(e)
@@ -154,27 +152,28 @@ exports.getAllRecords = function(callback) {
             })
 }
 
-exports.delAllRecords = function(callback) {
+function delAllRecords(callback) {
     // reset userCollection collection for testing
     userCollection.remove({}, callback) 
 }
 
-// ---- establish the database connection -------
-// attribute definition
-var db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}), {w: 1})
-
-db.open(function(e, d) {
-    if (e) {
-        console.log(e)
-    } else {
-        console.log('connected to educatopias database ')
+function isAuthorized(req,res) {
+    if (!req.cookie) {
+        return false
     }
-})
+    else {
+        AM.autoLogin(req.cookies.user, req.cookies.pass, function(o) {
+            if (o != null) {
+                req.session.user = o
+                return true
+            } else {
+                return false
+            }
+        })
+    }
+}
 
-
-// ---- module-exclusive functionality ----------
-var userCollection = db.collection('users')
-var generateSalt = function() {
+function generateSalt() {
     var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ'
     var salt = ''
 
@@ -186,26 +185,26 @@ var generateSalt = function() {
     return salt
 }
 
-var md5 = function(str) {
+function md5(str) {
     return crypto.createHash('md5').update(str).digest('hex')
 }
 
-var saltAndHash = function(pass, callback) {
+function saltAndHash(pass, callback) {
     var salt = generateSalt()
     callback(salt + md5(pass + salt))
 }
 
-var validatePassword = function(plainPass, hashedPass, callback) {
+function validatePassword(plainPass, hashedPass, callback) {
     var salt = hashedPass.substr(0, 10)
     var validHash = salt + md5(plainPass + salt)
     callback(null, hashedPass === validHash)
 }
 
-var getObjectId = function(id) {
+function getObjectId(id) {
     return userCollection.db.bson_serializer.ObjectID.createFromHexString(id)
 }
 
-var findById = function(id, callback) {
+function findById(id, callback) {
     userCollection.findOne({_id: getObjectId(id)},
             function(e, res) {
                 if (e) callback(e)
@@ -213,7 +212,7 @@ var findById = function(id, callback) {
             })
 }
 
-var findByMultipleFields = function(a, callback) {
+function findByMultipleFields(a, callback) {
     // this takes an array of name/val pairs to search against {fieldName : 'value'}
     userCollection.find( { $or : a } ).toArray(
             function(e, results) {

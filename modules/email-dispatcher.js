@@ -22,7 +22,7 @@ EM.server = require("emailjs/email").server.connect({
 EM.dispatchRegistrationMail = function(account, callback) {
     var text = "welcome to educatopia\n" +
                "please click the link below!" +
-               "http://educatopia.org/profile?email=" + atob(account.email) + "#finish-registration"
+               "http://educatopia.org/verify?user=" + account._id;
 
 	EM.server.send({
 		from         : mailsettings.sender,
