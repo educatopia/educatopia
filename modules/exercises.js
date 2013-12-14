@@ -1,30 +1,15 @@
 var mongo = require('mongodb'),
-	marked = require('marked')
+	marked = require('marked'),
 
-var Server = mongo.Server,
+	Server = mongo.Server,
 	Db = mongo.Db,
 	BSON = mongo.BSONPure,
 	c = console,
-	database = 'educatopiadev'
+	database = 'educatopiadev',
+	db
 
 
-var db = new Db(database, new Server("127.0.0.1", 27017, {auto_reconnect: true}), {w: 1})
-
-db.open(function (err, db) {
-	if (!err) {
-
-		c.log('Connected to database "' + database + '"')
-
-		db.collection('exercises', {safe: true}, function (err, collection) {
-			if (err)
-				c.error("The exercises don't exist.")
-		})
-	}
-	else
-		c.error(err)
-})
-
-function deleteEmptyFields(obj){
+function deleteEmptyFields(obj) {
 
 	for (var key in obj) {
 		if (obj.hasOwnProperty(key))
@@ -42,8 +27,6 @@ function deleteEmptyFields(obj){
 	return obj
 }
 
-
-//Exports
 
 exports.getById = function (req, res) {
 
@@ -182,7 +165,7 @@ exports.add = function (req, res) {
 			}
 			else
 				c.log(err)
-				res.send(err)
+			res.send(err)
 		})
 	})
 }
@@ -300,3 +283,14 @@ exports.delete = function (req, res) {
 		})
 	})
 }
+
+
+db = new Db(database, new Server("127.0.0.1", 27017, {auto_reconnect: true}), {w: 1})
+
+db.open(function (error, db) {
+
+	if (error)
+		throw error
+
+	c.log('Exercises module connected to database "' + database + '"')
+})

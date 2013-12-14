@@ -59,7 +59,7 @@
 		LoginView,
 		NavbarView,
 		SignupView,
-		LoginForm, SignupForm
+		LoginForm, SignupForm, User
 
 
 	marked.setOptions({
@@ -195,6 +195,73 @@
 			},
 			credits: {
 				type: 'Number',
+				editorClass: 'form-control',
+				editorAttrs: {min: 0},
+				help: 'Consider difficulty, necessary steps and importance of the exercise. ' +
+					'Each credit-point represents a noteworthy accomplishment while solving the task. ' +
+					'Recommended range is 1 - 10 credits.'
+			},
+			difficulty: {
+				type: 'Number',
+				editorClass: 'form-control',
+				editorAttrs: {min: 0, max: 1, step: 0.1, title: 'Tooltip help'},
+				help: 'The difficulty level of the exercise ranges ' +
+					'from excluded 0 (So easy that everybody can solve it) ' +
+					'to excluded 1 (So difficult that nobody can solve it)'
+			},
+			duration: {
+				type: 'Number',
+				editorClass: 'form-control',
+				editorAttrs: {min: 0},
+				help: 'How long does it take to solve the exercise for an average person?'
+			},
+			tags: {
+				type: 'List',
+				editorClass: 'form-control',
+				help: 'All the things that should be associated with this exercise'
+			},
+			note: {
+				type: 'TextArea',
+				editorClass: 'form-control',
+				editorAttrs: {rows: 5},
+				help: 'Any additional information'
+			},
+			hints: {
+				type: 'List',
+				editorClass: 'form-control',
+				help: 'Any information which helps one to solve the exercise when he\'s stuck.'
+			}
+		}
+	})
+
+	User = Backbone.Model.extend({
+		url: '/api/users',
+		schema: {
+			firstName: {
+				type: 'Text',
+				validators: ['required'],
+				editorClass: 'form-control',
+				help: 'Your first name.'
+			},
+			lastName: {
+				type: 'Text',
+				validators: ['required'],
+				editorClass: 'form-control',
+				help: 'Your first name.'
+			},
+			username: {
+				type: 'Text',
+				validators: ['required'],
+				editorClass: 'form-control',
+				help: ''
+			},
+			password: {
+				type: 'Password',
+				editorClass: 'form-control',
+				help: ''
+			},
+			birthday: {
+				type: 'Date',
 				editorClass: 'form-control',
 				editorAttrs: {min: 0},
 				help: 'Consider difficulty, necessary steps and importance of the exercise. ' +
@@ -770,7 +837,18 @@
 
 		},
 		submit: function () {
-			console.log(LoginForm.getValue())
+
+			$.ajax({
+				type: 'POST',
+				url: '/api/register',
+				data: Login.getValue,
+				success: function(){
+					alert('worked')
+				},
+				error: function(e){
+					throw e
+				}
+			})
 		},
 		forgotPassword: function () {
 			alert('TODO')
@@ -810,7 +888,26 @@
 
 		},
 		submit: function () {
-			console.log(LoginForm.getValue())
+
+			//TODO: Use a backbone model to store and submit data
+
+			var element = this.$el
+
+			$.ajax({
+				type: 'POST',
+				url: '/api/register',
+				data: SignupForm.getValue(),
+				success: function(data, textStatus, jqXHR){
+					console.log('Signup was successful')
+
+					element.modal('hide')
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					console.log('Signup was not successful')
+					console.log(textStatus)
+					console.log(errorThrown)
+				}
+			})
 		},
 		render: function () {
 
