@@ -6,6 +6,7 @@ var email = require('./email-dispatcher'),
 	MongoDB = require('mongodb').Db,
 	Server = require('mongodb').Server,
 	moment = require('moment'),
+	nodemailer = require('nodemailer'),
 
 	dbPort = 27017,
 	dbHost = 'localhost',
@@ -173,6 +174,72 @@ function findByMultipleFields(a, callback) {
 }
 
 
+// Used Methods
+
+function sendMail(userData) {
+
+	var smtpTransport,
+		mailOptions,
+		pickupTransport,
+		sendmailTransport
+
+	/*
+	smtpTransport = nodemailer.createTransport(
+			"SMTP",
+			{
+				service: "Gmail",
+				auth: {
+					user: "adrian.sieber1",
+					pass: "adwolesi@internetadress.org"
+				}
+			}
+		)
+	
+		pickupTransport = nodemailer.createTransport("PICKUP", {
+			directory: "/Users/adrian/Sites/educatopia/educatopia/mails"
+		})
+	*/
+	
+	
+	sendmailTransport = nodemailer.createTransport("sendmail")
+	
+	console.log(userData)
+
+	nodemailer.sendMail(
+		{
+			transport: sendmailTransport,
+			from: "Educatopia <no-reply@educatopia.org>",
+			to: userData.email,
+			subject: "Hello " + userData.firstName + ' ' + userData.lastName,
+			text: "Hello world"
+			// html: "<b>Hello world ✔</b>" // html body
+		},
+		function (error, response) {
+			if (error) 
+				throw error
+			else
+				console.log("Message sent: " + response.message)
+
+			// if you don't want to use this transport object anymore, uncomment following line
+			//smtpTransport.close(); // shut down the connection pool, no more messages
+		}
+	)
+}
+
+
+db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}), {w: 1})
+
+db.open(function (error) {
+
+	if (error) throw error
+
+	console.log('Accounting module connected to database "' + dbName + '"')
+})
+
+userCollection = db.collection('users')
+
+
+
 exports.register = function (req, res) {
 
 	// TODO: Refactoring
@@ -204,39 +271,31 @@ exports.register = function (req, res) {
 
 			userCollection.insert(userData, {safe: true}, function (error) {
 
-				if (error){
+				if (error) {
 					res.send(500, {error: 'User could not be saved'})
 					throw error
 				}
 
+				sendMail(userData)
+
+				res.send({
+					message: 'New user was created and mail was sent'
+				})
+
+
 				// TODO: Send mail
 				//email.dispatchRegistrationMail(userData, function (error) {
 
-					/*
-					if (error){
-						res.send(500, {error: 'Email could not be sent'})
-						throw error
-					}
-					*/
+				/*
+				 if (error){
+				 res.send(500, {error: 'Email could not be sent'})
+				 throw error
+				 }
+				 */
 
-					res.send({
-						message: 'New user was created and mail was sent'
-					})
 				//})
 			})
 		}
 	})
 }
-
-
-db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}), {w: 1})
-
-db.open(function (error) {
-
-	if (error) throw error
-
-	console.log('Accounting module connected to database "' + dbName + '"')
-})
-
-userCollection = db.collection('users')
 

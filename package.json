@@ -14,7 +14,8 @@
     "email": "~0.2.6",
     "atob": "~1.1.0",
     "emailjs": "~0.3.6",
-    "marked" : "~0.2.9"
+    "marked": "~0.2.9",
+    "nodemailer": "~0.5.15"
   },
   "engines": {
     "node": "0.10.x",
