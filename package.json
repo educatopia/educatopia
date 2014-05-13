@@ -9,15 +9,15 @@
     "email": "~0.2.6",
     "emailjs": "~0.3.6",
     "express": "~4.2.0",
-    "jake": "~0.5.x",
+    "jake": "~0.7.13",
     "marked": "~0.3.2",
     "moment": "~2.6.0",
     "mongo": "~0.1.x",
-    "mongodb": "~1.2.x",
+    "mongodb": "~1.4.4",
     "morgan": "~1.0.1",
-    "nodemailer": "~0.5.15",
+    "nodemailer": "~0.6.4",
     "passgen": "~1.0.1",
-    "uglify-js": "~2.2.x"
+    "uglify-js": "~2.4.13"
   },
   "engines": {
     "node": "0.10.x",
