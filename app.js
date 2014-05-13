@@ -1,29 +1,34 @@
-// External libraries
 var express = require('express'),
-	path = require('path'),
-	app = express(),
+    path = require('path'),
+    bodyParser = require('body-parser'),
+    morgan = require('morgan'),
+    app = express(),
 
-// Internal modules
-	exercises = require('./modules/exercises'),
-	accounting = require('./modules/accounting')
+    api = require('./modules/api'),
+
+    port = process.env.PORT || 3000,
+    env = 'development' //process.env.NODE_ENV || 'development'
 
 
-app.configure(function () {
-	app.use(express.logger('dev'))  //'default', 'short', 'tiny', 'dev'
-	app.use(express.bodyParser())
-	app.use(express.static(path.join(__dirname, 'public')))
-})
+app.use(morgan())
 
-app.post('/api/register', accounting.register)
+if (env === 'development') {
+	morgan('dev')
+}
 
-app.get('/api/exercises', exercises.getAll)
-app.post('/api/exercises', exercises.add)
+app.use(bodyParser())
+app.use(express.static(path.join(__dirname, 'public')))
 
-app.get('/api/exercises/:id', exercises.getById)
-app.put('/api/exercises/', exercises.update)
-app.delete('/api/exercises/:id', exercises.delete)
+//app.post('/api/register', api.accounting.register)
 
-app.get('/api/exercises/history/:id', exercises.getHistoryById)
+app.get('/api/exercises', api.exercises.getAll)
+app.post('/api/exercises', api.exercises.add)
 
-app.listen(3000)
-console.log('Listening on port 3000...')
+app.get('/api/exercises/:id', api.exercises.getById)
+app.put('/api/exercises/', api.exercises.update)
+app.delete('/api/exercises/:id', api.exercises.delete)
+
+app.get('/api/exercises/history/:id', api.exercises.getHistoryById)
+
+app.listen(port)
+console.log('Listening on port ' + port)

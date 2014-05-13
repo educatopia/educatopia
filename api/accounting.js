@@ -194,15 +194,15 @@ function sendMail(userData) {
 				}
 			}
 		)
-	
+
 		pickupTransport = nodemailer.createTransport("PICKUP", {
 			directory: "/Users/adrian/Sites/educatopia/educatopia/mails"
 		})
 	*/
-	
-	
+
+
 	sendmailTransport = nodemailer.createTransport("sendmail")
-	
+
 	console.log(userData)
 
 	nodemailer.sendMail(
@@ -215,7 +215,7 @@ function sendMail(userData) {
 			// html: "<b>Hello world ✔</b>" // html body
 		},
 		function (error, response) {
-			if (error) 
+			if (error)
 				throw error
 			else
 				console.log("Message sent: " + response.message)
