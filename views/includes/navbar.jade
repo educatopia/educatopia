@@ -1,0 +1,36 @@
+nav.navbar.navbar-inverse.navbar-fixed-top
+	a.navbar-brand(href='') educatopia
+
+	ul.navbar-nav.nav
+		li.dropdown
+			a.dropdown-toggle(href='#exercises') Exercises
+				b.caret
+
+			ul.dropdown-menu
+				li
+					a(href='/exercises/math') math
+				li
+					a(href='/exercises/computer-science') computer science
+				li
+					a(href='/exercises/programming') programming
+				li
+					a(href='/exercises/internet-technologies') internet technologies
+
+		li.dropdown
+			a.dropdown-toggle(href='/reference') Reference
+				b.caret
+
+			ul.dropdown-menu
+				li
+					a(href='/reference/math') math
+				li.disabled
+					a(href='/reference/computer-science') Computer Science
+				li.disabled
+					a(href='/reference/programming') programming
+
+		button#newExercise.btn.btn-lg.btn-link.navbar-btn.pull-right
+			.glyphicon.glyphicon-edit(type='button')
+		button#signupButton.btn.btn-link.navbar-btn.pull-right.
+			Signup
+		button#loginButton.btn.btn-link.navbar-btn.pull-right.
+			Login

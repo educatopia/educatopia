@@ -1,21 +1,27 @@
 var express = require('express'),
     path = require('path'),
     bodyParser = require('body-parser'),
-    morgan = require('morgan'),
+    compress = require('compression'),
+    logger = require('morgan'),
     app = express(),
 
-    api = require('./modules/api'),
+    api = require('./routes/api'),
+    index = require('./routes/index'),
 
     port = process.env.PORT || 3000,
     env = 'development' //process.env.NODE_ENV || 'development'
 
 
-app.use(morgan())
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'jade')
+
+app.use(logger())
 
 if (env === 'development') {
-	morgan('dev')
+	logger('dev')
 }
 
+app.use(compress())
 app.use(bodyParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
@@ -29,6 +35,9 @@ app.put('/api/exercises/', api.exercises.update)
 app.delete('/api/exercises/:id', api.exercises.delete)
 
 app.get('/api/exercises/history/:id', api.exercises.getHistoryById)
+
+app.get('/', index)
+
 
 app.listen(port)
 console.log('Listening on port ' + port)
