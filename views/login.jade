@@ -1,0 +1,22 @@
+extends layout
+
+block content
+	form(action='/login')
+		fieldset
+			legend Login
+
+			label(for='identifier') Email/username
+			br
+			input#identifier(type='text')
+
+			br
+			br
+
+			label(for='password') Password
+			br
+			input#password(type='password')
+
+			br
+			br
+
+			input(type='submit', value='Login')

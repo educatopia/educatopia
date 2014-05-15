@@ -1,0 +1,29 @@
+extends layout
+
+block content
+	form(action='/signup')
+		fieldset
+			legend Signup
+
+			label(for='identifier') Username
+			br
+			input#username(type='text')
+
+			br
+			br
+
+			label(for='identifier') Email
+			br
+			input#email(type='text')
+
+			br
+			br
+
+			label(for='password') Password
+			br
+			input#password(type='password')
+
+			br
+			br
+
+			input(type='submit', value='Create Account')

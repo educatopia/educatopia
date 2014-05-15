@@ -7,6 +7,9 @@ var express = require('express'),
 
     api = require('./routes/api'),
     index = require('./routes/index'),
+    login = require('./routes/login'),
+    signup = require('./routes/signup'),
+    exercises = require('./routes/exercises'),
 
     port = process.env.PORT || 3000,
     env = 'development' //process.env.NODE_ENV || 'development'
@@ -37,6 +40,9 @@ app.delete('/api/exercises/:id', api.exercises.delete)
 app.get('/api/exercises/history/:id', api.exercises.getHistoryById)
 
 app.get('/', index)
+app.get('/login', login)
+app.get('/signup', signup)
+app.get('/exercises', exercises)
 
 
 app.listen(port)
