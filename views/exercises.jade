@@ -3,32 +3,33 @@ extends layout
 block content
 	table#exercisesTable.table.table-striped.table-bordered.table-condensed
 		thead
-				tr
-					th Nr
-					th Subject
-					th Type
-					th Task
-					th Difficulty
-					th Credits
-					th Hints
-					th Tags
-					th Flags
-					th Note
-					th Date
-					th Time
+			tr
+				th Nr
+				th Subject
+				th Type
+				th Task
+				th Difficulty
+				th Credits
+				th Hints
+				th Tags
+				th Flags
+				th Note
+				th Date
+				th Time
 
-		//each exercise, index in exercises
+		each exercise, index in exercises
 			tbody
 				tr
 					td= index + 1
 					td= exercise.subjects
 					td= exercise.type
-					td: a(href=exercise.url)= exercise.task.substr(0, 30)
+					td: a(href=exercise.url, title=exercise.task.substr(0, 50))
+						= exercise.task.substr(0, 30) + '…'
 					td= exercise.difficulty
 					td= exercise.credits
-					td= exercise.hints.length
-					td= exercise.tags.length
-					td= exercise.flags.length
-					td= exercise.note.substr(0, 30) + '…'
+					td= (exercise.hasOwnProperty(hints)) ? exercise.hints.length : 0
+					td= (exercise.hasOwnProperty(tags)) ? exercise.tags.length : 0
+					td= (exercise.hasOwnProperty(flags)) ? exercise.flags.length : 0
+					td= (exercise.hasOwnProperty(note)) ? exercise.note.substr(0, 30) + '…' : ''
 					td= exercise.date
 					td= exercise.time

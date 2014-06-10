@@ -4,10 +4,13 @@ nav.navbar.navbar-inverse.navbar-fixed-top
 	ul.nav.navbar-nav
 		li: a(href='/exercises') Exercises
 
-		li: a(href='/reference') Reference
+		//li: a(href='/reference') Reference
 
-	a#newExercise.btn.btn-lg.btn-link.navbar-btn.navbar-right.glyphicon.glyphicon-edit(href='/exercise/create')
+	a#newExercise.btn.btn-lg.btn-link.navbar-btn.navbar-right(href='/exercise/create')
+		span.glyphicon.glyphicon-edit
+
 	a#signupButton.btn.btn-link.navbar-btn.navbar-right(href='/signup').
 		Signup
+
 	a#loginButton.btn.btn-link.navbar-btn.navbar-right(href='/login').
 		Login

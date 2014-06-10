@@ -10,6 +10,7 @@ var express = require('express'),
     login = require('./routes/login'),
     signup = require('./routes/signup'),
     exercises = require('./routes/exercises'),
+    reference = require('./routes/reference'),
 
     port = process.env.PORT || 3000,
     env = 'development' //process.env.NODE_ENV || 'development'
@@ -28,7 +29,6 @@ app.use(compress())
 app.use(bodyParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-//app.post('/api/register', api.accounting.register)
 
 app.get('/api/exercises', api.exercises.getAll)
 app.post('/api/exercises', api.exercises.add)
@@ -41,8 +41,12 @@ app.get('/api/exercises/history/:id', api.exercises.getHistoryById)
 
 app.get('/', index)
 app.get('/login', login)
+
 app.get('/signup', signup)
+app.post('/signup', api.accounting.signup)
+
 app.get('/exercises', exercises)
+app.get('/reference', reference)
 
 
 app.listen(port)

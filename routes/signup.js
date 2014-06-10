@@ -1,6 +1,10 @@
-module.exports = function (req, res) {
+var accounting = require('../api/accounting')
 
-	res.render('signup', {
+module.exports = function (request, response) {
+
+	//accounting.signup(request, response)
+
+	response.render('signup', {
 		page: 'signup'
 	})
 }

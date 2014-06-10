@@ -91,7 +91,7 @@
 				"Die Anzahl aller Permutationen einer ´n´-elementigen Menge ´S´ ist ´n!´.",
 				"Eine k-Permutation einer endlichen Menge ´S´ ist eine Permutation einer ´k´-elementigen Teilmenge von ´S´.",
 				"Wir bezeichnen mit ´[(n),(k)]´ die Anzahl aller ´k´-Permutationen einer ´n´-elementigen Menge.",
-			    "Seien ´n´ und ´k´ natürliche Zahlen mit ´n >= k >= 1´.\nFür die Anzahl aller ´k´-Permutationen einer ´n´-elementigen Menge gilt: ´[(n),(k)] = n * ( n − 1 ) * … * ( n − k + 1 )´",
+				"Seien ´n´ und ´k´ natürliche Zahlen mit ´n >= k >= 1´.\nFür die Anzahl aller ´k´-Permutationen einer ´n´-elementigen Menge gilt: ´[(n),(k)] = n * ( n − 1 ) * … * ( n − k + 1 )´",
 				"Für alle natürlichen Zahlen ´n´ und ´k´ mit ´n >= k >= 1´ gilt: ´[(n),(k)]= (n!)/((n−k)!)´",
 				"´((n),(k))´ bezeichnet die Anzahl der k-elementigen Teilmengen einer n-elementigen Menge. ´((n),(k))´ wird \"´n´ über ´k´\" ausgesprochen und auch Binomialkoeffizient von ´n´ und ´k´ genannt.",
 				"Seien ´k´ und ´n´ natürliche Zahlen mit ´k ≤ n´.\nFür die Anzahl ´((n),(k))´ der ´k´-elementigen Teilmengen einer ´n´-elementigen Menge gilt: <br>\n´((n),(k)) = (n · (n−1) * … * (n−k+1))/(k!)´",

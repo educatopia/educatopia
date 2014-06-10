@@ -1,23 +1,23 @@
 var mongo = require('mongodb'),
-	marked = require('marked'),
+    marked = require('marked'),
 
-	Server = mongo.Server,
-	Db = mongo.Db,
-	BSON = mongo.BSONPure,
-	c = console,
-	database = 'educatopiadev',
-	db
+    Server = mongo.Server,
+    Db = mongo.Db,
+    BSON = mongo.BSONPure,
+    c = console,
+    database = 'educatopiadev',
+    db
 
 
-function deleteEmptyFields(obj) {
+function deleteEmptyFields (obj) {
 
 	for (var key in obj) {
 		if (obj.hasOwnProperty(key))
 			if (obj[key] === "" ||
-				obj[key] === 0 ||
-				obj[key] === null ||
-				obj[key].length === 0 ||
-				obj[key] === undefined) {
+			    obj[key] === 0 ||
+			    obj[key] === null ||
+			    obj[key].length === 0 ||
+			    obj[key] === undefined) {
 
 				//print(key + ": " + exercise[key])
 				delete obj[key]
@@ -94,55 +94,59 @@ exports.getHistoryById = function (req, res) {
 	})
 }
 
-exports.getAll = function (req, res) {
+exports.getAll = function (callback) {
+
+	function execArray (err, items) {
+
+		if (err)
+			throw new Error(err)
+
+		var tempArray = []
+
+		items.forEach(function (item) {
+
+			var temp = {},
+			    key
+
+			temp.id = item._id
+
+			for (key in item.current)
+				if (item.current.hasOwnProperty(key))
+					temp[key] = item.current[key]
+
+
+			/*marked(item.current.task, function (err, content) {
+
+			 if (!err){
+			 console.log(content)
+
+			 temp.task = content
+			 }
+
+			 else
+			 throw err
+			 })*/
+
+			tempArray.push(temp)
+		})
+
+		callback(tempArray)
+	}
 
 	db.collection(
 		'exercises',
 		function (err, collection) {
 
-			if (!err) {
+			if (err)
+				console.error(err)
 
+			else
 				collection
 					.find()
 					.sort({_id: 1})
-					.toArray(function (err, items) {
-
-						var tempArray = []
-
-						items.forEach(function (item) {
-
-							var temp = {}
-
-							temp.id = item._id
-
-							for (var key in item.current) {
-
-								if (item.current.hasOwnProperty(key)) {
-									temp[key] = item.current[key]
-								}
-							}
-
-							/*marked(item.current.task, function (err, content) {
-
-							 if (!err){
-							 console.log(content)
-
-							 temp.task = content
-							 }
-
-							 else
-							 throw err
-							 })*/
-
-							tempArray.push(temp)
-						})
-
-						res.send(tempArray)
-					})
-			}
-			else
-				console.error(err)
-		})
+					.toArray(execArray)
+		}
+	)
 }
 
 exports.add = function (req, res) {
@@ -173,8 +177,8 @@ exports.add = function (req, res) {
 exports.update = function (req, res) {
 
 	var exercise = deleteEmptyFields(req.body),
-		id = new BSON.ObjectID(exercise.id),
-		temp = {}
+	    id = new BSON.ObjectID(exercise.id),
+	    temp = {}
 
 
 	temp['_id'] = id
@@ -236,7 +240,7 @@ exports.update = function (req, res) {
 		}
 	)
 
-//exercise.history.push(exercise.current)
+	//exercise.history.push(exercise.current)
 }
 
 
@@ -276,7 +280,8 @@ exports.delete = function (req, res) {
 		collection.remove({'_id': new BSON.ObjectID(id)}, {safe: true}, function (err, result) {
 			if (err) {
 				res.send({'error': 'An error has occurred - ' + err})
-			} else {
+			}
+			else {
 				c.log('' + result + ' document(s) deleted')
 				res.send(req.body)
 			}

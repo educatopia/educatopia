@@ -240,7 +240,7 @@ userCollection = db.collection('users')
 
 
 
-exports.register = function (req, res) {
+exports.signup = function (request, response) {
 
 	// TODO: Refactoring
 
@@ -250,9 +250,9 @@ exports.register = function (req, res) {
 	//	return
 
 	userData = {
-		firstName: req.body.firstName,
-		lastName: req.body.lastName,
-		email: req.body.email
+		username: request.body.username,
+		email: request.body.email,
+		password: request.body.password
 	}
 
 	userCollection.findOne({email: userData.email}, function (error, user) {
@@ -286,12 +286,12 @@ exports.register = function (req, res) {
 				// TODO: Send mail
 				//email.dispatchRegistrationMail(userData, function (error) {
 
-				/*
-				 if (error){
-				 res.send(500, {error: 'Email could not be sent'})
-				 throw error
-				 }
-				 */
+
+				 //if (error){
+				 //res.send(500, {error: 'Email could not be sent'})
+				 //throw error
+				 //}
+
 
 				//})
 			})

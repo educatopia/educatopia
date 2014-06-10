@@ -1,27 +1,27 @@
 extends layout
 
 block content
-	form(action='/signup')
+	form(action='/signup', method='post')
 		fieldset
 			legend Signup
 
-			label(for='identifier') Username
+			label(for='username') Username
 			br
-			input#username(type='text')
+			input#username(type='text', name='username')
 
 			br
 			br
 
-			label(for='identifier') Email
+			label(for='email') Email
 			br
-			input#email(type='text')
+			input#email(type='text', name='email')
 
 			br
 			br
 
 			label(for='password') Password
 			br
-			input#password(type='password')
+			input#password(type='password', name='password')
 
 			br
 			br

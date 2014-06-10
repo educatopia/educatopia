@@ -12,7 +12,7 @@ api.exercises = {
 }
 
 api.accounting = {
-	register: accounting.register
+	signup: accounting.signup
 }
 
 module.exports = api
