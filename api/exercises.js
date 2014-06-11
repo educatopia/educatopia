@@ -52,12 +52,8 @@ exports.getById = function (id, callback) {
 						if (err)
 							console.error(err)
 
-						else {
-
-							console.log(content)
-
+						else
 							item.current.task = content
-						}
 					})
 
 					callback(item.current)
