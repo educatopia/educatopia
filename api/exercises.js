@@ -4,7 +4,6 @@ var mongo = require('mongodb'),
     Server = mongo.Server,
     Db = mongo.Db,
     BSON = mongo.BSONPure,
-    c = console,
     database = 'educatopiadev',
     db
 
@@ -28,46 +27,43 @@ function deleteEmptyFields (obj) {
 }
 
 
-exports.getById = function (req, res) {
+exports.getById = function (id, callback) {
 
-	var id = new BSON.ObjectID(req.params.id)
+	id = new BSON.ObjectID(id)
 
-	c.log('Retrieving exercise: ' + id)
+	//c.log('Retrieving exercise: ' + id)
 
 	db.collection('exercises', function (err, collection) {
 
-		if (!err) {
+		if (err)
+			console.error(err)
 
+		else {
 			collection.findOne({'_id': id}, function (err, item) {
 
-				if (!err) {
+				if (err)
+					console.error(err)
 
+				else {
 					item.current.id = id
-
-					console.log('test')
 
 					marked(item.current.task, function (err, content) {
 
-						if (!err) {
+						if (err)
+							console.error(err)
+
+						else {
 
 							console.log(content)
 
 							item.current.task = content
-
 						}
-
-						else
-							throw err
 					})
 
-					res.send(item.current)
+					callback(item.current)
 				}
-				else
-					c.error(err)
 			})
 		}
-		else
-			c.error(err)
 	})
 }
 
@@ -75,7 +71,7 @@ exports.getHistoryById = function (req, res) {
 
 	var id = new BSON.ObjectID(req.params.id)
 
-	c.log('Retrieving history of exercise: ' + id)
+	console.log('Retrieving history of exercise: ' + id)
 
 	db.collection('exercises', function (err, collection) {
 
@@ -86,11 +82,11 @@ exports.getHistoryById = function (req, res) {
 					res.send(item.history)
 
 				else
-					c.error(err)
+					console.error(err)
 			})
 		}
 		else
-			c.error(err)
+			console.error(err)
 	})
 }
 
@@ -108,24 +104,25 @@ exports.getAll = function (callback) {
 			var temp = {},
 			    key
 
-			temp.id = item._id
+			temp.id = item._id // TODO: Introduce extra url id
+			temp.url = '/exercises/' + item._id
 
 			for (key in item.current)
 				if (item.current.hasOwnProperty(key))
 					temp[key] = item.current[key]
 
 
-			/*marked(item.current.task, function (err, content) {
+			/*
+			 marked(item.current.task, function (err, content) {
 
-			 if (!err){
-			 console.log(content)
-
-			 temp.task = content
-			 }
-
-			 else
+			 if (err)
 			 throw err
-			 })*/
+			 else
+			 temp.task = content
+
+			 tempArray.push(temp)
+			 })
+			 */
 
 			tempArray.push(temp)
 		})
@@ -155,20 +152,20 @@ exports.add = function (req, res) {
 
 	exercise.current = deleteEmptyFields(req.body)
 
-	c.log('Adding exercise:')
+	console.log('Adding exercise:')
 
 	db.collection('exercises', function (err, collection) {
 
 		collection.insert(exercise, {safe: true}, function (err, result) {
 
 			if (!err) {
-				c.log('Successfully added following exercise:')
-				c.dir(result)
+				console.log('Successfully added following exercise:')
+				console.dir(result)
 
 				res.send(result[0])
 			}
 			else
-				c.log(err)
+				console.log(err)
 			res.send(err)
 		})
 	})
@@ -188,7 +185,7 @@ exports.update = function (req, res) {
 	delete temp.current.id
 
 
-	c.log('Updating exercise: ' + id)
+	console.log('Updating exercise: ' + id)
 
 	db.collection('exercises', function (err, collection) {
 
@@ -208,7 +205,7 @@ exports.update = function (req, res) {
 
 
 						temp.history.push(item.current)
-						//c.log(temp)
+						//console.log(temp)
 
 						collection.update(
 							{'_id': id},
@@ -217,7 +214,7 @@ exports.update = function (req, res) {
 							function (err, result) {
 
 								if (!err) {
-									c.log(result + ' document(s) updated')
+									console.log(result + ' document(s) updated')
 
 									// TODO: remove for production
 
@@ -226,14 +223,14 @@ exports.update = function (req, res) {
 									}, 2000)
 								}
 								else {
-									c.error('Error updating exercise: ' + err)
+									console.error('Error updating exercise: ' + err)
 									res.send({'error': 'An error has occurred'})
 								}
 							}
 						)
 					}
 					else
-						c.error(err)
+						console.error(err)
 				})
 
 
@@ -249,10 +246,10 @@ exports.update = function (req, res) {
  var id = req.body.id,
  exercise = req.body
 
- c.log('Updating exercise: ' + id)
- c.log(JSON.stringify(exercise))
+ console.log('Updating exercise: ' + id)
+ console.log(JSON.stringify(exercise))
 
- c.log(new BSON.ObjectID(id))
+ console.log(new BSON.ObjectID(id))
 
  db.collection('exercises', function (err, collection) {
  collection.update(
@@ -260,10 +257,10 @@ exports.update = function (req, res) {
  exercise,
  {safe: true}, function (err, result) {
  if (err) {
- c.log('Error updating exercise: ' + err)
+ console.log('Error updating exercise: ' + err)
  res.send({'error': 'An error has occurred'})
  } else {
- c.log('' + result + ' document(s) updated')
+ console.log('' + result + ' document(s) updated')
  res.send(exercise)
  }
  })
@@ -274,7 +271,7 @@ exports.delete = function (req, res) {
 
 	var id = req.params.id
 
-	c.log('Deleting exercise: ' + id)
+	console.log('Deleting exercise: ' + id)
 
 	db.collection('exercises', function (err, collection) {
 		collection.remove({'_id': new BSON.ObjectID(id)}, {safe: true}, function (err, result) {
@@ -282,7 +279,7 @@ exports.delete = function (req, res) {
 				res.send({'error': 'An error has occurred - ' + err})
 			}
 			else {
-				c.log('' + result + ' document(s) deleted')
+				console.log('' + result + ' document(s) deleted')
 				res.send(req.body)
 			}
 		})
@@ -297,5 +294,5 @@ db.open(function (error, db) {
 	if (error)
 		throw error
 
-	c.log('Exercises module connected to database "' + database + '"')
+	console.log('Exercises module connected to database "' + database + '"')
 })

@@ -18,6 +18,7 @@ block content
 				th Time
 
 		each exercise, index in exercises
+			- console.log(exercise)
 			tbody
 				tr
 					td= index + 1
@@ -27,9 +28,9 @@ block content
 						= exercise.task.substr(0, 30) + '…'
 					td= exercise.difficulty
 					td= exercise.credits
-					td= (exercise.hasOwnProperty(hints)) ? exercise.hints.length : 0
-					td= (exercise.hasOwnProperty(tags)) ? exercise.tags.length : 0
-					td= (exercise.hasOwnProperty(flags)) ? exercise.flags.length : 0
+					td= (exercise.hasOwnProperty(hints)) ? exercise.hints.length : ''
+					td= (exercise.hasOwnProperty(tags)) ? exercise.tags.length : ''
+					td= (exercise.hasOwnProperty(flags)) ? exercise.flags.length : ''
 					td= (exercise.hasOwnProperty(note)) ? exercise.note.substr(0, 30) + '…' : ''
 					td= exercise.date
 					td= exercise.time

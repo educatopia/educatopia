@@ -1,0 +1,50 @@
+extends layout
+
+block content
+	.tabbable.col-lg-9
+		ul#tabHandlers.nav.nav-tabs
+			li.active
+				a(href='#tab1', exercise-toggle='tab') Exercise
+			li
+				a(href='#tab2', exercise-toggle='tab') Edit
+			li
+				a(href='#tab3', exercise-toggle='tab') History
+
+		.tab-content
+			#tab1.tab-pane.active
+				if exercise.flags && exercise.flags.indexOf("unapproved") != -1
+					.alert.alert-warning
+						strong Unapproved
+						| This exercise was not yet verified to be correct
+				if exercise.flags && exercise.flags.indexOf("incorrect") != -1
+					.alert.alert-error
+						strong Attention!
+						| There are mistakes in this exercise! Please help to correct them!
+
+				div!= exercise.task
+
+				#hints
+				.accordion
+					.accordion-group
+						.accordion-heading
+							a.btn.btn-success.accordion-toggle(
+							href='#collapseOne', exercise-toggle='collapse').
+								Solution
+
+						#collapseOne.accordion-body.collapse.out
+							.accordion-inner
+								if exercise.approach
+									=exercise.approach
+
+								if exercise.solutions && exercise.solutions.length > 0
+									p= exercise.solutions.reduce(function (a, b) {return a + b})
+
+								else if exercise.solution
+									.alert.alert-success= exercise.solution
+									if exercise.tags.indexOf("proof")
+										span.qed(title='Quod Erat Demonstrandum')
+
+			#tab2.tab-pane
+			#tab3.tab-pane
+	#exerciseSidebar.col-lg-3
+
