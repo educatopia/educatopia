@@ -124,3 +124,7 @@ table caption {
 #exerciseSidebar .progress {
     margin-bottom: 0;
 }
+
+#solution .panel-heading {
+    cursor: pointer;
+}

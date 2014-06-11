@@ -1,8 +1,9 @@
-var exercisesApi = require('../api/exercises')
+var exercisesApi = require('../api/exercises'),
+    exercises = {}
 
-module.exports.all = function (req, res) {
+exercises.all = function (req, res) {
 
-	exercisesApi.getAll(function(exercises){
+	exercisesApi.getAll(function (exercises) {
 
 		res.render('exercises', {
 			page: 'exercises',
@@ -11,9 +12,9 @@ module.exports.all = function (req, res) {
 	})
 }
 
-module.exports.one = function (req, res) {
+exercises.one = function (req, res) {
 
-	exercisesApi.getById(req.params.id, function(exercise){
+	exercisesApi.getById(req.params.id, function (exercise) {
 
 		res.render('exercise', {
 			page: 'exercise',
@@ -21,3 +22,17 @@ module.exports.one = function (req, res) {
 		})
 	})
 }
+
+exercises.edit = function (req, res) {
+
+	exercisesApi.getById(req.params.id, function (exercise) {
+
+		res.render('exerciseEdit', {
+			page: 'exerciseEdit',
+			exercise: exercise
+		})
+	})
+}
+
+
+module.exports = exercises

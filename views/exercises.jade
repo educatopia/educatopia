@@ -1,36 +1,37 @@
 extends layout
 
 block content
-	table#exercisesTable.table.table-striped.table-bordered.table-condensed
-		thead
-			tr
-				th Nr
-				th Subject
-				th Type
-				th Task
-				th Difficulty
-				th Credits
-				th Hints
-				th Tags
-				th Flags
-				th Note
-				th Date
-				th Time
-
-		each exercise, index in exercises
-			- console.log(exercise)
-			tbody
+	.table-responsive
+		table#exercisesTable.table.table-striped.table-bordered.table-condensed
+			thead
 				tr
-					td= index + 1
-					td= exercise.subjects
-					td= exercise.type
-					td: a(href=exercise.url, title=exercise.task.substr(0, 50))
-						= exercise.task.substr(0, 30) + '…'
-					td= exercise.difficulty
-					td= exercise.credits
-					td= (exercise.hasOwnProperty(hints)) ? exercise.hints.length : ''
-					td= (exercise.hasOwnProperty(tags)) ? exercise.tags.length : ''
-					td= (exercise.hasOwnProperty(flags)) ? exercise.flags.length : ''
-					td= (exercise.hasOwnProperty(note)) ? exercise.note.substr(0, 30) + '…' : ''
-					td= exercise.date
-					td= exercise.time
+					th Nr
+					th Subject
+					th Type
+					th Task
+					th Difficulty
+					th Credits
+					th Hints
+					th Tags
+					th Flags
+					th Note
+					th Date
+					th Time
+
+			each exercise, index in exercises
+				- console.log(exercise)
+				tbody
+					tr
+						td= index + 1
+						td= exercise.subjects
+						td= exercise.type
+						td: a(href=exercise.url, title=exercise.task.substr(0, 50))
+							= exercise.task.substr(0, 30) + '…'
+						td= exercise.difficulty
+						td= exercise.credits
+						td= (exercise.hasOwnProperty(hints)) ? exercise.hints.length : ''
+						td= (exercise.hasOwnProperty(tags)) ? exercise.tags.length : ''
+						td= (exercise.hasOwnProperty(flags)) ? exercise.flags.length : ''
+						td= (exercise.hasOwnProperty(note)) ? exercise.note.substr(0, 30) + '…' : ''
+						td= exercise.date
+						td= exercise.time

@@ -24,25 +24,22 @@ block content
 				div!= exercise.task
 
 				#hints
-				.accordion
-					.accordion-group
-						.accordion-heading
-							a.btn.btn-success.accordion-toggle(
-							href='#collapseOne', exercise-toggle='collapse').
-								Solution
 
-						#collapseOne.accordion-body.collapse.out
-							.accordion-inner
-								if exercise.approach
-									=exercise.approach
+				#solution.panel.panel-success
+					.panel-heading(data-toggle='collapse', data-target='#solutionBody')
+						span.panel-title Solution
+					#solutionBody.panel-body.collapse.out
+						if exercise.approach
+							!= exercise.approach
 
-								if exercise.solutions && exercise.solutions.length > 0
-									p= exercise.solutions.reduce(function (a, b) {return a + b})
+						if exercise.solutions && exercise.solutions.length > 0
+							p!= exercise.solutions.reduce(function (a, b) {return a + b})
 
-								else if exercise.solution
-									.alert.alert-success= exercise.solution
-									if exercise.tags.indexOf("proof")
-										span.qed(title='Quod Erat Demonstrandum')
+						else if exercise.solution
+							.alert.alert-success
+								!= exercise.solution
+							if exercise.tags.indexOf("proof")
+								span.qed(title='Quod Erat Demonstrandum')
 
 			#tab2.tab-pane
 				button#exerciseEditSubmit.btn.btn-default(type='submit')
@@ -84,6 +81,7 @@ block content
 			if exercise.tags
 				each tag in exercise.tags
 					span.label.label-default= tag
+					|  <!--space-->
 
 		li.list-group-item
 			- var className = '', viewedHints = 0, availableHints = 0
@@ -115,7 +113,6 @@ block content
 			| Created:
 			br
 			small.text-muted= time
-//div
 
 		li.list-group-item
 			// TODO: time for last modified
