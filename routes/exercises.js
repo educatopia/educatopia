@@ -34,5 +34,19 @@ exercises.edit = function (req, res) {
 	})
 }
 
+exercises.history = function (req, res) {
+
+	exercisesApi.getHistoryById(req.params.id, function (history) {
+
+		res.render('exerciseHistory', {
+			page: 'exerciseHistory',
+			history: history,
+			exercise: {
+				id: req.params.id
+			}
+		})
+	})
+}
+
 
 module.exports = exercises

@@ -63,26 +63,24 @@ exports.getById = function (id, callback) {
 	})
 }
 
-exports.getHistoryById = function (req, res) {
+exports.getHistoryById = function (id, callback) {
 
-	var id = new BSON.ObjectID(req.params.id)
-
-	console.log('Retrieving history of exercise: ' + id)
+	id = new BSON.ObjectID(id)
 
 	db.collection('exercises', function (err, collection) {
 
-		if (!err) {
+		if (err)
+			console.error(err)
+
+		else {
 			collection.findOne({'_id': id}, function (err, item) {
 
-				if (!err)
-					res.send(item.history)
-
-				else
+				if (err)
 					console.error(err)
+				else
+					callback(item.history)
 			})
 		}
-		else
-			console.error(err)
 	})
 }
 
@@ -237,7 +235,8 @@ exports.update = function (req, res) {
 }
 
 
-/*exports.update = function (req, res) {
+/*
+ exports.update = function (req, res) {
 
  var id = req.body.id,
  exercise = req.body
@@ -261,7 +260,8 @@ exports.update = function (req, res) {
  }
  })
  })
- }*/
+ }
+ */
 
 exports.delete = function (req, res) {
 

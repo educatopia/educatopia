@@ -47,7 +47,7 @@ app.post('/signup', api.accounting.signup)
 app.get('/exercises', exercises.all)
 app.get('/exercises/:id', exercises.one)
 app.get('/exercises/:id/edit', exercises.edit)
-//app.get('/exercises/:id/history', exercises.history)
+app.get('/exercises/:id/history', exercises.history)
 
 app.get('/reference', reference)
 

@@ -22,77 +22,8 @@ block content
 			#tab3.tab-pane(class= (page == 'exerciseHistory') ? 'active' : '')
 				block thirdTab
 
-	#exerciseSidebar.col-lg-3
-		li.list-group-item
-			| URL:
-			input.form-control.input-sm(
-			type='url', readonly=true, value='educatopia.org' + url)
+	block sidebar
 
-		li.list-group-item
-			| Difficulty: <!--space-->
-			small.pull-right
-				= (exercise.difficulty) ? exercise.difficulty * 10 : 0
-				| /10
-			.progress
-				.progress-bar(style='width:' + (exercise.difficulty * 100) + '%')
-
-		li.list-group-item
-			| Credits: <!--space-->
-			span.badge.pull-right= exercise.credits
-
-		li.list-group-item
-			| Type: <!--space-->
-			span.pull-right= exercise.type
-
-		li.list-group-item
-			| Subjects: <!--space-->
-			each subject in exercise.subjects
-				span.label.label-default= subject
-
-		li.list-group-item
-			| Tags: <!--space-->
-			if exercise.tags
-				each tag in exercise.tags
-					span.label.label-default= tag
-					| <!--space-->
-
-		li.list-group-item
-			- var className = '', viewedHints = 0, availableHints = 0
-
-			if exercise.displayedHints && exercise.hints
-				- viewedHints = exercise.displayedHints + 1
-				- availableHints = exercise.hints.length
-
-				if exercise.displayedHints == exercise.hints.length
-					- className = 'disabled'
-					- viewedHints = exercise.displayedHints
-
-			button#showHint.btn.btn-info.btn-sm.btn-block(class=className)
-				| Show Hint <!--space-->
-				= viewedHints
-				| /
-				= availableHints
-
-		li.list-group-item
-			| Note:
-			br
-			small.text-muted
-				= exercise.note
-
-		li.list-group-item
-			- var timestamp = String(exercise.id).substr(0, 8)
-			- var date = new Date(parseInt(timestamp, 16) * 1000)
-			- var time = date.toISOString().substr(0, 19).split('T').join(' ')
-			| Created:
-			br
-			small.text-muted= time
-
-		li.list-group-item
-			// TODO: time for last modified
-			- var time = 'TODO'
-			| Last Modified:
-			br
-			small.text-muted= time
 
 
 
