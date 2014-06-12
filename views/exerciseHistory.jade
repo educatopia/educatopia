@@ -1,0 +1,16 @@
+extends exercise
+
+block thirdTab
+	each exercise, index in exercises
+		table.table.table-striped.table-bordered.table-condensed
+			thead
+				tr
+					th Nr
+					th Created
+					th User
+			tbody
+				tr
+					td= (index + 1)
+					td Time
+					td User
+

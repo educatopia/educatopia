@@ -16,8 +16,8 @@ exercises.one = function (req, res) {
 
 	exercisesApi.getById(req.params.id, function (exercise) {
 
-		res.render('exercise', {
-			page: 'exercise',
+		res.render('exerciseView', {
+			page: 'exerciseView',
 			exercise: exercise
 		})
 	})
