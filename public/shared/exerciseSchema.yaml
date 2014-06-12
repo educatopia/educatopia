@@ -1,0 +1,97 @@
+task:
+  type: textarea
+  validators:
+    - required
+  editorAttrs:
+    rows: 8
+  help: >
+    Detailed description of the task which must be solved.
+    Try to split up large tasks into its subtasks.
+
+approach:
+  type: textarea
+  editorAttrs:
+    rows: 8
+  help: All the necessary steps to get to a solution.
+
+solutions:
+  type: list
+  subtype: textarea
+  editorAttrs:
+    rows: 2
+  help: >
+    The different solutions should be equally correct. Keep them as short
+    as possible to make them machine readable.
+    All further information should be written down in the approach section.
+
+subjects:
+  type: list
+  subtype: text
+  validators:
+    - required
+  help: Specify the subjects of the exercise. (E.g. Math, Biology, …)
+  format: comma separated
+
+type:
+  type: select
+  options:
+    - Calculate
+    - Explain
+    - Name
+    - Describe
+    - Proof
+    - Assign
+    - Draw
+    - Choose
+    - Transform
+  validators:
+    - required
+  help: What is the main task of the exercise?
+
+credits:
+  type: number
+  editorAttrs:
+    placeholder: 0
+    min: 0
+  help: >
+    Each credit-point represents a noteworthy
+    accomplishment while solving the task.
+    Recommended range is 1 - 10 credits.
+
+difficulty:
+  type: number
+  editorAttrs:
+    placeholder: 0
+    min: 0
+    max: 1
+    step: 0.1
+    title: Tooltip help
+  help: >
+    Ranges from excluded 0 (everybody is able to solve it)
+    to excluded 1 (nobody is able to solve it).
+
+duration:
+  type: number
+  editorAttrs:
+    placeholder: 0
+    min: 0
+  help: How long does it take to solve the exercise for an average person?
+
+tags:
+  type: list
+  subtype: text
+  help: All the keywords that should be associated with this exercise.
+  format: comma separated
+
+note:
+  type: textarea
+  editorAttrs:
+    rows: 5
+  help: Any additional information.
+
+hints:
+  type: list
+  subtype: textarea
+  editorAttrs:
+    rows: 2
+  help: Any information which helps one to solve the exercise when he's stuck.

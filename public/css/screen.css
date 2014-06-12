@@ -6,39 +6,9 @@ a {
     cursor: pointer;
 }
 
-.nav {
+/*.nav {
     text-transform: capitalize;
-}
-
-.nav-tabs {
-    margin-bottom: 20px;
-}
-
-ul.nav li.dropdown:hover ul.dropdown-menu {
-    display: block;
-}
-
-a.menu:after,
-.dropdown-toggle:after {
-    content: none;
-}
-
-@media (max-width: 979px) {
-    .navbar-fixed-top .navbar-inner,
-    .navbar-fixed-bottom .navbar-inner {
-        padding: 0 !important;
-    }
-}
-
-.accordion {
-    background-color: white;
-    margin-top: 3em
-}
-
-.accordion-inner {
-    line-height: 2;
-    overflow: scroll;
-}
+}*/
 
 s {
     color: rgb(185, 74, 72) !important;
@@ -64,9 +34,6 @@ footer a {
     margin: 0 10px;
 }
 
-/*#content .nav a {
-	text-transform: none;
-}*/
 
 /* Exercise Formular */
 
@@ -102,16 +69,6 @@ pre {
     border: none;
 }
 
-table caption {
-    font-weight: 900;
-    font-size: 120%;
-    margin-bottom: 10px;
-    text-align: left;
-}
-
-.table-auto {
-    width: auto;
-}
 
 .alert {
     overflow: scroll;
@@ -121,10 +78,34 @@ table caption {
     display: none;
 }
 
+.nav-tabs {
+    margin-bottom: 1.5em;
+}
+
+#viewTab #task{
+    margin-bottom: 3em;
+}
+#viewTab #solution{
+    margin-bottom: 3em;
+}
+
+
 #exerciseSidebar .progress {
     margin-bottom: 0;
 }
 
 #solution .panel-heading {
     cursor: pointer;
+}
+
+.panel {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.form-control + button{
+    margin-top: 1em;
+}
+.form-control + .form-control{
+    margin-top: 0.5em;
 }

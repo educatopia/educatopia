@@ -13,13 +13,13 @@ block content
 				a(href=url + '/history', exercise-toggle='tab') History
 
 		.tab-content
-			#tab1.tab-pane(class= (page == 'exerciseView') ? 'active' : '')
+			#viewTab.tab-pane(class= (page == 'exerciseView') ? 'active' : '')
 				block firstTab
 
-			#tab2.tab-pane(class= (page == 'exerciseEdit') ? 'active' : '')
+			#editTab.tab-pane(class= (page == 'exerciseEdit') ? 'active' : '')
 				block secondTab
 
-			#tab3.tab-pane(class= (page == 'exerciseHistory') ? 'active' : '')
+			#historyTab.tab-pane(class= (page == 'exerciseHistory') ? 'active' : '')
 				block thirdTab
 
 	block sidebar

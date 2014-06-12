@@ -1,4 +1,7 @@
 var exercisesApi = require('../api/exercises'),
+    fs = require('fs'),
+    path = require('path'),
+    yaml = require('js-yaml'),
     exercises = {}
 
 exercises.all = function (req, res) {
@@ -25,11 +28,22 @@ exercises.one = function (req, res) {
 
 exercises.edit = function (req, res) {
 
+	var schema = yaml.safeLoad(fs.readFileSync(
+			path.resolve(__dirname, '../public/shared/exerciseSchema.yaml'),
+			'utf8')
+	    ),
+	    fieldsets = yaml.safeLoad(fs.readFileSync(
+			    path.resolve(__dirname, '../public/shared/exerciseFieldsets.yaml'),
+			    'utf8')
+	    )
+
 	exercisesApi.getById(req.params.id, function (exercise) {
 
 		res.render('exerciseEdit', {
 			page: 'exerciseEdit',
-			exercise: exercise
+			exercise: exercise,
+			schema: schema,
+			fieldsets: fieldsets
 		})
 	})
 }

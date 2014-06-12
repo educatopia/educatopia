@@ -1,0 +1,17 @@
+-
+  fields:
+    - task
+    - approach
+    - solutions
+
+-
+  legend: Details
+  fields:
+    - subjects
+    - type
+    - credits
+    - difficulty
+    - duration
+    - hints
+    - tags
+    - note

@@ -15,10 +15,13 @@ script(type='text/x-mathjax-config').
 script(src='/components/MathJax/MathJax.js?config=AM_HTMLorMML')
 script(src='/components/highlightjs/highlight.pack.js')
 script(src='/components/marked/lib/marked.js')
-script(src='/js/dominate.min.js')
 //script(src='lang/de.js')
 //script(src='js/lang.js')
 //script(src='js/index.js')
 //
-	<script type="text/javascript" src="js/piwik.js"></script>
-	<noscript><p><img src="http://piwik.adriansieber.com/piwik.php?idsite=2" style="border:0" alt=""/></p></noscript>
+
+//script(src="js/piwik.js")
+	noscript
+		p
+			img(src="//piwik.adriansieber.com/piwik.php?idsite=2",
+				style="border:0", alt="")

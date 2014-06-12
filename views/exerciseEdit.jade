@@ -1,7 +1,77 @@
 extends exercise
 
 block secondTab
-	button#exerciseEditSubmit.btn.btn-default(type='submit')
-		| Submit
-		span
-	.successInfo.alert
+
+	form.form-horizontal(role='form')
+
+		each fieldset in fieldsets
+			each field in fieldset.fields
+				- var label = field.slice(0, 1).toUpperCase() + field.slice(1)
+				- var attrs = schema[field].editorAttrs
+				- var help = schema[field].help
+				- var subtype = schema[field].subtype
+				case schema[field].type
+					when 'textarea'
+						.form-group
+							label.col-sm-2.control-label(for=field)
+								= label
+							.col-sm-10
+								textarea.form-control(id=field
+								)&attributes(attrs)
+									= exercise[field]
+								p.help-block.small= help
+
+					when 'text'
+						.form-group
+							label.col-sm-2.control-label(for=field)= label
+							.col-sm-10
+								input.form-control(
+								id=field, type=text, value=exercise[field]
+								)&attributes(attrs)
+								p.help-block.small= help
+
+					when 'number'
+						.form-group
+							label.col-sm-2.control-label(for=field)= label
+							.col-sm-6
+								input.col-sm-2.form-control(
+								id=field, type='number', value=exercise[field]
+								)&attributes(attrs)
+								p.help-block.small= help
+
+					when 'list'
+						.form-group
+							label.col-sm-2.control-label(for=field)= label
+							.col-sm-10
+								if subtype == 'textarea'
+									if exercise[field]
+										each element in exercise[field]
+											textarea.form-control(id=field
+											)&attributes(attrs ? attrs : {})
+												= element
+									button.btn.btn-default.btn-xs(type='button').
+										Add another #{field.slice(0,-1)}
+								else
+									input.form-control(
+									id=field, type=subtype,
+									value=exercise[field] ? exercise[field].join(', '):''
+									)&attributes(attrs ? attrs : {})
+								p.help-block.small
+									= help
+									if schema[field].format
+										|  (#{schema[field].format})
+
+					when 'select'
+						.form-group
+							label.col-sm-2.control-label(for=field)= label
+							.col-sm-10
+								select.form-control(
+								id=field)&attributes(attrs ? attrs : {})
+									each option in schema[field].options
+										option(selected=exercise.type == option)
+											= option
+								p.help-block.small= help
+
+		.form-group
+			.col-sm-offset-2.col-sm-10
+				button.btn.btn-primary(type='submit') Submit

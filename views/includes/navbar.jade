@@ -1,16 +1,18 @@
-nav.navbar.navbar-inverse.navbar-fixed-top
-	a.navbar-brand(href='/') educatopia
+nav.navbar.navbar-inverse.navbar-fixed-top(role="navigation")
+	.container-fluid
+		a.navbar-brand(href='/') educatopia
 
-	ul.nav.navbar-nav
-		li: a(href='/exercises') Exercises
+		ul.nav.navbar-nav.navbar-left
+			li: a(href='/exercises') Exercises
+			//li: a(href='/reference') Reference
 
-		//li: a(href='/reference') Reference
-
-	a#newExercise.btn.btn-lg.btn-link.navbar-btn.navbar-right(href='/exercise/create')
-		span.glyphicon.glyphicon-edit
-
-	a#signupButton.btn.btn-link.navbar-btn.navbar-right(href='/signup').
-		Signup
-
-	a#loginButton.btn.btn-link.navbar-btn.navbar-right(href='/login').
-		Login
+		ul.nav.navbar-nav.navbar-right
+			li
+				a#loginButton(href='/login').
+					Login
+			li
+				a#signupButton(href='/signup').
+					Signup
+			li
+				a#newExercise(href='/exercise/create')
+					span.glyphicon.glyphicon-edit
