@@ -35,6 +35,7 @@ subjects:
 type:
   type: select
   options:
+    - ""
     - Calculate
     - Explain
     - Name
@@ -61,7 +62,6 @@ credits:
 difficulty:
   type: number
   editorAttrs:
-    placeholder: 0
     min: 0
     max: 1
     step: 0.1
@@ -73,7 +73,6 @@ difficulty:
 duration:
   type: number
   editorAttrs:
-    placeholder: 0
     min: 0
   help: How long does it take to solve the exercise for an average person?
 

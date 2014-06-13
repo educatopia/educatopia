@@ -19,7 +19,6 @@ function deleteEmptyFields (obj) {
 			    obj[key].length === 0 ||
 			    obj[key] === undefined) {
 
-				//print(key + ": " + exercise[key])
 				delete obj[key]
 			}
 	}
@@ -132,7 +131,7 @@ exports.getAll = function (callback) {
 			tempArray.push(temp)
 		})
 
-		callback(tempArray)
+		callback(null, tempArray)
 	}
 
 	db.collection(
@@ -183,7 +182,7 @@ exports.update = function (exercise, callback) {
 
 
 	temp['_id'] = id
-	temp.current = clone(exercise)
+	temp.current = clone(deleteEmptyFields(exercise))
 
 	delete temp.current.id
 

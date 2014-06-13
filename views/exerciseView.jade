@@ -3,34 +3,52 @@ extends exercise
 block firstTab
 	if exercise.flags && exercise.flags.indexOf("unapproved") != -1
 		.alert.alert-warning
-			strong Unapproved
+			strong Unapproved <!--space-->
 			| This exercise was not yet verified to be correct
 	if exercise.flags && exercise.flags.indexOf("incorrect") != -1
-		.alert.alert-error
+		.alert.alert-danger
 			strong Attention! <!--space-->
 			| There are mistakes in this exercise! Please help to correct them!
 
-	div#task!= exercise.task
+	#task!= exercise.task
 
-	#hints
+	if exercise.hints
+		#hints.panel-group
+			each hint, index in exercise.hints
+				.panel.panel-default
+					.panel-heading(data-toggle='collapse', data-target='#hint-' + index+1)
+						span Hint #{index+1}
+					.panel-collapse.collapse(id='hint-' + index+1)
+						.panel-body!= hint
 
-	#solution.panel-group
-		.panel.panel-success
-			.panel-heading(data-toggle='collapse', data-target='#solutionBody')
-				span.panel-title Solution
-			#solutionBody.panel-collapse.collapse.out
-				.panel-body
-					if exercise.approach
+	br
+
+	if exercise.approach
+		#approach.panel-group
+			.panel.panel-default
+				.panel-heading(data-toggle='collapse', data-target='#approachBody')
+					span.panel-title Approach
+				#approachBody.panel-collapse.collapse
+					.panel-body
 						!= exercise.approach
 
-					if exercise.solutions && exercise.solutions.length > 0
-						p!= exercise.solutions.reduce(function (a, b) {return a + b})
+	br
 
-					else if exercise.solution
-						.alert.alert-success
-							!= exercise.solution
-						if exercise.tags.indexOf("proof")
-							span.qed(title='Quod Erat Demonstrandum')
+	if exercise.solutions && exercise.solutions.length > 0
+		#solution.panel-group
+			.panel.panel-primary
+				.panel-heading(data-toggle='collapse', data-target='#solution .list-group')
+					span.panel-title Solutions
+
+				if exercise.solutions && exercise.solutions.length > 0
+					ul.list-group.collapse
+						each solution in exercise.solutions
+							li.list-group-item!= solution
+
+				else if exercise.solution
+					.alert.alert-success
+						!= exercise.solution
+				// TODO: remove because deprecated
 
 block sidebar
 	#exerciseSidebar.col-lg-3
@@ -66,23 +84,6 @@ block sidebar
 				each tag in exercise.tags
 					span.label.label-default= tag
 					|  <!--space-->
-
-		li.list-group-item
-			- var className = '', viewedHints = 0, availableHints = 0
-
-			if exercise.displayedHints && exercise.hints
-				- viewedHints = exercise.displayedHints + 1
-				- availableHints = exercise.hints.length
-
-				if exercise.displayedHints == exercise.hints.length
-					- className = 'disabled'
-					- viewedHints = exercise.displayedHints
-
-			button#showHint.btn.btn-info.btn-sm.btn-block(class=className)
-				| Show Hint <!--space-->
-				= viewedHints
-				| /
-				= availableHints
 
 		li.list-group-item
 			| Note:
