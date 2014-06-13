@@ -22,7 +22,7 @@ app.set('view engine', 'jade')
 app.use(logger())
 
 if (env === 'development') {
-	logger('dev')
+	//logger('dev')
 }
 
 app.use(compress())
@@ -46,7 +46,9 @@ app.post('/signup', api.accounting.signup)
 
 app.get('/exercises', exercises.all)
 app.get('/exercises/:id', exercises.one)
+app.post('/exercises/:id', exercises.update)
 app.get('/exercises/:id/edit', exercises.edit)
+app.post('/exercises/:id/edit', exercises.edit)
 app.get('/exercises/:id/history', exercises.history)
 
 app.get('/reference', reference)

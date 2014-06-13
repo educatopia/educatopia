@@ -2,14 +2,14 @@ extends exercise
 
 block thirdTab
 	if history
-		each exercise, index in history
-			table.table.table-striped.table-bordered.table-condensed
-				thead
-					tr
-						th Nr
-						th Created
-						th User
-				tbody
+		table.table.table-striped.table-condensed
+			thead
+				tr
+					th Nr
+					th Created
+					th User
+			tbody
+				each exercise, index in history
 					tr
 						td= (index + 1)
 						td Time

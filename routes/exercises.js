@@ -2,11 +2,40 @@ var exercisesApi = require('../api/exercises'),
     fs = require('fs'),
     path = require('path'),
     yaml = require('js-yaml'),
-    exercises = {}
+
+    exercises = {},
+
+    schemaPath = path.resolve(__dirname, '../public/shared/exerciseSchema.yaml'),
+    schema = yaml.safeLoad(fs.readFileSync(schemaPath, 'utf8')),
+
+    fieldsetsPath = path.resolve(__dirname, '../public/shared/exerciseFieldsets.yaml'),
+    fieldsets = yaml.safeLoad(fs.readFileSync(fieldsetsPath, 'utf8'))
+
+
+function arrayify (object, schema) {
+
+	var key
+
+	for (key in schema) {
+		if (schema.hasOwnProperty(key)) {
+
+			if (schema[key].type === 'list' && schema[key].subtype === 'text') {
+
+				object[key] = object[key].split(/\s*,\s*/)
+			}
+		}
+	}
+
+	return object
+}
+
 
 exercises.all = function (req, res) {
 
-	exercisesApi.getAll(function (exercises) {
+	exercisesApi.getAll(function (error, exercises) {
+
+		if(error)
+			throw new Error(error)
 
 		res.render('exercises', {
 			page: 'exercises',
@@ -17,7 +46,10 @@ exercises.all = function (req, res) {
 
 exercises.one = function (req, res) {
 
-	exercisesApi.getRenderedById(req.params.id, function (exercise) {
+	exercisesApi.getRenderedById(req.params.id, function (error, exercise) {
+
+		if(error)
+			throw new Error(error)
 
 		res.render('exerciseView', {
 			page: 'exerciseView',
@@ -28,29 +60,47 @@ exercises.one = function (req, res) {
 
 exercises.edit = function (req, res) {
 
-	var schema = yaml.safeLoad(fs.readFileSync(
-			path.resolve(__dirname, '../public/shared/exerciseSchema.yaml'),
-			'utf8')
-	    ),
-	    fieldsets = yaml.safeLoad(fs.readFileSync(
-			    path.resolve(__dirname, '../public/shared/exerciseFieldsets.yaml'),
-			    'utf8')
-	    )
+	var key,
+	    renderObject = {
+		    page: 'exerciseEdit',
+		    schema: schema,
+		    fieldsets: fieldsets
+	    }
 
-	exercisesApi.getById(req.params.id, function (exercise) {
 
-		res.render('exerciseEdit', {
-			page: 'exerciseEdit',
-			exercise: exercise,
-			schema: schema,
-			fieldsets: fieldsets
+	if (req.method === 'POST') {
+
+		// Add one more field for in query specified form-list
+		for (key in req.query)
+			if (req.query.hasOwnProperty(key)) {
+
+				req.body[key] = req.body[key] || []
+
+				req.body[key].push("")
+			}
+
+		renderObject.exercise = arrayify(req.body, schema)
+
+		res.render('exerciseEdit', renderObject)
+	}
+	else
+		exercisesApi.getById(req.params.id, function (error, exercise) {
+
+			if(error)
+				throw new Error(error)
+
+			renderObject.exercise = exercise
+
+			res.render('exerciseEdit', renderObject)
 		})
-	})
 }
 
 exercises.history = function (req, res) {
 
-	exercisesApi.getHistoryById(req.params.id, function (history) {
+	exercisesApi.getHistoryById(req.params.id, function (error, history) {
+
+		if(error)
+			throw new Error(error)
 
 		res.render('exerciseHistory', {
 			page: 'exerciseHistory',
@@ -58,6 +108,20 @@ exercises.history = function (req, res) {
 			exercise: {
 				id: req.params.id
 			}
+		})
+	})
+}
+
+exercises.update = function (req, res) {
+
+	exercisesApi.update(arrayify(req.body, schema), function (error, exercise) {
+
+		if(error)
+			throw new Error(error)
+
+		res.render('exerciseView', {
+			page: 'exerciseView',
+			exercise: exercise
 		})
 	})
 }

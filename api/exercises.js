@@ -1,5 +1,6 @@
 var mongo = require('mongodb'),
     marked = require('marked'),
+    clone = require('clone'),
 
     Server = mongo.Server,
     Db = mongo.Db,
@@ -31,55 +32,55 @@ exports.getById = function (id, callback) {
 
 	id = new BSON.ObjectID(id)
 
-	db.collection('exercises', function (err, collection) {
+	db.collection('exercises', function (error, collection) {
 
-		if (err)
-			console.error(err)
+		if (error)
+			callback(error)
 
 		else {
-			collection.findOne({'_id': id}, function (err, item) {
+			collection.findOne({'_id': id}, function (error, item) {
 
-				if (err)
-					console.error(err)
+				if (error)
+					callback(error)
 
 				else {
 					item.current.id = id
 
-					callback(item.current)
+					callback(null, item.current)
 				}
 			})
 		}
 	})
 }
 
-exports.getRenderedById = function(id, callback){
+exports.getRenderedById = function (id, callback) {
 
 	id = new BSON.ObjectID(id)
 
-	db.collection('exercises', function (err, collection) {
+	db.collection('exercises', function (error, collection) {
 
-		if (err)
-			console.error(err)
+		if (error)
+			callback(error)
 
 		else {
-			collection.findOne({'_id': id}, function (err, item) {
+			collection.findOne({'_id': id}, function (error, item) {
 
-				if (err)
-					console.error(err)
+				if (error)
+					callback(error)
 
 				else {
 					item.current.id = id
 
-					marked(item.current.task, function (err, content) {
+					marked(item.current.task, function (error, content) {
 
-						if (err)
-							console.error(err)
+						if (error)
+							callback(error)
 
 						else
 							item.current.task = content
 					})
 
-					callback(item.current)
+					callback(null, item.current)
 				}
 			})
 		}
@@ -90,18 +91,18 @@ exports.getHistoryById = function (id, callback) {
 
 	id = new BSON.ObjectID(id)
 
-	db.collection('exercises', function (err, collection) {
+	db.collection('exercises', function (error, collection) {
 
-		if (err)
-			console.error(err)
+		if (error)
+			callback(error)
 
 		else {
-			collection.findOne({'_id': id}, function (err, item) {
+			collection.findOne({'_id': id}, function (error, item) {
 
-				if (err)
-					console.error(err)
+				if (error)
+					callback(error)
 				else
-					callback(item.history)
+					callback(null, item.history)
 			})
 		}
 	})
@@ -109,10 +110,10 @@ exports.getHistoryById = function (id, callback) {
 
 exports.getAll = function (callback) {
 
-	function execArray (err, items) {
+	function execArray (error, items) {
 
-		if (err)
-			throw new Error(err)
+		if (error)
+			callback(error)
 
 		var tempArray = []
 
@@ -128,19 +129,6 @@ exports.getAll = function (callback) {
 				if (item.current.hasOwnProperty(key))
 					temp[key] = item.current[key]
 
-
-			/*
-			 marked(item.current.task, function (err, content) {
-
-			 if (err)
-			 throw err
-			 else
-			 temp.task = content
-
-			 tempArray.push(temp)
-			 })
-			 */
-
 			tempArray.push(temp)
 		})
 
@@ -149,10 +137,10 @@ exports.getAll = function (callback) {
 
 	db.collection(
 		'exercises',
-		function (err, collection) {
+		function (error, collection) {
 
-			if (err)
-				console.error(err)
+			if (error)
+				callback(error)
 
 			else
 				collection
@@ -171,90 +159,73 @@ exports.add = function (req, res) {
 
 	console.log('Adding exercise:')
 
-	db.collection('exercises', function (err, collection) {
+	db.collection('exercises', function (error, collection) {
 
-		collection.insert(exercise, {safe: true}, function (err, result) {
+		collection.insert(exercise, {safe: true}, function (error, result) {
 
-			if (!err) {
+			if (error)
+				callback(error)
+
+			else {
 				console.log('Successfully added following exercise:')
 				console.dir(result)
 
-				res.send(result[0])
+				callback(null, result[0])
 			}
-			else
-				console.log(err)
-			res.send(err)
 		})
 	})
 }
 
-exports.update = function (req, res) {
+exports.update = function (exercise, callback) {
 
-	var exercise = deleteEmptyFields(req.body),
-	    id = new BSON.ObjectID(exercise.id),
+	var id = new BSON.ObjectID(exercise.id),
 	    temp = {}
 
 
 	temp['_id'] = id
-
-	temp.current = exercise
+	temp.current = clone(exercise)
 
 	delete temp.current.id
 
+	console.log(temp)
 
-	console.log('Updating exercise: ' + id)
+	db.collection('exercises', function (error, collection) {
 
-	db.collection('exercises', function (err, collection) {
-
-			// FIXME: Very ugly!
-
-			collection.findOne(
-				{'_id': id},
-				function (err, item) {
-
-					if (!err) {
-
-						if (item.history)
-							temp.history = item.history
-
-						else
-							temp.history = []
+		if (error)
+			callback('An error occurred while loading the exercises collection: ' + error)
 
 
-						temp.history.push(item.current)
-						//console.log(temp)
+		collection.findOne({'_id': id}, function (error, item) {
 
-						collection.update(
-							{'_id': id},
-							temp,
-							{safe: true},
-							function (err, result) {
+			if (error)
+				callback('An error occurred while loading the exercise: ' + error)
 
-								if (!err) {
-									console.log(result + ' document(s) updated')
+			else {
 
-									// TODO: remove for production
+				temp.history = item.history || []
 
-									setTimeout(function () {
-										res.send({})
-									}, 2000)
-								}
-								else {
-									console.error('Error updating exercise: ' + err)
-									res.send({'error': 'An error has occurred'})
-								}
-							}
-						)
+				temp.history.push(item.current)
+
+				collection.update(
+					{'_id': id},
+					temp,
+					{safe: true},
+					function (error, result) {
+
+						if (error)
+							callback('An error occurred while updating the exercise: ' + error)
+
+						else {
+							// TODO: remove for production
+							//setTimeout(function () {
+								callback(null, exercise)
+							//}, 2000)
+						}
 					}
-					else
-						console.error(err)
-				})
-
-
-		}
-	)
-
-	//exercise.history.push(exercise.current)
+				)
+			}
+		})
+	})
 }
 
 
@@ -269,13 +240,13 @@ exports.update = function (req, res) {
 
  console.log(new BSON.ObjectID(id))
 
- db.collection('exercises', function (err, collection) {
+ db.collection('exercises', function (error, collection) {
  collection.update(
  {'_id': new BSON.ObjectID(id)},
  exercise,
- {safe: true}, function (err, result) {
- if (err) {
- console.log('Error updating exercise: ' + err)
+ {safe: true}, function (error, result) {
+ if (error) {
+ console.log('Error updating exercise: ' + error)
  res.send({'error': 'An error has occurred'})
  } else {
  console.log('' + result + ' document(s) updated')
@@ -286,22 +257,24 @@ exports.update = function (req, res) {
  }
  */
 
-exports.delete = function (req, res) {
+exports.delete = function (id, callback) {
 
-	var id = req.params.id
+	//var id = req.params.id
 
 	console.log('Deleting exercise: ' + id)
 
-	db.collection('exercises', function (err, collection) {
-		collection.remove({'_id': new BSON.ObjectID(id)}, {safe: true}, function (err, result) {
-			if (err) {
-				res.send({'error': 'An error has occurred - ' + err})
-			}
-			else {
-				console.log('' + result + ' document(s) deleted')
-				res.send(req.body)
-			}
-		})
+	db.collection('exercises', function (error, collection) {
+		collection.remove(
+			{'_id': new BSON.ObjectID(id)},
+			{safe: true},
+			function (error, result) {
+				if (error)
+					callback(error)
+				else {
+					console.log('' + result + ' document(s) deleted')
+					callback(req.body)
+				}
+			})
 	})
 }
 

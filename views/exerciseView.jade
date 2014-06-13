@@ -65,7 +65,7 @@ block sidebar
 			if exercise.tags
 				each tag in exercise.tags
 					span.label.label-default= tag
-					| <!--space-->
+					|  <!--space-->
 
 		li.list-group-item
 			- var className = '', viewedHints = 0, availableHints = 0
@@ -91,6 +91,7 @@ block sidebar
 				= exercise.note
 
 		li.list-group-item
+			- console.log(exercise.id)
 			- var timestamp = String(exercise.id).substr(0, 8)
 			- var date = new Date(parseInt(timestamp, 16) * 1000)
 			- var time = date.toISOString().substr(0, 19).split('T').join(' ')

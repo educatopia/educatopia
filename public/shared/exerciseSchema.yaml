@@ -1,12 +1,12 @@
 task:
   type: textarea
-  validators:
-    - required
   editorAttrs:
     rows: 8
   help: >
     Detailed description of the task which must be solved.
     Try to split up large tasks into its subtasks.
+  validators:
+    - required
 
 approach:
   type: textarea
@@ -18,7 +18,7 @@ solutions:
   type: list
   subtype: textarea
   editorAttrs:
-    rows: 2
+    rows: 3
   help: >
     The different solutions should be equally correct. Keep them as short
     as possible to make them machine readable.
@@ -93,5 +93,5 @@ hints:
   type: list
   subtype: textarea
   editorAttrs:
-    rows: 2
+    rows: 3j
   help: Any information which helps one to solve the exercise when he's stuck.
