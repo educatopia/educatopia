@@ -17,7 +17,7 @@ exercises.all = function (req, res) {
 
 exercises.one = function (req, res) {
 
-	exercisesApi.getById(req.params.id, function (exercise) {
+	exercisesApi.getRenderedById(req.params.id, function (exercise) {
 
 		res.render('exerciseView', {
 			page: 'exerciseView',

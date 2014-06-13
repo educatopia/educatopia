@@ -31,7 +31,30 @@ exports.getById = function (id, callback) {
 
 	id = new BSON.ObjectID(id)
 
-	//c.log('Retrieving exercise: ' + id)
+	db.collection('exercises', function (err, collection) {
+
+		if (err)
+			console.error(err)
+
+		else {
+			collection.findOne({'_id': id}, function (err, item) {
+
+				if (err)
+					console.error(err)
+
+				else {
+					item.current.id = id
+
+					callback(item.current)
+				}
+			})
+		}
+	})
+}
+
+exports.getRenderedById = function(id, callback){
+
+	id = new BSON.ObjectID(id)
 
 	db.collection('exercises', function (err, collection) {
 
