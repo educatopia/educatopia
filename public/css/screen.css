@@ -109,3 +109,7 @@ pre {
 .form-control + .form-control{
     margin-top: 0.5em;
 }
+
+.sr-only + textarea {
+    margin-top: 0.3em;
+}

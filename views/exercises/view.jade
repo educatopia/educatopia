@@ -1,4 +1,4 @@
-extends exercise
+extends layout
 
 block firstTab
 	if exercise.flags && exercise.flags.indexOf("unapproved") != -1
@@ -75,8 +75,10 @@ block sidebar
 
 		li.list-group-item
 			| Subjects: <!--space-->
-			each subject in exercise.subjects
-				span.label.label-default= subject
+			if exercise.subjects
+				each subject in exercise.subjects
+					span.label.label-default= subject
+					|  <!--space-->
 
 		li.list-group-item
 			| Tags: <!--space-->

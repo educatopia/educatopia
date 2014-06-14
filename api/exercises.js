@@ -150,28 +150,30 @@ exports.getAll = function (callback) {
 	)
 }
 
-exports.add = function (req, res) {
+exports.add = function (exercise, callback) {
 
-	var exercise = {}
+	var temp = {}
 
-	exercise.current = deleteEmptyFields(req.body)
-
-	console.log('Adding exercise:')
+	temp.current = deleteEmptyFields(exercise)
 
 	db.collection('exercises', function (error, collection) {
 
-		collection.insert(exercise, {safe: true}, function (error, result) {
+		collection.insert(
+			temp,
+			{safe: true},
+			function (error, result) {
 
-			if (error)
-				callback(error)
+				if (error)
+					callback(error)
 
-			else {
-				console.log('Successfully added following exercise:')
-				console.dir(result)
+				else {
+					console.log('Successfully added following exercise:')
+					console.dir(result)
 
-				callback(null, result[0])
+					callback(null, result[0])
+				}
 			}
-		})
+		)
 	})
 }
 
@@ -217,7 +219,7 @@ exports.update = function (exercise, callback) {
 						else {
 							// TODO: remove for production
 							//setTimeout(function () {
-								callback(null, exercise)
+							callback(null, exercise)
 							//}, 2000)
 						}
 					}
