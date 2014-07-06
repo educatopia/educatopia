@@ -2,30 +2,32 @@
 // https://github.com/braitsch/node-login/blob/master/app/server/modules/account-manager.js
 
 var email = require('./email-dispatcher'),
-	crypto = require('crypto'),
-	MongoDB = require('mongodb').Db,
-	Server = require('mongodb').Server,
-	moment = require('moment'),
-	nodemailer = require('nodemailer'),
+    crypto = require('crypto'),
+    MongoDB = require('mongodb').Db,
+    Server = require('mongodb').Server,
+    moment = require('moment'),
+    nodemailer = require('nodemailer'),
+    jade = require('jade'),
 
-	dbPort = 27017,
-	dbHost = 'localhost',
-	dbName = 'educatopiadev',
-	db,
-	userCollection
+    dbPort = 27017,
+    dbHost = 'localhost',
+    dbName = 'educatopiadev',
+    db,
+    userCollection
 
 
-function autoLogin(user, pass, callback) {
+function autoLogin (user, pass, callback) {
 	userCollection.findOne({user: user}, function (e, o) {
 		if (o) {
 			o.pass == pass ? callback(o) : callback(null)
-		} else {
+		}
+		else {
 			callback(null)
 		}
 	})
 }
 
-function manualLogin(user, pass, callback) {
+function manualLogin (user, pass, callback) {
 	userCollection.findOne({user: user}, function (e, o) {
 		if (o == null) {
 			callback('user-not-found')
@@ -34,7 +36,8 @@ function manualLogin(user, pass, callback) {
 			validatePassword(pass, o.pass, function (err, res) {
 				if (res) {
 					callback(null, o)
-				} else {
+				}
+				else {
 					callback('invalid-password')
 				}
 			})
@@ -42,7 +45,7 @@ function manualLogin(user, pass, callback) {
 	})
 }
 
-function updateAccount(newData, callback) {
+function updateAccount (newData, callback) {
 	userCollection.findOne({user: newData.user}, function (e, o) {
 		o.name = newData.name
 		o.email = newData.email
@@ -53,7 +56,8 @@ function updateAccount(newData, callback) {
 				if (err) callback(err)
 				else callback(null, o)
 			})
-		} else {
+		}
+		else {
 			saltAndHash(newData.pass, function (hash) {
 				o.pass = hash
 				userCollection.save(o, {safe: true}, function (err) {
@@ -65,11 +69,12 @@ function updateAccount(newData, callback) {
 	})
 }
 
-function updatePassword(email, newPass, callback) {
+function updatePassword (email, newPass, callback) {
 	userCollection.findOne({email: email}, function (e, o) {
 		if (e) {
 			callback(e, null)
-		} else {
+		}
+		else {
 			saltAndHash(newPass, function (hash) {
 				o.pass = hash
 				userCollection.save(o, {safe: true}, callback)
@@ -78,17 +83,17 @@ function updatePassword(email, newPass, callback) {
 	})
 }
 
-function deleteAccount(id, callback) {
+function deleteAccount (id, callback) {
 	userCollection.remove({_id: getObjectId(id)}, callback)
 }
 
-function getAccountByEmail(email, callback) {
+function getAccountByEmail (email, callback) {
 	userCollection.findOne({email: email}, function (e, o) {
 		callback(o)
 	})
 }
 
-function validateResetLink(email, passHash, callback) {
+function validateResetLink (email, passHash, callback) {
 	userCollection.find({ $and: [
 		{email: email, pass: passHash}
 	] }, function (e, o) {
@@ -96,7 +101,7 @@ function validateResetLink(email, passHash, callback) {
 	})
 }
 
-function getAllRecords(callback) {
+function getAllRecords (callback) {
 	userCollection.find().toArray(
 		function (e, res) {
 			if (e) callback(e)
@@ -104,12 +109,12 @@ function getAllRecords(callback) {
 		})
 }
 
-function delAllRecords(callback) {
+function delAllRecords (callback) {
 	// reset userCollection collection for testing
 	userCollection.remove({}, callback)
 }
 
-function isAuthorized(req, res) {
+function isAuthorized (req, res) {
 
 	if (!req.cookie)
 		return false
@@ -119,13 +124,14 @@ function isAuthorized(req, res) {
 			if (o != null) {
 				req.session.user = o
 				return true
-			} else {
+			}
+			else {
 				return false
 			}
 		})
 }
 
-function generateSalt() {
+function generateSalt () {
 	var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ'
 	var salt = ''
 
@@ -137,26 +143,26 @@ function generateSalt() {
 	return salt
 }
 
-function md5(str) {
+function md5 (str) {
 	return crypto.createHash('md5').update(str).digest('hex')
 }
 
-function saltAndHash(pass, callback) {
+function saltAndHash (pass, callback) {
 	var salt = generateSalt()
 	callback(salt + md5(pass + salt))
 }
 
-function validatePassword(plainPass, hashedPass, callback) {
+function validatePassword (plainPass, hashedPass, callback) {
 	var salt = hashedPass.substr(0, 10)
 	var validHash = salt + md5(plainPass + salt)
 	callback(null, hashedPass === validHash)
 }
 
-function getObjectId(id) {
+function getObjectId (id) {
 	return userCollection.db.bson_serializer.ObjectID.createFromHexString(id)
 }
 
-function findById(id, callback) {
+function findById (id, callback) {
 	userCollection.findOne({_id: getObjectId(id)},
 		function (e, res) {
 			if (e) callback(e)
@@ -164,7 +170,7 @@ function findById(id, callback) {
 		})
 }
 
-function findByMultipleFields(a, callback) {
+function findByMultipleFields (a, callback) {
 	// this takes an array of name/val pairs to search against {fieldName : 'value'}
 	userCollection.find({ $or: a }).toArray(
 		function (e, results) {
@@ -176,47 +182,46 @@ function findByMultipleFields(a, callback) {
 
 // Used Methods
 
-function sendMail(userData) {
+function sendMail (userData) {
 
 	var smtpTransport,
-		mailOptions,
-		pickupTransport,
-		sendmailTransport
+	    mailOptions,
+	    pickupTransport,
+	    sendmailTransport
 
 	/*
-	smtpTransport = nodemailer.createTransport(
-			"SMTP",
-			{
-				service: "Gmail",
-				auth: {
-					user: "adrian.sieber1",
-					pass: "adwolesi@internetadress.org"
-				}
-			}
-		)
+	 smtpTransport = nodemailer.createTransport(
+	 "SMTP",
+	 {
+	 service: "Gmail",
+	 auth: {
+	 user: "adrian.sieber1",
+	 pass: "adwolesi@internetadress.org"
+	 }
+	 }
+	 )
 
-		pickupTransport = nodemailer.createTransport("PICKUP", {
-			directory: "/Users/adrian/Sites/educatopia/educatopia/mails"
-		})
-	*/
+	 pickupTransport = nodemailer.createTransport("PICKUP", {
+	 directory: "/Users/adrian/Sites/educatopia/educatopia/mails"
+	 })
+	 */
 
 
 	sendmailTransport = nodemailer.createTransport("sendmail")
-
-	console.log(userData)
 
 	nodemailer.sendMail(
 		{
 			transport: sendmailTransport,
 			from: "Educatopia <no-reply@educatopia.org>",
 			to: userData.email,
-			subject: "Hello " + userData.firstName + ' ' + userData.lastName,
-			text: "Hello world"
-			// html: "<b>Hello world ✔</b>" // html body
+			subject: "Verify your email-address for Educatopia",
+			html: jade.renderFile('views/mails/signup.jade', userData)
 		},
 		function (error, response) {
+
 			if (error)
 				throw error
+
 			else
 				console.log("Message sent: " + response.message)
 
@@ -231,16 +236,16 @@ db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}), {w:
 
 db.open(function (error) {
 
-	if (error) throw error
+	if (error)
+		throw error
 
-	console.log('Accounting module connected to database "' + dbName + '"')
+	console.log('User-management module connected to database "' + dbName + '"')
 })
 
 userCollection = db.collection('users')
 
 
-
-exports.signup = function (request, response) {
+exports.signup = function (request, callback) {
 
 	// TODO: Refactoring
 
@@ -257,13 +262,11 @@ exports.signup = function (request, response) {
 
 	userCollection.findOne({email: userData.email}, function (error, user) {
 
-		if (error) {
-			res.send(500, {error: 'User could not be found'})
-			throw error
-		}
+		if (error)
+			callback('User could not be found.')
 
 		if (user)
-			res.send(422, {error: 'Email-address is already taken'})
+			callback(null, {httpCode: 422, message: 'Email-address is already taken'})
 
 		else {
 
@@ -271,31 +274,15 @@ exports.signup = function (request, response) {
 
 			userCollection.insert(userData, {safe: true}, function (error) {
 
-				if (error) {
-					res.send(500, {error: 'User could not be saved'})
-					throw error
-				}
+				if (error)
+					callback('User could not be inserted.')
 
 				sendMail(userData)
 
-				res.send({
+				callback(null, {
 					message: 'New user was created and mail was sent'
 				})
-
-
-				// TODO: Send mail
-				//email.dispatchRegistrationMail(userData, function (error) {
-
-
-				 //if (error){
-				 //res.send(500, {error: 'Email could not be sent'})
-				 //throw error
-				 //}
-
-
-				//})
 			})
 		}
 	})
 }
-
