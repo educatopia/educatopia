@@ -1,5 +1,5 @@
 var exercises = require('../api/exercises'),
-    accounting = require('../api/accounting'),
+    users = require('../api/users'),
     api = {}
 
 api.exercises = {
@@ -11,8 +11,8 @@ api.exercises = {
 	delete: exercises.delete
 }
 
-api.accounting = {
-	signup: accounting.signup
+api.users = {
+	signup: users.signup
 }
 
 module.exports = api

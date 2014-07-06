@@ -100,11 +100,11 @@ block sidebar
 			- var time = date.toISOString().substr(0, 19).split('T').join(' ')
 			| Created:
 			br
-			small.text-muted= time
+			small.text-muted= time + ' (UTC)'
 
 		li.list-group-item
 			// TODO: time for last modified
 			- var time = 'TODO'
 			| Last Modified:
 			br
-			small.text-muted= time
+			small.text-muted= time + ' (UTC)'

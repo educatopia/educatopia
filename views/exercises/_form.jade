@@ -73,6 +73,8 @@ role='form', action=actionUrl, method='POST')
 								type='submit',
 								formaction= addFieldUrl + field + '#' + field)
 									| Add another #{field.slice(0,-1)}
+								// TODO: Use POST body to send data
+								// (name & value field in submit button)
 					else
 						.form-group
 							label.col-sm-2.control-label(for=field)

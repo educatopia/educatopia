@@ -39,10 +39,10 @@ app.get('/api/exercises/:id/history', api.exercises.getHistoryById)
 
 
 app.get('/', index)
-app.get('/login', login)
 
+app.get('/login', login)
 app.get('/signup', signup)
-app.post('/signup', api.accounting.signup)
+app.post('/signup', signup)
 
 app.get('/exercises', exercises.all)
 app.get('/exercises/create', exercises.create)

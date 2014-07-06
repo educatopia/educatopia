@@ -152,9 +152,15 @@ exports.getAll = function (callback) {
 
 exports.add = function (exercise, callback) {
 
-	var temp = {}
+	var temp = {},
+	    now = new Date()
+
+	temp.created_at = now
+	temp.updated_at = now
 
 	temp.current = deleteEmptyFields(exercise)
+	temp.current.created_at = now
+
 
 	db.collection('exercises', function (error, collection) {
 
@@ -180,15 +186,18 @@ exports.add = function (exercise, callback) {
 exports.update = function (exercise, callback) {
 
 	var id = new BSON.ObjectID(exercise.id),
-	    temp = {}
+	    temp = {},
+	    now = new Date()
 
 
 	temp['_id'] = id
+	temp.updated_at = now
+
 	temp.current = clone(deleteEmptyFields(exercise))
+	temp.current.created_at = now
 
 	delete temp.current.id
 
-	console.log(temp)
 
 	db.collection('exercises', function (error, collection) {
 
@@ -228,35 +237,6 @@ exports.update = function (exercise, callback) {
 		})
 	})
 }
-
-
-/*
- exports.update = function (req, res) {
-
- var id = req.body.id,
- exercise = req.body
-
- console.log('Updating exercise: ' + id)
- console.log(JSON.stringify(exercise))
-
- console.log(new BSON.ObjectID(id))
-
- db.collection('exercises', function (error, collection) {
- collection.update(
- {'_id': new BSON.ObjectID(id)},
- exercise,
- {safe: true}, function (error, result) {
- if (error) {
- console.log('Error updating exercise: ' + error)
- res.send({'error': 'An error has occurred'})
- } else {
- console.log('' + result + ' document(s) updated')
- res.send(exercise)
- }
- })
- })
- }
- */
 
 exports.delete = function (id, callback) {
 
