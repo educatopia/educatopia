@@ -180,34 +180,10 @@ function findByMultipleFields (a, callback) {
 }
 
 
-// Used Methods
 
 function sendMail (userData) {
 
-	var smtpTransport,
-	    mailOptions,
-	    pickupTransport,
-	    sendmailTransport
-
-	/*
-	 smtpTransport = nodemailer.createTransport(
-	 "SMTP",
-	 {
-	 service: "Gmail",
-	 auth: {
-	 user: "adrian.sieber1",
-	 pass: "adwolesi@internetadress.org"
-	 }
-	 }
-	 )
-
-	 pickupTransport = nodemailer.createTransport("PICKUP", {
-	 directory: "/Users/adrian/Sites/educatopia/educatopia/mails"
-	 })
-	 */
-
-
-	sendmailTransport = nodemailer.createTransport("sendmail")
+	var sendmailTransport = nodemailer.createTransport("sendmail")
 
 	nodemailer.sendMail(
 		{
@@ -224,9 +200,6 @@ function sendMail (userData) {
 
 			else
 				console.log("Message sent: " + response.message)
-
-			// if you don't want to use this transport object anymore, uncomment following line
-			//smtpTransport.close(); // shut down the connection pool, no more messages
 		}
 	)
 }

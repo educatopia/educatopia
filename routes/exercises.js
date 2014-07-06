@@ -49,25 +49,33 @@ exercises.one = function (req, res) {
 
 exercises.create = function (req, res) {
 
-	var renderObject = {
-		page: 'exerciseCreate',
-		schema: schema,
-		fieldsets: fieldsets
-	}
+	var renderObject
+
+	if (res.locals.authenticated) {
+
+		renderObject = {
+			page: 'exerciseCreate',
+			schema: schema,
+			fieldsets: fieldsets
+		}
 
 
-	if (req.method === 'POST') {
+		if (req.method === 'POST') {
 
-		addFields(req)
+			addFields(req)
 
-		renderObject.exercise = arrayify(req.body)
+			renderObject.exercise = arrayify(req.body)
 
-		res.render('exercises/create', renderObject)
+			res.render('exercises/create', renderObject)
+		}
+		else {
+			renderObject.exercise = {}
+
+			res.render('exercises/create', renderObject)
+		}
 	}
 	else {
-		renderObject.exercise = {}
-
-		res.render('exercises/create', renderObject)
+		res.redirect('/')
 	}
 }
 
@@ -82,9 +90,9 @@ exercises.submit = function (req, res) {
 		res.redirect('/exercises/' + exercise['_id'])
 
 		/*res.render('exercises/view', {
-			page: 'exerciseView',
-			exercise: exercise
-		})*/
+		 page: 'exerciseView',
+		 exercise: exercise
+		 })*/
 	})
 }
 
