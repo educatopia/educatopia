@@ -26,6 +26,20 @@ function deleteEmptyFields (obj) {
 	return obj
 }
 
+function exerciseToPrintFormat (exercise){
+
+	var temp = clone(exercise.current)
+
+	temp.id = exercise._id
+	temp.updatedAt = exercise.updatedAt
+
+	temp.createdAt = exercise.history ?
+	                 exercise.history[0].createdAt :
+	                 exercise.current.createdAt
+
+	return temp
+}
+
 
 exports.getById = function (id, callback) {
 
@@ -44,6 +58,7 @@ exports.getById = function (id, callback) {
 
 				else {
 					item.current.id = id
+					item.current.updatedAt = item.updatedAt
 
 					callback(null, item.current)
 				}
@@ -52,7 +67,7 @@ exports.getById = function (id, callback) {
 	})
 }
 
-exports.getRenderedById = function (id, callback) {
+exports.getByIdRendered = function (id, callback) {
 
 	id = new BSON.ObjectID(id)
 
@@ -68,7 +83,6 @@ exports.getRenderedById = function (id, callback) {
 					callback(error)
 
 				else {
-					item.current.id = id
 
 					marked(item.current.task, function (error, content) {
 
@@ -79,7 +93,7 @@ exports.getRenderedById = function (id, callback) {
 							item.current.task = content
 					})
 
-					callback(null, item.current)
+					callback(null, exerciseToPrintFormat(item))
 				}
 			})
 		}
@@ -87,6 +101,8 @@ exports.getRenderedById = function (id, callback) {
 }
 
 exports.getHistoryById = function (id, callback) {
+
+	// TODO: Also include current revision of exercise
 
 	id = new BSON.ObjectID(id)
 
@@ -155,11 +171,11 @@ exports.add = function (exercise, callback) {
 	var temp = {},
 	    now = new Date()
 
-	temp.created_at = now
-	temp.updated_at = now
+	temp.createdAt = now
+	temp.updatedAt = now
 
 	temp.current = deleteEmptyFields(exercise)
-	temp.current.created_at = now
+	temp.current.createdAt = now
 
 
 	db.collection('exercises', function (error, collection) {
@@ -183,21 +199,20 @@ exports.add = function (exercise, callback) {
 	})
 }
 
-exports.update = function (exercise, callback) {
+exports.update = function (exerciseFromForm, callback) {
 
-	var id = new BSON.ObjectID(exercise.id),
-	    temp = {},
+	var temp = {},
 	    now = new Date()
 
+	temp['_id'] = new BSON.ObjectID(exerciseFromForm.id)
 
-	temp['_id'] = id
-	temp.updated_at = now
-
-	temp.current = clone(deleteEmptyFields(exercise))
-	temp.current.created_at = now
+	temp.current = clone(deleteEmptyFields(exerciseFromForm))
 
 	delete temp.current.id
+	delete temp.current.updatedAt
 
+	temp.current.createdAt = now
+	temp.updatedAt = now
 
 	db.collection('exercises', function (error, collection) {
 
@@ -205,7 +220,8 @@ exports.update = function (exercise, callback) {
 			callback('An error occurred while loading the exercises collection: ' + error)
 
 
-		collection.findOne({'_id': id}, function (error, item) {
+		collection.findOne({'_id': temp._id}, function (error, item) {
+
 
 			if (error)
 				callback('An error occurred while loading the exercise: ' + error)
@@ -213,24 +229,20 @@ exports.update = function (exercise, callback) {
 			else {
 
 				temp.history = item.history || []
-
 				temp.history.push(item.current)
 
+
 				collection.update(
-					{'_id': id},
+					{'_id': temp._id},
 					temp,
 					{safe: true},
 					function (error, result) {
 
-						if (error)
+						if (error || result === 0)
 							callback('An error occurred while updating the exercise: ' + error)
 
-						else {
-							// TODO: remove for production
-							//setTimeout(function () {
-							callback(null, exercise)
-							//}, 2000)
-						}
+						else
+							callback(null, exerciseToPrintFormat(temp))
 					}
 				)
 			}

@@ -48,6 +48,7 @@ app.use(function (req, res, next) {
 	next()
 })
 
+/* API
 
 app
 	.route('/api/exercises')
@@ -58,6 +59,7 @@ app.get('/api/exercises/:id', api.exercises.getById)
 app.put('/api/exercises/', api.exercises.update)
 app.delete('/api/exercises/:id', api.exercises.delete)
 app.get('/api/exercises/:id/history', api.exercises.getHistoryById)
+*/
 
 
 app.get('/', index)

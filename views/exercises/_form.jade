@@ -20,86 +20,103 @@ role='form', action=actionUrl, method='POST')
 	input.hidden(type='text', name='id', value=exercise.id)
 
 	each fieldset in fieldsets
-		each field in fieldset.fields
-			- var label = field.slice(0, 1).toUpperCase() + field.slice(1)
-			- var attrs = schema[field].editorAttrs
-			- var help = schema[field].help
-			- var subtype = schema[field].subtype
 
-			case schema[field].type
-				when 'textarea'
-					.form-group
-						label.col-sm-2.control-label(for=field)
-							= label
-						.col-sm-10
-							textarea.form-control(id=field, name=field
-							)&attributes(attrs)
-								= exercise[field]
-							p.help-block.small= help
+		fieldset
+			if fieldset.legend
+				legend= fieldset.legend
 
-				when 'text'
-					.form-group
-						label.col-sm-2.control-label(for=field)
-							= label
-						.col-sm-10
-							input.form-control(
-							id=field, name=field, type=text, value=exercise[field]
-							)&attributes(attrs)
-							p.help-block.small= help
+			each field in fieldset.fields
+				- var label = field.slice(0, 1).toUpperCase() + field.slice(1)
+				- var attrs = schema[field].editorAttrs
+				- var help = schema[field].help
+				- var subtype = schema[field].subtype
 
-				when 'number'
-					.form-group
-						label.col-sm-2.control-label(for=field, name=field)
-							= label
-						.col-sm-6
-							input.col-sm-2.form-control(
-							id=field, name=field, type='number', value=exercise[field]
-							)&attributes(attrs)
-							p.help-block.small= help
-
-				when 'list'
-					if subtype == 'textarea'
-						.form-group(id=field)
-							label.col-sm-2.control-label(for=field + 'Body')
-								= label
-							.col-sm-10(id=field + 'Body')
-								if exercise[field]
-									each element, index in exercise[field]
-										+textarea(element, field, index)
-								else
-									+textarea(element, field, 0)
-
-								button.btn.btn-default.btn-xs(
-								type='submit',
-								formaction= addFieldUrl + field + '#' + field)
-									| Add another #{field.slice(0,-1)}
-								// TODO: Use POST body to send data
-								// (name & value field in submit button)
-					else
+				case schema[field].type
+					when 'textarea'
 						.form-group
 							label.col-sm-2.control-label(for=field)
 								= label
-							.col-sm-10(id=field)
-								input.form-control(
-								id=field + '0', name=field, type=subtype,
-								value=exercise[field] ? exercise[field].join(', '):''
-								)&attributes(attrs ? attrs : {})
-								p.help-block.small
-									= help
-									if schema[field].format
-										|  (#{schema[field].format})
+							.col-sm-10
+								textarea.form-control(id=field, name=field
+								)&attributes(attrs)
+									= exercise[field]
+								p.help-block.small= help
+					when 'number'
+						.form-group
+							label.col-sm-2.control-label(for=field, name=field)
+								= label
+							.col-sm-6
+								input.col-sm-2.form-control(
+								id=field, name=field, type='number', value=exercise[field]
+								)&attributes(attrs)
+								p.help-block.small= help
 
-				when 'select'
-					.form-group
-						label.col-sm-2.control-label(for=field, name=field)
-							= label
-						.col-sm-10
-							select.form-control(id=field, name=field
-							)&attributes(attrs ? attrs : {})
-								each option in schema[field].options
-									option(selected=exercise.type == option)
-										= option
-							p.help-block.small= help
+					when 'list'
+						if subtype == 'textarea'
+							.form-group(id=field)
+								label.col-sm-2.control-label(for=field + 'Body')
+									= label
+								.col-sm-10(id=field + 'Body')
+									if exercise[field]
+										each element, index in exercise[field]
+											+textarea(element, field, index)
+									else
+										+textarea(element, field, 0)
+
+									button.btn.btn-default.btn-xs(
+									type='submit',
+									formaction= addFieldUrl + field + '#' + field)
+										| Add another #{field.slice(0,-1)}
+									// TODO: Use POST body to send data
+									// (name & value field in submit button)
+						else
+							.form-group
+								label.col-sm-2.control-label(for=field)
+									= label
+								.col-sm-10(id=field)
+									input.form-control(
+									id=field + '0', name=field, type=subtype,
+									value=exercise[field] ? exercise[field].join(', '):''
+									)&attributes(attrs ? attrs : {})
+									p.help-block.small
+										= help
+										if schema[field].format
+											|  (#{schema[field].format})
+
+					when 'select'
+						.form-group
+							label.col-sm-2.control-label(for=field, name=field)
+								= label
+							.col-sm-10
+								select.form-control(id=field, name=field
+								)&attributes(attrs ? attrs : {})
+									each option in schema[field].options
+										option(selected=exercise.type == option)
+											= option
+								p.help-block.small= help
+
+					when 'date'
+						.form-group
+							label.col-sm-2.control-label(for=field)
+								= schema[field].label || label
+							.col-sm-10
+								input.form-control(
+								id=field, name=field,
+								type='datetime', value=exercise[field].toISOString()
+								)&attributes(attrs ? attrs : {})
+
+								p.help-block.small= help
+
+					default
+						.form-group
+							label.col-sm-2.control-label(for=field)
+								= schema[field].label || label
+							.col-sm-10
+								input.form-control(
+								id=field, name=field, type='text', value=exercise[field]
+								)&attributes(attrs ? attrs : {})
+
+								p.help-block.small= help
 
 	.form-group
 		.col-sm-offset-2.col-sm-10

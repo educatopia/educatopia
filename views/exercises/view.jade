@@ -94,17 +94,15 @@ block sidebar
 				= exercise.note
 
 		li.list-group-item
-			- console.log(exercise.id)
-			- var timestamp = String(exercise.id).substr(0, 8)
-			- var date = new Date(parseInt(timestamp, 16) * 1000)
-			- var time = date.toISOString().substr(0, 19).split('T').join(' ')
+			- var createdAt = exercise.createdAt.toISOString().substr(0, 19).split('T').join(' ')
 			| Created:
 			br
-			small.text-muted= time + ' (UTC)'
+			if exercise.createdAt
+				small.text-muted= createdAt + ' (UTC)'
 
 		li.list-group-item
-			// TODO: time for last modified
-			- var time = 'TODO'
+			- var updatedAt = exercise.updatedAt.toISOString().substr(0, 19).split('T').join(' ')
 			| Last Modified:
 			br
-			small.text-muted= time + ' (UTC)'
+			if exercise.updatedAt
+				small.text-muted= updatedAt + ' (UTC)'

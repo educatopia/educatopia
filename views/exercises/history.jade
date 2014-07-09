@@ -5,15 +5,14 @@ block thirdTab
 		table.table.table-striped.table-condensed
 			thead
 				tr
-					th Nr
+					th Revision
 					th Created
 					th User
 			tbody
-				each exercise, index in history
-					- console.log(exercise)
+				each exercise, index in history.reverse()
 					tr
-						td= (index + 1)
-						td Time
+						td= history.length - index
+						td= exercise.createdAt.toISOString()
 						td User
 	else
 		.alert.alert-info.

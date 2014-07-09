@@ -12,7 +12,7 @@ var exercisesApi = require('../api/exercises'),
     fieldsets = yaml.safeLoad(fs.readFileSync(fieldsetsPath, 'utf8'))
 
 
-function arrayify (object) {
+function stringsToArrays (object) {
 
 	var key
 
@@ -20,6 +20,18 @@ function arrayify (object) {
 		if (schema.hasOwnProperty(key))
 			if (schema[key].type === 'list' && schema[key].subtype === 'text')
 				object[key] = object[key].split(/\s*,\s*/)
+
+	return object
+}
+
+function stringToDate (object){
+
+	var key
+
+	for (key in schema)
+		if (schema.hasOwnProperty(key))
+			if (schema[key].type === 'date')
+				object[key] = new Date(object[key])
 
 	return object
 }
@@ -35,7 +47,7 @@ function addFields (req) {
 
 exercises.one = function (req, res) {
 
-	exercisesApi.getRenderedById(req.params.id, function (error, exercise) {
+	exercisesApi.getByIdRendered(req.params.id, function (error, exercise) {
 
 		if (error)
 			throw new Error(error)
@@ -64,7 +76,7 @@ exercises.create = function (req, res) {
 
 			addFields(req)
 
-			renderObject.exercise = arrayify(req.body)
+			renderObject.exercise = stringsToArrays(req.body)
 
 			res.render('exercises/create', renderObject)
 		}
@@ -112,19 +124,18 @@ exercises.all = function (req, res) {
 
 exercises.edit = function (req, res) {
 
-	var key,
-	    renderObject = {
-		    page: 'exerciseEdit',
-		    schema: schema,
-		    fieldsets: fieldsets
-	    }
+	var renderObject = {
+		page: 'exerciseEdit',
+		schema: schema,
+		fieldsets: fieldsets
+	}
 
 
 	if (req.method === 'POST') {
 
 		addFields(req)
 
-		renderObject.exercise = arrayify(req.body)
+		renderObject.exercise = stringsToArrays(req.body)
 
 		res.render('exercises/edit', renderObject)
 	}
@@ -138,6 +149,7 @@ exercises.edit = function (req, res) {
 
 			res.render('exercises/edit', renderObject)
 		})
+
 }
 
 exercises.history = function (req, res) {
@@ -159,16 +171,21 @@ exercises.history = function (req, res) {
 
 exercises.update = function (req, res) {
 
-	exercisesApi.update(arrayify(req.body, schema), function (error, exercise) {
+	var updatedExercise = stringToDate(stringsToArrays(req.body, schema))
 
-		if (error)
-			throw new Error(error)
+	exercisesApi.update(
+		updatedExercise,
+		function (error, exercise) {
 
-		res.render('exercises/view', {
-			page: 'exerciseView',
-			exercise: exercise
-		})
-	})
+			if (error)
+				throw new Error(error)
+
+			res.render('exercises/view', {
+				page: 'exerciseView',
+				exercise: exercise
+			})
+		}
+	)
 }
 
 
