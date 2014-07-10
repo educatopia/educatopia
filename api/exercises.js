@@ -26,7 +26,7 @@ function deleteEmptyFields (obj) {
 	return obj
 }
 
-function exerciseToPrintFormat (exercise){
+function exerciseToPrintFormat (exercise) {
 
 	var temp = clone(exercise.current)
 
@@ -102,8 +102,6 @@ exports.getByIdRendered = function (id, callback) {
 
 exports.getHistoryById = function (id, callback) {
 
-	// TODO: Also include current revision of exercise
-
 	id = new BSON.ObjectID(id)
 
 	db.collection('exercises', function (error, collection) {
@@ -111,15 +109,14 @@ exports.getHistoryById = function (id, callback) {
 		if (error)
 			callback(error)
 
-		else {
+		else
 			collection.findOne({'_id': id}, function (error, item) {
 
 				if (error)
 					callback(error)
 				else
-					callback(null, item.history)
+					callback(null, item.history.concat(item.current))
 			})
-		}
 	})
 }
 
