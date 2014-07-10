@@ -16,6 +16,15 @@ var email = require('./email-dispatcher'),
     userCollection
 
 
+function randomBase64String (length) {
+	return crypto
+		.randomBytes(Math.ceil(length * 0.75))
+		.toString('base64')
+		.slice(0, length)
+		.replace(/\+/g, '-')
+		.replace(/\//g, '_')
+}
+
 function autoLogin (user, pass, callback) {
 	userCollection.findOne({user: user}, function (e, o) {
 		if (o) {
@@ -180,7 +189,6 @@ function findByMultipleFields (a, callback) {
 }
 
 
-
 function sendMail (userData) {
 
 	var sendmailTransport = nodemailer.createTransport("sendmail")
@@ -191,7 +199,10 @@ function sendMail (userData) {
 			from: "Educatopia <no-reply@educatopia.org>",
 			to: userData.email,
 			subject: "Verify your email-address for Educatopia",
-			html: jade.renderFile('views/mails/signup.jade', userData)
+			html: jade.renderFile(
+				'views/mails/signup.jade',
+				{'userData': userData}
+			)
 		},
 		function (error, response) {
 
@@ -220,9 +231,8 @@ userCollection = db.collection('users')
 
 exports.signup = function (request, callback) {
 
-	// TODO: Refactoring
-
-	var userData
+	var userData,
+	    now = new Date()
 
 	//if (isAuthorized(req, res))
 	//	return
@@ -230,7 +240,13 @@ exports.signup = function (request, callback) {
 	userData = {
 		username: request.body.username,
 		email: request.body.email,
-		password: request.body.password
+		password: request.body.password,
+		confirmation: {
+			completed: false,
+			code: randomBase64String(33)
+		},
+		createdAt: now,
+		updatedAt: now
 	}
 
 	userCollection.findOne({email: userData.email}, function (error, user) {
@@ -242,8 +258,6 @@ exports.signup = function (request, callback) {
 			callback(null, {httpCode: 422, message: 'Email-address is already taken'})
 
 		else {
-
-			userData.staged = true
 
 			userCollection.insert(userData, {safe: true}, function (error) {
 
@@ -258,4 +272,36 @@ exports.signup = function (request, callback) {
 			})
 		}
 	})
+}
+
+exports.confirm = function (confirmationCode, callback) {
+
+	userCollection.findOne(
+		{'confirmation.code': confirmationCode},
+		function (error, user) {
+
+			if (error || !user)
+				callback('User for confirmation could not be found.')
+
+			else {
+
+				delete user.confirmation
+
+				userCollection.update(
+					{'_id': user._id},
+					user,
+					{safe: true},
+					function (error, result) {
+
+						if (error || result === 0)
+							callback('Following error occurred while updating user ' +
+							         username + ': ' + error)
+
+						else
+							callback(null, user)
+					}
+				)
+			}
+		}
+	)
 }

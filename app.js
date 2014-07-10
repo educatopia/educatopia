@@ -14,6 +14,7 @@ var express = require('express'),
     login = require('./routes/login'),
     signup = require('./routes/signup'),
     exercises = require('./routes/exercises'),
+    users = require('./routes/users'),
     reference = require('./routes/reference'),
 
     port = process.env.PORT || 3000,
@@ -69,6 +70,9 @@ app.get('/login', login)
 app.route('/signup')
 	.get(signup)
 	.post(signup)
+
+
+app.get('/confirm/:confirmationCode', users.confirm)
 
 app.get('/exercises', exercises.all)
 
