@@ -1,4 +1,16 @@
 extends ../layout
 
 block content
-	h1= user.username
+	.row
+		.col-md-3
+			img(
+			src='/img/placeholderProfilePicture.png',
+			alt='Profile picture of' + user.username
+			)
+			h1= user.name
+			h2 @#{user.username}
+			hr
+		.col-md-9
+			//h2 #{user.exercises.length} created exercises
+			h2 0 created exercises
+			hr

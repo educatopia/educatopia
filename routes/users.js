@@ -9,7 +9,7 @@ users.confirm = function (req, res) {
 		if (error)
 			throw new Error(error)
 
-		res.redirect('/users/' + user.username)
+		res.redirect('/' + user.username)
 	})
 }
 

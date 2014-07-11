@@ -72,9 +72,6 @@ app.route('/signup')
 	.post(signup)
 
 
-app.get('/confirm/:confirmationCode', users.confirm)
-app.get('/:username', users.profile)
-
 app.get('/exercises', exercises.all)
 
 app.route('/exercises/:id')
@@ -95,6 +92,10 @@ app.route('/exercises/:id/edit')
 app.get('/exercises/:id/history', exercises.history)
 
 app.get('/reference', reference)
+
+
+app.get('/confirm/:confirmationCode', users.confirm)
+app.get('/:username', users.profile)
 
 
 app.listen(port)

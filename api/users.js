@@ -201,7 +201,9 @@ function sendMail (userData) {
 			subject: "Verify your email-address for Educatopia",
 			html: jade.renderFile(
 				'views/mails/signup.jade',
-				{'userData': userData}
+				{
+					'userData': userData
+				}
 			)
 		},
 		function (error, response) {
@@ -210,7 +212,7 @@ function sendMail (userData) {
 				throw error
 
 			else
-				console.log("Message sent: " + response.message)
+				console.log("Message sent: " + response)
 		}
 	)
 }
@@ -229,7 +231,7 @@ db.open(function (error) {
 userCollection = db.collection('users')
 
 
-exports.getByUsername = function (username, callback){
+exports.getByUsername = function (username, callback) {
 
 	userCollection.findOne({username: username}, function (error, user) {
 
@@ -242,44 +244,68 @@ exports.getByUsername = function (username, callback){
 
 exports.signup = function (request, callback) {
 
-	var userData,
-	    now = new Date()
+	var now = new Date(),
+	    blackList = [
+		    'about',
+		    'api',
+		    'confirm',
+		    'exercises',
+		    'login',
+		    'request',
+		    'settings',
+		    'signup',
+		    'team',
+		    'help'
+	    ],
+	    userData = {
+		    username: request.body.username,
+		    email: request.body.email,
+		    password: request.body.password,
+		    confirmationCode: randomBase64String(33),
+		    createdAt: now,
+		    updatedAt: now
+	    }
+
+
+	if (blackList.indexOf(userData.username) != -1) {
+		callback(null, {message: 'This username is not allowed.'})
+		return
+	}
 
 	//if (isAuthorized(req, res))
 	//	return
+	userCollection.findOne(
+		{ $or: [
+			{email: userData.email},
+			{username: userData.username}
+		]},
+		function (error, user) {
 
-	userData = {
-		username: request.body.username,
-		email: request.body.email,
-		password: request.body.password,
-		confirmationCode: randomBase64String(33),
-		createdAt: now,
-		updatedAt: now
-	}
+			if (error)
+				callback('User could not be found.')
 
-	userCollection.findOne({email: userData.email}, function (error, user) {
+			else if (user) {
 
-		if (error)
-			callback('User could not be found.')
+				if (user.email === userData.email)
+					callback(null, {httpCode: 422, message: 'Email-address is already taken'})
+				else
+					callback(null, {httpCode: 422, message: 'Username is already taken'})
+			}
+			else {
 
-		if (user)
-			callback(null, {httpCode: 422, message: 'Email-address is already taken'})
+				userCollection.insert(userData, {safe: true}, function (error) {
 
-		else {
+					if (error)
+						callback('User could not be inserted.')
 
-			userCollection.insert(userData, {safe: true}, function (error) {
+					sendMail(userData)
 
-				if (error)
-					callback('User could not be inserted.')
-
-				sendMail(userData)
-
-				callback(null, {
-					message: 'New user was created and mail was sent'
+					callback(null, {
+						message: 'New user was created and mail was sent'
+					})
 				})
-			})
-		}
-	})
+			}
+		})
 }
 
 exports.confirm = function (confirmationCode, callback) {
