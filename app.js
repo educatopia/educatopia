@@ -73,6 +73,7 @@ app.route('/signup')
 
 
 app.get('/confirm/:confirmationCode', users.confirm)
+app.get('/:username', users.profile)
 
 app.get('/exercises', exercises.all)
 

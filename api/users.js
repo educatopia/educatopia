@@ -229,6 +229,17 @@ db.open(function (error) {
 userCollection = db.collection('users')
 
 
+exports.getByUsername = function (username, callback){
+
+	userCollection.findOne({username: username}, function (error, user) {
+
+		if (error)
+			callback('User could not be found.')
+		else
+			callback(null, user)
+	})
+}
+
 exports.signup = function (request, callback) {
 
 	var userData,

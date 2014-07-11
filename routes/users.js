@@ -13,5 +13,19 @@ users.confirm = function (req, res) {
 	})
 }
 
+users.profile = function (req, res) {
+
+	usersApi.getByUsername(req.params.username, function (error, user) {
+
+		if (error)
+			throw new Error(error)
+
+		res.render('users/profile', {
+			page: 'profile',
+			user: user
+		})
+	})
+}
+
 
 module.exports = users
