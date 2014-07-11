@@ -241,10 +241,7 @@ exports.signup = function (request, callback) {
 		username: request.body.username,
 		email: request.body.email,
 		password: request.body.password,
-		confirmation: {
-			completed: false,
-			code: randomBase64String(33)
-		},
+		confirmationCode: randomBase64String(33),
 		createdAt: now,
 		updatedAt: now
 	}
@@ -277,7 +274,7 @@ exports.signup = function (request, callback) {
 exports.confirm = function (confirmationCode, callback) {
 
 	userCollection.findOne(
-		{'confirmation.code': confirmationCode},
+		{'confirmationCode': confirmationCode},
 		function (error, user) {
 
 			if (error || !user)
@@ -285,7 +282,7 @@ exports.confirm = function (confirmationCode, callback) {
 
 			else {
 
-				delete user.confirmation
+				delete user.confirmationCode
 
 				userCollection.update(
 					{'_id': user._id},
