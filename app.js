@@ -12,6 +12,7 @@ var express = require('express'),
     api = require('./routes/api'),
     index = require('./routes/index'),
     login = require('./routes/login'),
+    logout = require('./routes/logout'),
     signup = require('./routes/signup'),
     exercises = require('./routes/exercises'),
     users = require('./routes/users'),
@@ -23,8 +24,6 @@ var express = require('express'),
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
-
-app.set('loggedIn', false)
 
 if (env === 'development')
 	app.use(errorHandler())
@@ -38,6 +37,11 @@ app.use(bodyParser())
 app.use(cookieParser('mustached wookie'))
 app.use(session({secret: 'potential octo batman'}))
 
+app.use(function (request, response, next) {
+	response.locals.session = request.session
+	next()
+})
+
 
 app.get('/', index)
 
@@ -45,6 +49,8 @@ app
 	.route('/login')
 	.get(login)
 	.post(login)
+
+app.get('/logout', logout)
 
 app
 	.route('/signup')

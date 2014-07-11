@@ -22,15 +22,12 @@ users.profile = function (request, res) {
 		request.params.username,
 		function (error, user) {
 
-			console.log(user)
-
 			if (error)
 				throw new Error(error)
 
 			res.render('users/profile', {
 				page: 'profile',
-				user: user,
-				session: request.session
+				user: user
 			})
 		}
 	)

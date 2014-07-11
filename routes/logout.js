@@ -1,6 +1,5 @@
 module.exports = function (request, response) {
 
-	response.render('index', {
-		page: 'home'
-	})
+	request.session.destroy()
+	response.redirect('/')
 }

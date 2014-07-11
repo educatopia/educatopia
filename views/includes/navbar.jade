@@ -12,12 +12,11 @@ nav.navbar.navbar-inverse.navbar-fixed-top(role="navigation")
 				a(href='/' + session.user.username)
 					= session.user.username
 			li
-				a#ogoutButton(href='/logout').
-					Logout
-			li
 				a#newExercise(href='/exercises/create')
 					span.glyphicon.glyphicon-edit
-
+			li
+				a#ogoutButton(href='/logout').
+					Logout
 	else
 		ul.nav.navbar-nav.navbar-right
 			li

@@ -237,8 +237,6 @@ exports.getByUsername = function (username, callback) {
 		{username: username},
 		function (error, user) {
 
-			console.log(username)
-
 			if (error)
 				callback('User could not be found.')
 			else

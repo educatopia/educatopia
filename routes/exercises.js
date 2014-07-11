@@ -54,8 +54,7 @@ exercises.one = function (request, response) {
 
 		response.render('exercises/view', {
 			page: 'exerciseView',
-			exercise: exercise,
-			session: request.session
+			exercise: exercise
 		})
 	})
 }
@@ -118,8 +117,7 @@ exercises.all = function (request, response) {
 
 		response.render('exercises/all', {
 			page: 'exercises',
-			exercises: exercises,
-			session: request.session
+			exercises: exercises
 		})
 	})
 }
@@ -166,8 +164,7 @@ exercises.history = function (request, response) {
 			history: history,
 			exercise: {
 				id: request.params.id
-			},
-			session: request.session
+			}
 		})
 	})
 }

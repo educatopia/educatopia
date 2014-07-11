@@ -114,8 +114,12 @@ exports.getHistoryById = function (id, callback) {
 
 				if (error)
 					callback(error)
-				else
+
+				else if (item.history)
 					callback(null, item.history.concat(item.current))
+
+				else
+					callback()
 			})
 	})
 }

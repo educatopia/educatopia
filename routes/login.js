@@ -2,15 +2,13 @@ var usersApi = require('../api/users')
 
 module.exports = function (request, response) {
 
-	console.log('asdf')
-
 	if (request.method === 'POST')
 		usersApi.login(
 			request.body.username,
 			request.body.password,
 			function (error, user) {
 
-				if (error || !user){
+				if (error || !user) {
 					console.error('Following error occurred during login: '
 						+ error.message)
 
@@ -26,11 +24,8 @@ module.exports = function (request, response) {
 			}
 		)
 
-	else {
-		console.log('test')
-
+	else
 		response.render('login', {
 			page: 'login'
 		})
-	}
 }
