@@ -1,7 +1,7 @@
-module.exports = function (req, res) {
+module.exports = function (request, response) {
 
-	res.render('index', {
-		//page: 'home',
-		//files: data
+	response.render('index', {
+		page: 'home',
+		session: request.session
 	})
 }

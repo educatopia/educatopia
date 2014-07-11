@@ -2,29 +2,38 @@ var usersApi = require('../api/users'),
     users = {}
 
 
-users.confirm = function (req, res) {
+users.confirm = function (request, res) {
 
-	usersApi.confirm(req.params.confirmationCode, function (error, user) {
+	usersApi.confirm(
+		request.params.confirmationCode,
+		function (error, user) {
 
-		if (error)
-			throw new Error(error)
+			if (error)
+				throw new Error(error)
 
-		res.redirect('/' + user.username)
-	})
+			res.redirect('/' + user.username)
+		}
+	)
 }
 
-users.profile = function (req, res) {
+users.profile = function (request, res) {
 
-	usersApi.getByUsername(req.params.username, function (error, user) {
+	usersApi.getByUsername(
+		request.params.username,
+		function (error, user) {
 
-		if (error)
-			throw new Error(error)
+			console.log(user)
 
-		res.render('users/profile', {
-			page: 'profile',
-			user: user
-		})
-	})
+			if (error)
+				throw new Error(error)
+
+			res.render('users/profile', {
+				page: 'profile',
+				user: user,
+				session: request.session
+			})
+		}
+	)
 }
 
 

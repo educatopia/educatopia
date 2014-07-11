@@ -6,6 +6,19 @@ nav.navbar.navbar-inverse.navbar-fixed-top(role="navigation")
 			li: a(href='/exercises') Exercises
 			//li: a(href='/reference') Reference
 
+	if session && session.user
+		ul.nav.navbar-nav.navbar-right
+			li
+				a(href='/' + session.user.username)
+					= session.user.username
+			li
+				a#ogoutButton(href='/logout').
+					Logout
+			li
+				a#newExercise(href='/exercises/create')
+					span.glyphicon.glyphicon-edit
+
+	else
 		ul.nav.navbar-nav.navbar-right
 			li
 				a#loginButton(href='/login').
@@ -13,6 +26,3 @@ nav.navbar.navbar-inverse.navbar-fixed-top(role="navigation")
 			li
 				a#signupButton(href='/signup').
 					Signup
-			li
-				a#newExercise(href='/exercises/create')
-					span.glyphicon.glyphicon-edit

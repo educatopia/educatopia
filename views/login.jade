@@ -1,22 +1,26 @@
 extends layout
 
 block content
-	form(action='/login')
+	form(action='/login', method='post')
 		fieldset
 			legend Login
 
-			label(for='identifier') Email/username
+			label(for='username') Username
 			br
-			input#identifier(type='text')
+			input#identifier(type='text', name='username')
 
 			br
 			br
 
 			label(for='password') Password
 			br
-			input#password(type='password')
+			input#password(type='password', name='password')
 
 			br
 			br
 
 			input(type='submit', value='Login')
+
+	if error
+		br
+		p.alert.alert-danger An error occured during login!

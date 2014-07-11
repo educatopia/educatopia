@@ -35,66 +35,47 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(env === 'development' ? morgan('dev') : morgan())
 
 app.use(bodyParser())
+app.use(cookieParser('mustached wookie'))
 app.use(session({secret: 'potential octo batman'}))
-
-app.use(function (req, res, next) {
-
-	if (req.cookies) {
-		res.locals.user = req.cookies.user
-		res.locals.authenticated = (req.cookies.user && req.cookies.pass)
-	}
-	else
-		res.locals.authenticated = false
-
-	next()
-})
-
-/* API
-
-app
-	.route('/api/exercises')
-	.get(api.exercises.getAll)
-	.post(api.exercises.add)
-
-app.get('/api/exercises/:id', api.exercises.getById)
-app.put('/api/exercises/', api.exercises.update)
-app.delete('/api/exercises/:id', api.exercises.delete)
-app.get('/api/exercises/:id/history', api.exercises.getHistoryById)
-*/
 
 
 app.get('/', index)
 
-app.get('/login', login)
+app
+	.route('/login')
+	.get(login)
+	.post(login)
 
-app.route('/signup')
+app
+	.route('/signup')
 	.get(signup)
 	.post(signup)
 
 
 app.get('/exercises', exercises.all)
 
-app.route('/exercises/:id')
+app
+	.route('/exercises/:id')
 	.get(exercises.one)
 	.post(exercises.update)
 
-app.route('/exercises/create')
+app
+	.route('/exercises/:id/edit')
+	.get(exercises.edit)
+	.post(exercises.edit)
+
+app.get('/exercises/:id/history', exercises.history)
+
+app
+	.route('/exercises/create')
 	.get(exercises.create)
 	.post(exercises.create)
 
 app.post('/exercises/submit', exercises.submit)
 
 
-app.route('/exercises/:id/edit')
-	.get(exercises.edit)
-	.post(exercises.edit)
-
-app.get('/exercises/:id/history', exercises.history)
-
-app.get('/reference', reference)
-
-
 app.get('/confirm/:confirmationCode', users.confirm)
+
 app.get('/:username', users.profile)
 
 

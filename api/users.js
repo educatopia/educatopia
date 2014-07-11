@@ -233,13 +233,18 @@ userCollection = db.collection('users')
 
 exports.getByUsername = function (username, callback) {
 
-	userCollection.findOne({username: username}, function (error, user) {
+	userCollection.findOne(
+		{username: username},
+		function (error, user) {
 
-		if (error)
-			callback('User could not be found.')
-		else
-			callback(null, user)
-	})
+			console.log(username)
+
+			if (error)
+				callback('User could not be found.')
+			else
+				callback(null, user)
+		}
+	)
 }
 
 exports.signup = function (request, callback) {
@@ -336,6 +341,26 @@ exports.confirm = function (confirmationCode, callback) {
 					}
 				)
 			}
+		}
+	)
+}
+
+exports.login = function (username, passwordHash, callback) {
+
+	userCollection.findOne(
+		{username: username},
+		function (error, user) {
+
+			if (error) {
+				console.error('Could not find user supposed to be logged in.')
+				callback(error)
+			}
+
+			else if (user.password === passwordHash)
+				callback(null, user)
+
+			else
+				callback({message: 'Wrong password'})
 		}
 	)
 }

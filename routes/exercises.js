@@ -36,34 +36,35 @@ function stringToDate (object){
 	return object
 }
 
-function addFields (req) {
-	for (key in req.query)
-		if (req.query.hasOwnProperty(key)) {
-			req.body[key] = req.body[key] || []
-			req.body[key].push("")
+function addFields (request) {
+	for (key in request.query)
+		if (request.query.hasOwnProperty(key)) {
+			request.body[key] = request.body[key] || []
+			request.body[key].push("")
 		}
 }
 
 
-exercises.one = function (req, res) {
+exercises.one = function (request, response) {
 
-	exercisesApi.getByIdRendered(req.params.id, function (error, exercise) {
+	exercisesApi.getByIdRendered(request.params.id, function (error, exercise) {
 
 		if (error)
 			throw new Error(error)
 
-		res.render('exercises/view', {
+		response.render('exercises/view', {
 			page: 'exerciseView',
-			exercise: exercise
+			exercise: exercise,
+			session: request.session
 		})
 	})
 }
 
-exercises.create = function (req, res) {
+exercises.create = function (request, response) {
 
 	var renderObject
 
-	if (res.locals.authenticated) {
+	if (response.locals.authenticated) {
 
 		renderObject = {
 			page: 'exerciseCreate',
@@ -72,57 +73,58 @@ exercises.create = function (req, res) {
 		}
 
 
-		if (req.method === 'POST') {
+		if (request.method === 'POST') {
 
-			addFields(req)
+			addFields(requestuest)
 
-			renderObject.exercise = stringsToArrays(req.body)
+			renderObject.exercise = stringsToArrays(request.body)
 
-			res.render('exercises/create', renderObject)
+			response.render('exercises/create', renderObject)
 		}
 		else {
 			renderObject.exercise = {}
 
-			res.render('exercises/create', renderObject)
+			response.render('exercises/create', renderObject)
 		}
 	}
 	else {
-		res.redirect('/')
+		response.redirect('/')
 	}
 }
 
 
-exercises.submit = function (req, res) {
+exercises.submit = function (request, response) {
 
-	exercisesApi.add(req.body, function (error, exercise) {
+	exercisesApi.add(request.body, function (error, exercise) {
 
 		if (error)
 			throw new Error(error)
 
-		res.redirect('/exercises/' + exercise['_id'])
+		response.redirect('/exercises/' + exercise['_id'])
 
-		/*res.render('exercises/view', {
+		/*response.render('exercises/view', {
 		 page: 'exerciseView',
 		 exercise: exercise
 		 })*/
 	})
 }
 
-exercises.all = function (req, res) {
+exercises.all = function (request, response) {
 
 	exercisesApi.getAll(function (error, exercises) {
 
 		if (error)
 			throw new Error(error)
 
-		res.render('exercises/all', {
+		response.render('exercises/all', {
 			page: 'exercises',
-			exercises: exercises
+			exercises: exercises,
+			session: request.session
 		})
 	})
 }
 
-exercises.edit = function (req, res) {
+exercises.edit = function (request, response) {
 
 	var renderObject = {
 		page: 'exerciseEdit',
@@ -131,47 +133,48 @@ exercises.edit = function (req, res) {
 	}
 
 
-	if (req.method === 'POST') {
+	if (request.method === 'POST') {
 
-		addFields(req)
+		addFields(request)
 
-		renderObject.exercise = stringsToArrays(req.body)
+		renderObject.exercise = stringsToArrays(request.body)
 
-		res.render('exercises/edit', renderObject)
+		response.render('exercises/edit', renderObject)
 	}
 	else
-		exercisesApi.getById(req.params.id, function (error, exercise) {
+		exercisesApi.getById(request.params.id, function (error, exercise) {
 
 			if (error)
 				throw new Error(error)
 
 			renderObject.exercise = exercise
 
-			res.render('exercises/edit', renderObject)
+			response.render('exercises/edit', renderObject)
 		})
 
 }
 
-exercises.history = function (req, res) {
+exercises.history = function (request, response) {
 
-	exercisesApi.getHistoryById(req.params.id, function (error, history) {
+	exercisesApi.getHistoryById(request.params.id, function (error, history) {
 
 		if (error)
 			throw new Error(error)
 
-		res.render('exercises/history', {
+		response.render('exercises/history', {
 			page: 'exerciseHistory',
 			history: history,
 			exercise: {
-				id: req.params.id
-			}
+				id: request.params.id
+			},
+			session: request.session
 		})
 	})
 }
 
-exercises.update = function (req, res) {
+exercises.update = function (request, response) {
 
-	var updatedExercise = stringToDate(stringsToArrays(req.body, schema))
+	var updatedExercise = stringToDate(stringsToArrays(request.body, schema))
 
 	exercisesApi.update(
 		updatedExercise,
@@ -180,7 +183,7 @@ exercises.update = function (req, res) {
 			if (error)
 				throw new Error(error)
 
-			res.render('exercises/view', {
+			response.render('exercises/view', {
 				page: 'exerciseView',
 				exercise: exercise
 			})
