@@ -27,7 +27,10 @@ function stringsToObjects (object) {
 	return object
 }
 
-function addFields (request) {
+function addEmptyFields (request) {
+
+	// Adds empty fields to render empty input-fields in form
+
 	for (key in request.query)
 		if (request.query.hasOwnProperty(key)) {
 			request.body[key] = request.body[key] || []
@@ -67,7 +70,7 @@ exercises.create = function (request, response) {
 
 	if (request.method === 'POST' && request.session.user) {
 
-		addFields(request)
+		addEmptyFields(request)
 
 		renderObject.exercise = stringsToObjects(request.body)
 
@@ -126,13 +129,14 @@ exercises.edit = function (request, response, next) {
 
 	if (request.method === 'POST' && request.session.user) {
 
-		addFields(request)
+		addEmptyFields(request)
 
 		renderObject.exercise = stringsToObjects(request.body)
 
 		response.render('exercises/edit', renderObject)
 	}
-	else {
+
+	else
 		exercisesApi.getById(
 			request.params.id,
 			function (error, exercise) {
@@ -148,7 +152,6 @@ exercises.edit = function (request, response, next) {
 					next()
 			}
 		)
-	}
 }
 
 exercises.history = function (request, response, next) {
@@ -186,10 +189,12 @@ exercises.update = function (request, response) {
 			if (error)
 				throw new Error(error)
 
-			response.render('exercises/view', {
-				page: 'exerciseView',
-				exercise: exercise
-			})
+			else {
+				response.render('exercises/view', {
+					page: 'exerciseView',
+					exercise: exercise
+				})
+			}
 		}
 	)
 }

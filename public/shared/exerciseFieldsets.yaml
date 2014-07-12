@@ -1,12 +1,12 @@
 -
-  legend: Exercise
+  legend: exercise
   fields:
     - task
     - approach
     - solutions
 
 -
-  legend: Details
+  legend: details
   fields:
     - subjects
     - type
@@ -16,9 +16,3 @@
     - hints
     - tags
     - note
-
--
-  legend: Admin
-  fields:
-    - createdAt
-    - updatedAt

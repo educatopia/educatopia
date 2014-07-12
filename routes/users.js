@@ -12,8 +12,13 @@ users.confirm = function (request, response, next) {
 			if (error)
 				console.error(error)
 
-			if (user)
-				response.redirect('/' + user.username)
+			else if (user)
+				response.render('login', {
+					page: 'login',
+					message: 'You are email-address has been confirmed. ' +
+					         'You can log in now!'
+				})
+
 			else
 				next()
 		}
@@ -29,7 +34,7 @@ users.profile = function (request, response, next) {
 			if (error)
 				console.error(error)
 
-			if (user)
+			else if (user)
 				exercisesApi.getByUser(
 					request.params.username,
 					function (error, exercises) {

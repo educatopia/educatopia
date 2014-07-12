@@ -39,6 +39,10 @@ function exerciseToPrintFormat (exercise) {
 	                 exercise.history[0].createdAt :
 	                 exercise.current.createdAt
 
+	temp.createdBy = exercise.history ?
+	                 exercise.history[0].createdBy :
+	                 exercise.current.createdBy
+
 	return temp
 }
 
@@ -61,12 +65,8 @@ exports.getById = function (id, callback) {
 			if (error || !exercise)
 				callback(error)
 
-			else {
-				exercise.current.id = id
-				exercise.current.updatedAt = exercise.updatedAt
-
-				callback(null, exercise.current)
-			}
+			else
+				callback(null, exerciseToPrintFormat(exercise))
 		}
 	)
 }
@@ -167,7 +167,15 @@ exports.getAll = function (callback) {
 
 exports.getByUser = function (username, callback) {
 	exercisesCollection
-		.find({'current.createdBy': username})
+		.find({
+			$or: [
+				{$and: [
+					{'current.createdBy': username},
+					{'history': {$exists: false}}
+				]},
+				{'history.0.createdBy': username}
+			]
+		})
 		.sort({_id: 1})
 		.toArray(function (error, exercises) {
 
@@ -216,6 +224,7 @@ exports.update = function (exerciseFromForm, user, callback) {
 
 	temp.current = clone(deleteEmptyFields(exerciseFromForm))
 
+
 	delete temp.current.id
 	delete temp.current.updatedAt
 
@@ -234,7 +243,6 @@ exports.update = function (exerciseFromForm, user, callback) {
 
 			temp.history = item.history || []
 			temp.history.push(item.current)
-
 
 			exercisesCollection.update(
 				{'_id': temp._id},

@@ -94,11 +94,3 @@ hints:
   editorAttrs:
     rows: 3j
   help: Any information which helps one to solve the exercise when he's stuck.
-
-createdAt:
-  type: date
-  label: Created at
-
-updatedAt:
-  type: date
-  label: Updated at

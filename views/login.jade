@@ -20,8 +20,12 @@ block content
 			br
 
 			input(type='submit', value='Login')
-
 	if error
 		br
 		p.alert.alert-danger
 			= error.message
+
+	if message
+		br
+		p.alert.alert-success
+			= message

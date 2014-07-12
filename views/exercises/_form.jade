@@ -27,7 +27,8 @@ role='form', action=actionUrl, method='POST')
 
 		fieldset
 			if fieldset.legend && (index !== 0 || page === 'exerciseCreate')
-					legend= fieldset.legend
+					legend
+						= fieldset.legend.slice(0,1).toUpperCase() + fieldset.legend.slice(1)
 
 			each field in fieldset.fields
 				- var label = field.slice(0, 1).toUpperCase() + field.slice(1)
