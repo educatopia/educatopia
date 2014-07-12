@@ -29,4 +29,6 @@ block content
 			input(type='submit', value='Create Account')
 
 	if data && data.message
-		p= data.message
+		br
+		p.alert.alert-info
+			= data.message

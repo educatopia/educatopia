@@ -27,17 +27,18 @@ head
 
 	link(rel='shortcut icon', href='img/favicon.png')
 
-include includes/navbar
+body(class=page)
+	include includes/navbar
 
-#contentWrapper.container
-	block content
+	#contentWrapper.container
+		block content
 
-footer
-	p
-		a(href='http://adriansieber.com') By Adrian Sieber
-		span.muted •
-		a(href='https://github.com/adius/educatopia') Github
-		span.muted •
-		a(href='https://github.com/adius/educatopia/issues') Issues
+	footer
+		p
+			a(href='http://adriansieber.com') By Adrian Sieber
+			span.muted •
+			a(href='https://github.com/adius/educatopia') Github
+			span.muted •
+			a(href='https://github.com/adius/educatopia/issues') Issues
 
-include includes/scripts
+	include includes/scripts

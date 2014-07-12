@@ -4,7 +4,9 @@ if page === 'exerciseEdit'
 
 if page === 'exerciseCreate'
 	- var actionUrl = '/exercises/submit'
-	- var addFieldUrl = '/exercises/create/edit?'
+	- var addFieldUrl = '/exercises/create?'
+
+- console.log(page)
 
 mixin textarea(element, field, index)
 	- var id = field.slice(0, -1) + index
@@ -19,13 +21,13 @@ role='form', action=actionUrl, method='POST')
 
 	input.hidden(type='text', name='id', value=exercise.id)
 
-	each fieldset in fieldsets
+	each fieldset, index in fieldsets
 		if !fieldset
 			- continue
 
 		fieldset
-			if fieldset.legend
-				legend= fieldset.legend
+			if fieldset.legend && (index !== 0 || page === 'exerciseCreate')
+					legend= fieldset.legend
 
 			each field in fieldset.fields
 				- var label = field.slice(0, 1).toUpperCase() + field.slice(1)

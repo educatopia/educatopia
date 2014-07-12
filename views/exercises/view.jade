@@ -78,20 +78,26 @@ block sidebar
 			if exercise.subjects
 				each subject in exercise.subjects
 					span.label.label-default= subject
-					|  <!--space-->
+					| <!--space--> <!--space-->
 
 		li.list-group-item
 			| Tags: <!--space-->
 			if exercise.tags
 				each tag in exercise.tags
 					span.label.label-default= tag
-					|  <!--space-->
+					| <!--space--> <!--space-->
 
 		li.list-group-item
 			| Note:
 			br
 			small.text-muted
 				= exercise.note
+
+		li.list-group-item
+			| Created By: <!--space-->
+			if exercise.createdBy
+				a.pull-right(href='/' + exercise.createdBy)
+					= exercise.createdBy
 
 		li.list-group-item
 			- var createdAt = exercise.createdAt.toISOString().substr(0, 19).split('T').join(' ')

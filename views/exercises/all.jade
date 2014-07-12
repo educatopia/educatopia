@@ -17,16 +17,19 @@ block content
 					th Note
 					th Date
 					th Time
-
-			each exercise, index in exercises
-				tbody
+			tbody
+				each exercise, index in exercises
 					tr
 						td= index + 1
 						td= exercise.subjects
 						td= exercise.type
-						td: a(href=exercise.url,
-							title=(exercise.task) ? exercise.task.substr(0, 50)+ '…' : '')
-								=(exercise.task) ? exercise.task.substr(0, 30) + '…' : ''
+						td
+							- var task = exercise.task
+							a(
+							href= exercise.url,
+							title= task ? task.substr(0, 50) + '…' : ''
+							)
+								=(task) ? task.substr(0, 30) + '…' : ''
 						td= exercise.difficulty
 						td= exercise.credits
 						td= (exercise.hints) ? exercise.hints.length : ''

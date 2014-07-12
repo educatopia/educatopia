@@ -12,7 +12,7 @@ var exercisesApi = require('../api/exercises'),
     fieldsets = yaml.safeLoad(fs.readFileSync(fieldsetsPath, 'utf8'))
 
 
-function stringsToArrays (object) {
+function stringsToObjects (object) {
 
 	var key
 
@@ -21,16 +21,7 @@ function stringsToArrays (object) {
 			if (schema[key].type === 'list' && schema[key].subtype === 'text')
 				object[key] = object[key].split(/\s*,\s*/)
 
-	return object
-}
-
-function stringToDate (object) {
-
-	var key
-
-	for (key in schema)
-		if (schema.hasOwnProperty(key))
-			if (schema[key].type === 'date')
+			else if (schema[key].type === 'date')
 				object[key] = new Date(object[key])
 
 	return object
@@ -74,11 +65,11 @@ exercises.create = function (request, response) {
 	}
 
 
-	if (request.method === 'POST' && response.session.user) {
+	if (request.method === 'POST' && request.session.user) {
 
-		addFields(requestuest)
+		addFields(request)
 
-		renderObject.exercise = stringsToArrays(request.body)
+		renderObject.exercise = stringsToObjects(request.body)
 
 		response.render('exercises/create', renderObject)
 	}
@@ -93,15 +84,20 @@ exercises.create = function (request, response) {
 
 exercises.submit = function (request, response) {
 
-	if (request.session.user) {
-		exercisesApi.add(request.body, function (error, exercise) {
+	if (request.session.user)
+		exercisesApi.add(
+			request.body,
+			request.session.user,
+			function (error, exercise) {
 
-			if (error)
-				throw new Error(error)
+				if (error)
+					console.error(error)
 
-			response.redirect('/exercises/' + exercise['_id'])
-		})
-	}
+				else
+					response.redirect('/exercises/' + exercise['_id'])
+			}
+		)
+
 	else
 		response.redirect('/exercises/' + exercise['_id'])
 }
@@ -132,7 +128,7 @@ exercises.edit = function (request, response, next) {
 
 		addFields(request)
 
-		renderObject.exercise = stringsToArrays(request.body)
+		renderObject.exercise = stringsToObjects(request.body)
 
 		response.render('exercises/edit', renderObject)
 	}
@@ -144,7 +140,7 @@ exercises.edit = function (request, response, next) {
 				if (error)
 					console.log(error)
 
-				if (exercise) {
+				else if (exercise) {
 					renderObject.exercise = exercise
 					response.render('exercises/edit', renderObject)
 				}
@@ -180,10 +176,11 @@ exercises.history = function (request, response, next) {
 
 exercises.update = function (request, response) {
 
-	var updatedExercise = stringToDate(stringsToArrays(request.body, schema))
+	var updatedExercise = stringsToObjects(request.body, schema)
 
 	exercisesApi.update(
 		updatedExercise,
+		request.session.user,
 		function (error, exercise) {
 
 			if (error)

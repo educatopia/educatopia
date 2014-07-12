@@ -332,8 +332,12 @@ exports.login = function (username, passwordHash, callback) {
 		function (error, user) {
 
 			if (error) {
-				console.error('Could not find user supposed to be logged in.')
+				console.error('Error occured during lookup of user.')
 				callback(error)
+			}
+			else if (!user) {
+				console.log('User to login does not exist.')
+				callback({message: 'User does not exist!'})
 			}
 			else if (user.confirmationCode) {
 				callback({message: 'Email-address must first be verified!'})
@@ -342,7 +346,7 @@ exports.login = function (username, passwordHash, callback) {
 				callback(null, user)
 			}
 			else
-				callback({message: 'Wrong password'})
+				callback({message: 'Wrong password or wrong username!'})
 		}
 	)
 }

@@ -90,6 +90,10 @@ exports.getByIdRendered = function (id, callback) {
 
 			else {
 
+				// TODO: Distinguish between different exercise data formats
+				if (exercise.history)
+					exercise.current.createdBy = exercise.history[0].createdBy
+
 				marked(exercise.current.task, function (error, content) {
 
 					if (error)
@@ -115,16 +119,16 @@ exports.getHistoryById = function (id, callback) {
 		return
 	}
 
-	exercisesCollection.findOne({'_id': id}, function (error, item) {
+	exercisesCollection.findOne({'_id': id}, function (error, exercise) {
 
 		if (error)
 			callback(error)
 
-		else if (item.history)
-			callback(null, item.history.concat(item.current))
+		else {
+			exercise.history = exercise.history || []
 
-		else
-			callback()
+			callback(null, exercise.history.concat(exercise.current))
+		}
 	})
 }
 
@@ -161,16 +165,29 @@ exports.getAll = function (callback) {
 		.toArray(execArray)
 }
 
-exports.add = function (exercise, callback) {
+exports.getByUser = function (username, callback) {
+	exercisesCollection
+		.find({'current.createdBy': username})
+		.sort({_id: 1})
+		.toArray(function (error, exercises) {
+
+			if (error)
+				callback(error)
+			else
+				callback(null, exercises)
+		})
+}
+
+exports.add = function (exercise, user, callback) {
 
 	var temp = {},
 	    now = new Date()
 
-	temp.createdAt = now
 	temp.updatedAt = now
 
 	temp.current = deleteEmptyFields(exercise)
 	temp.current.createdAt = now
+	temp.current.createdBy = user.username
 
 	exercisesCollection.insert(
 		temp,
@@ -190,7 +207,7 @@ exports.add = function (exercise, callback) {
 	)
 }
 
-exports.update = function (exerciseFromForm, callback) {
+exports.update = function (exerciseFromForm, user, callback) {
 
 	var temp = {},
 	    now = new Date()
@@ -205,6 +222,8 @@ exports.update = function (exerciseFromForm, callback) {
 	temp.current.createdAt = now
 	temp.updatedAt = now
 
+	temp.current.createdBy = user.username
+
 
 	exercisesCollection.findOne({'_id': temp._id}, function (error, item) {
 
@@ -217,7 +236,7 @@ exports.update = function (exerciseFromForm, callback) {
 			temp.history.push(item.current)
 
 
-			collection.update(
+			exercisesCollection.update(
 				{'_id': temp._id},
 				temp,
 				{safe: true},

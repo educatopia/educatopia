@@ -7,10 +7,17 @@ block content
 			src='/img/placeholderProfilePicture.png',
 			alt='Profile picture of' + user.username
 			)
-			h1= user.name
-			h2 @#{user.username}
+			h2= user.name
+			h3 @#{user.username}
 			hr
 		.col-md-9
-			//h2 #{user.exercises.length} created exercises
-			h2 0 created exercises
-			hr
+			- var length = exercises.length
+			h3= length + ' created exercise' + (length !== 1 ? 's' : '')
+			table.table.table-condensed
+				tbody
+					each exercise, index in exercises
+						tr
+							td= index + 1
+							td
+								a(href='/exercises/' + exercise._id)
+									= exercise.current.task.substr(0, 120) + '…'
