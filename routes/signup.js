@@ -2,28 +2,28 @@ var users = require('../api/users')
 
 module.exports = function (request, response) {
 
-	if (request.method === 'POST' && request.session.user)
+	if (request.session.user) {
+		delete response.locals.session
+		request.session.destroy()
+	}
 
-		users.signup(request, function (error, data) {
+	if (request.method === 'POST')
+		users.signup(
+			request,
+			function (error, data) {
 
-			if (error)
-				throw new Error(error)
+				if (error)
+					throw new Error(error)
 
-			response.render('signup', {
-				page: 'signup',
-				data: data
-			})
-		})
+				response.render('signup', {
+					page: 'signup',
+					data: data
+				})
+			}
+		)
 
-	else {
-
-		if (request.session.user) {
-			delete response.locals.session
-			request.session.destroy()
-		}
-
+	else
 		response.render('signup', {
 			page: 'signup'
 		})
-	}
 }
