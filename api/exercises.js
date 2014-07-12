@@ -6,7 +6,9 @@ var mongo = require('mongodb'),
     Db = mongo.Db,
     BSON = mongo.BSONPure,
     database = 'educatopiadev',
-    db
+    db = new Db(database, new Server("127.0.0.1", 27017,
+	    {auto_reconnect: true}), {w: 1}),
+    exercisesCollection
 
 
 function deleteEmptyFields (obj) {
@@ -43,84 +45,86 @@ function exerciseToPrintFormat (exercise) {
 
 exports.getById = function (id, callback) {
 
-	id = new BSON.ObjectID(id)
+	try {
+		id = BSON.ObjectID(id)
+	}
+	catch (error) {
+		callback({message: 'Invalid Id'})
+		return
+	}
 
-	db.collection('exercises', function (error, collection) {
 
-		if (error)
-			callback(error)
+	exercisesCollection.findOne(
+		{'_id': id},
+		function (error, exercise) {
 
-		else {
-			collection.findOne({'_id': id}, function (error, item) {
+			if (error || !exercise)
+				callback(error)
 
-				if (error)
-					callback(error)
+			else {
+				exercise.current.id = id
+				exercise.current.updatedAt = exercise.updatedAt
 
-				else {
-					item.current.id = id
-					item.current.updatedAt = item.updatedAt
-
-					callback(null, item.current)
-				}
-			})
+				callback(null, exercise.current)
+			}
 		}
-	})
+	)
 }
 
 exports.getByIdRendered = function (id, callback) {
 
-	id = new BSON.ObjectID(id)
+	try {
+		id = BSON.ObjectID(id)
+	}
+	catch (error) {
+		callback({message: 'Invalid Id'})
+		return
+	}
 
-	db.collection('exercises', function (error, collection) {
+	exercisesCollection.findOne(
+		{'_id': id},
+		function (error, exercise) {
 
-		if (error)
-			callback(error)
+			if (error || !exercise)
+				callback(error)
 
-		else {
-			collection.findOne({'_id': id}, function (error, item) {
+			else {
 
-				if (error)
-					callback(error)
+				marked(exercise.current.task, function (error, content) {
 
-				else {
+					if (error)
+						callback(error)
 
-					marked(item.current.task, function (error, content) {
+					else
+						exercise.current.task = content
+				})
 
-						if (error)
-							callback(error)
-
-						else
-							item.current.task = content
-					})
-
-					callback(null, exerciseToPrintFormat(item))
-				}
-			})
+				callback(null, exerciseToPrintFormat(exercise))
+			}
 		}
-	})
+	)
 }
 
 exports.getHistoryById = function (id, callback) {
 
-	id = new BSON.ObjectID(id)
+	try {
+		id = BSON.ObjectID(id)
+	}
+	catch (error) {
+		callback({message: 'Invalid Id'})
+		return
+	}
 
-	db.collection('exercises', function (error, collection) {
+	exercisesCollection.findOne({'_id': id}, function (error, item) {
 
 		if (error)
 			callback(error)
 
+		else if (item.history)
+			callback(null, item.history.concat(item.current))
+
 		else
-			collection.findOne({'_id': id}, function (error, item) {
-
-				if (error)
-					callback(error)
-
-				else if (item.history)
-					callback(null, item.history.concat(item.current))
-
-				else
-					callback()
-			})
+			callback()
 	})
 }
 
@@ -151,20 +155,10 @@ exports.getAll = function (callback) {
 		callback(null, tempArray)
 	}
 
-	db.collection(
-		'exercises',
-		function (error, collection) {
-
-			if (error)
-				callback(error)
-
-			else
-				collection
-					.find()
-					.sort({_id: 1})
-					.toArray(execArray)
-		}
-	)
+	exercisesCollection
+		.find()
+		.sort({_id: 1})
+		.toArray(execArray)
 }
 
 exports.add = function (exercise, callback) {
@@ -178,26 +172,22 @@ exports.add = function (exercise, callback) {
 	temp.current = deleteEmptyFields(exercise)
 	temp.current.createdAt = now
 
+	exercisesCollection.insert(
+		temp,
+		{safe: true},
+		function (error, result) {
 
-	db.collection('exercises', function (error, collection) {
+			if (error)
+				callback(error)
 
-		collection.insert(
-			temp,
-			{safe: true},
-			function (error, result) {
+			else {
+				console.log('Successfully added following exercise:')
+				console.dir(result)
 
-				if (error)
-					callback(error)
-
-				else {
-					console.log('Successfully added following exercise:')
-					console.dir(result)
-
-					callback(null, result[0])
-				}
+				callback(null, result[0])
 			}
-		)
-	})
+		}
+	)
 }
 
 exports.update = function (exerciseFromForm, callback) {
@@ -215,70 +205,60 @@ exports.update = function (exerciseFromForm, callback) {
 	temp.current.createdAt = now
 	temp.updatedAt = now
 
-	db.collection('exercises', function (error, collection) {
+
+	exercisesCollection.findOne({'_id': temp._id}, function (error, item) {
 
 		if (error)
-			callback('An error occurred while loading the exercises collection: ' + error)
+			callback('An error occurred while loading the exercise: ' + error)
+
+		else {
+
+			temp.history = item.history || []
+			temp.history.push(item.current)
 
 
-		collection.findOne({'_id': temp._id}, function (error, item) {
+			collection.update(
+				{'_id': temp._id},
+				temp,
+				{safe: true},
+				function (error, result) {
 
+					if (error || result === 0)
+						callback('An error occurred while updating the exercise: ' + error)
 
-			if (error)
-				callback('An error occurred while loading the exercise: ' + error)
-
-			else {
-
-				temp.history = item.history || []
-				temp.history.push(item.current)
-
-
-				collection.update(
-					{'_id': temp._id},
-					temp,
-					{safe: true},
-					function (error, result) {
-
-						if (error || result === 0)
-							callback('An error occurred while updating the exercise: ' + error)
-
-						else
-							callback(null, exerciseToPrintFormat(temp))
-					}
-				)
-			}
-		})
+					else
+						callback(null, exerciseToPrintFormat(temp))
+				}
+			)
+		}
 	})
 }
 
 exports.delete = function (id, callback) {
 
-	//var id = req.params.id
-
 	console.log('Deleting exercise: ' + id)
 
-	db.collection('exercises', function (error, collection) {
-		collection.remove(
-			{'_id': new BSON.ObjectID(id)},
-			{safe: true},
-			function (error, result) {
-				if (error)
-					callback(error)
-				else {
-					console.log('' + result + ' document(s) deleted')
-					callback(req.body)
-				}
-			})
-	})
+	exercisesCollection.remove(
+		{'_id': new BSON.ObjectID(id)},
+		{safe: true},
+		function (error, result) {
+			if (error)
+				callback(error)
+			else {
+				console.log('' + result + ' document(s) deleted')
+				callback(req.body)
+			}
+		}
+	)
 }
 
 
-db = new Db(database, new Server("127.0.0.1", 27017, {auto_reconnect: true}), {w: 1})
-
-db.open(function (error, db) {
+db.open(function (error, database) {
 
 	if (error)
 		throw error
 
 	console.log('Exercises module connected to database "' + database + '"')
 })
+
+exercisesCollection = db.collection('exercises')

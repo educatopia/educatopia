@@ -45,19 +45,22 @@ function addFields (request) {
 }
 
 
-exercises.one = function (request, response) {
+exercises.one = function (request, response, next) {
 
 	exercisesApi.getByIdRendered(
 		request.params.id,
 		function (error, exercise) {
 
 			if (error)
-				throw new Error(error)
+				console.log(error)
 
-			response.render('exercises/view', {
-				page: 'exerciseView',
-				exercise: exercise
-			})
+			if (exercise)
+				response.render('exercises/view', {
+					page: 'exerciseView',
+					exercise: exercise
+				})
+			else
+				next()
 		}
 	)
 }
@@ -117,7 +120,7 @@ exercises.all = function (request, response) {
 	})
 }
 
-exercises.edit = function (request, response) {
+exercises.edit = function (request, response, next) {
 
 	var renderObject = {
 		page: 'exerciseEdit',
@@ -134,34 +137,43 @@ exercises.edit = function (request, response) {
 		response.render('exercises/edit', renderObject)
 	}
 	else {
-		exercisesApi.getById(request.params.id, function (error, exercise) {
+		exercisesApi.getById(
+			request.params.id,
+			function (error, exercise) {
 
-			if (error)
-				throw new Error(error)
+				if (error)
+					console.log(error)
 
-			renderObject.exercise = exercise
-
-			response.render('exercises/edit', renderObject)
-		})
+				if (exercise) {
+					renderObject.exercise = exercise
+					response.render('exercises/edit', renderObject)
+				}
+				else
+					next()
+			}
+		)
 	}
 }
 
-exercises.history = function (request, response) {
+exercises.history = function (request, response, next) {
 
 	exercisesApi.getHistoryById(
 		request.params.id,
 		function (error, history) {
 
 			if (error)
-				throw new Error(error)
+				console.log(error)
 
-			response.render('exercises/history', {
-				page: 'exerciseHistory',
-				history: history,
-				exercise: {
-					id: request.params.id
-				}
-			})
+			if (history)
+				response.render('exercises/history', {
+					page: 'exerciseHistory',
+					history: history,
+					exercise: {
+						id: request.params.id
+					}
+				})
+			else
+				next()
 		}
 	)
 }

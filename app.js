@@ -85,5 +85,9 @@ app.get('/:username', users.profile)
 if (env === 'development')
 	app.use(errorHandler())
 
+app.use(function(req, res){
+	res.render('404')
+})
+
 app.listen(port)
 console.log('Listening on port ' + port)

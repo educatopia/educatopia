@@ -1,6 +1,3 @@
-// More or less taken functionality from here braitsch' node-login:
-// https://github.com/braitsch/node-login/blob/master/app/server/modules/account-manager.js
-
 var email = require('./email-dispatcher'),
     crypto = require('crypto'),
     MongoDB = require('mongodb').Db,
@@ -12,7 +9,7 @@ var email = require('./email-dispatcher'),
     dbPort = 27017,
     dbHost = 'localhost',
     dbName = 'educatopiadev',
-    db,
+    db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}), {w: 1}),
     userCollection
 
 
@@ -188,7 +185,6 @@ function findByMultipleFields (a, callback) {
 		})
 }
 
-
 function sendMail (userData) {
 
 	var sendmailTransport = nodemailer.createTransport("sendmail")
@@ -216,19 +212,6 @@ function sendMail (userData) {
 		}
 	)
 }
-
-
-db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}), {w: 1})
-
-db.open(function (error) {
-
-	if (error)
-		throw error
-
-	console.log('User-management module connected to database "' + dbName + '"')
-})
-
-userCollection = db.collection('users')
 
 
 exports.getByUsername = function (username, callback) {
@@ -275,8 +258,6 @@ exports.signup = function (request, callback) {
 		return
 	}
 
-	//if (isAuthorized(req, res))
-	//	return
 	userCollection.findOne(
 		{ $or: [
 			{email: userData.email},
@@ -308,7 +289,8 @@ exports.signup = function (request, callback) {
 					})
 				})
 			}
-		})
+		}
+	)
 }
 
 exports.confirm = function (confirmationCode, callback) {
@@ -364,3 +346,15 @@ exports.login = function (username, passwordHash, callback) {
 		}
 	)
 }
+
+
+
+db.open(function (error) {
+
+	if (error)
+		throw error
+
+	console.log('User-management module connected to database "' + dbName + '"')
+})
+
+userCollection = db.collection('users')
