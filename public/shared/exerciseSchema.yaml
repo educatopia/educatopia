@@ -27,15 +27,14 @@ solutions:
 subjects:
   type: list
   subtype: text
-  validators:
-    - required
   help: Specify the subjects of the exercise. (E.g. Math, Biology, …)
   format: comma separated
+  #validators:
+  #  - required
 
 type:
   type: select
   options:
-    - ""
     - Calculate
     - Explain
     - Name
@@ -45,9 +44,9 @@ type:
     - Draw
     - Choose
     - Transform
-  validators:
-    - required
   help: What is the main task of the exercise?
+  #validators:
+  #  - required
 
 credits:
   type: number

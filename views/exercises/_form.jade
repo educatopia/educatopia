@@ -3,7 +3,7 @@ if page === 'exerciseEdit'
 	- var addFieldUrl = actionUrl + '/edit?'
 
 if page === 'exerciseCreate'
-	- var actionUrl = '/exercises/submit'
+	- var actionUrl = '/exercises/create'
 	- var addFieldUrl = '/exercises/create?'
 
 - console.log(page)
@@ -19,7 +19,8 @@ mixin textarea(element, field, index)
 form.form-horizontal(
 role='form', action=actionUrl, method='POST')
 
-	input.hidden(type='text', name='id', value=exercise.id)
+	if exercise && exercise.id
+		input.hidden(type='text', name='id', value=exercise.id)
 
 	each fieldset, index in fieldsets
 		if !fieldset
@@ -35,49 +36,50 @@ role='form', action=actionUrl, method='POST')
 				- var attrs = schema[field].editorAttrs
 				- var help = schema[field].help
 				- var subtype = schema[field].subtype
+				- var validators = schema[field].validators
 
-				case schema[field].type
-					when 'textarea'
-						.form-group
-							label.col-sm-2.control-label(for=field)
-								= label
+				- var fieldId = (subtype == 'textarea') ? field + 'Body' : field
+
+				- console.log(field, schema[field])
+
+				.form-group(id=field)
+					label.col-sm-2.control-label(for=fieldId)
+						= label
+						if validators && validators.indexOf('required') !== -1
+							span= ' *'
+
+					case schema[field].type
+						when 'textarea'
 							.col-sm-10
 								textarea.form-control(id=field, name=field
 								)&attributes(attrs)
 									= exercise[field]
 								p.help-block.small= help
-					when 'number'
-						.form-group
-							label.col-sm-2.control-label(for=field, name=field)
-								= label
+
+						when 'number'
 							.col-sm-6
 								input.col-sm-2.form-control(
 								id=field, name=field, type='number', value=exercise[field]
 								)&attributes(attrs)
 								p.help-block.small= help
 
-					when 'list'
-						if subtype == 'textarea'
-							.form-group(id=field)
-								label.col-sm-2.control-label(for=field + 'Body')
-									= label
-								.col-sm-10(id=field + 'Body')
-									if exercise[field]
-										each element, index in exercise[field]
-											+textarea(element, field, index)
-									else
-										+textarea(element, field, 0)
+						when 'list'
+							if subtype == 'textarea'
+									.col-sm-10(id=field + 'Body')
+										if exercise[field]
+											each element, index in exercise[field]
+												+textarea(element, field, index)
+										else
+											+textarea(element, field, 0)
 
-									button.btn.btn-default.btn-xs(
-									type='submit',
-									formaction= addFieldUrl + field + '#' + field)
-										| Add another #{field.slice(0,-1)}
-									// TODO: Use POST body to send data
-									// (name & value field in submit button)
-						else
-							.form-group
-								label.col-sm-2.control-label(for=field)
-									= label
+										button.btn.btn-default.btn-xs(
+										type='submit',
+										formaction= addFieldUrl + field + '#' + field)
+											| Add another #{field.slice(0,-1)}
+										// TODO: Use POST body to send data
+										// (name & value field in submit button)
+
+							else
 								.col-sm-10(id=field)
 									input.form-control(
 									id=field + '0', name=field, type=subtype,
@@ -88,22 +90,16 @@ role='form', action=actionUrl, method='POST')
 										if schema[field].format
 											|  (#{schema[field].format})
 
-					when 'select'
-						.form-group
-							label.col-sm-2.control-label(for=field, name=field)
-								= label
-							.col-sm-10
-								select.form-control(id=field, name=field
-								)&attributes(attrs ? attrs : {})
-									each option in schema[field].options
-										option(selected=exercise.type == option)
-											= option
-								p.help-block.small= help
+						when 'select'
+								.col-sm-10
+									select.form-control(id=field, name=field
+									)&attributes(attrs ? attrs : {})
+										each option in [""].concat(schema[field].options)
+											option(selected=exercise.type == option)
+												= option
+									p.help-block.small= help
 
-					when 'date'
-						.form-group
-							label.col-sm-2.control-label(for=field)
-								= schema[field].label || label
+						when 'date'
 							.col-sm-10
 								input.form-control(
 								id=field, name=field,
@@ -113,10 +109,7 @@ role='form', action=actionUrl, method='POST')
 
 								p.help-block.small= help
 
-					default
-						.form-group
-							label.col-sm-2.control-label(for=field)
-								= schema[field].label || label
+						default
 							.col-sm-10
 								input.form-control(
 								id=field, name=field, type='text', value=exercise[field]

@@ -3,7 +3,12 @@ extends ../layout
 block content
 
 	if session.user
+		if message
+			p.alert.alert-danger
+				= message
+
 		include _form
+
 	else
 		p.alert.alert-info.
 			You need to be logged in to create exercises!

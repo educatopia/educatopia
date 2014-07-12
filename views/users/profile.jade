@@ -16,8 +16,14 @@ block content
 			table.table.table-condensed
 				tbody
 					each exercise, index in exercises
+						- var slug = '…'
+
+						if exercise.current.task
+							- var slug = exercise.current.task.substr(0, 110)
+							if exercise.current.task.length > 110
+								- slug += '…'
 						tr
 							td= index + 1
 							td
 								a(href='/exercises/' + exercise._id)
-									= exercise.current.task.substr(0, 120) + '…'
+									= slug

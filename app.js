@@ -62,8 +62,6 @@ app
 	.get(exercises.create)
 	.post(exercises.create)
 
-app.post('/exercises/submit', exercises.submit)
-
 app
 	.route('/exercises/:id')
 	.get(exercises.one)
