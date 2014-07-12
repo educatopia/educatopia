@@ -20,6 +20,8 @@ role='form', action=actionUrl, method='POST')
 	input.hidden(type='text', name='id', value=exercise.id)
 
 	each fieldset in fieldsets
+		if !fieldset
+			- continue
 
 		fieldset
 			if fieldset.legend
@@ -102,7 +104,8 @@ role='form', action=actionUrl, method='POST')
 							.col-sm-10
 								input.form-control(
 								id=field, name=field,
-								type='datetime', value=exercise[field].toISOString()
+								type='datetime',
+								value=exercise[field] ? exercise[field].toISOString() : ''
 								)&attributes(attrs ? attrs : {})
 
 								p.help-block.small= help

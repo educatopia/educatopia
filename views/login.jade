@@ -23,4 +23,5 @@ block content
 
 	if error
 		br
-		p.alert.alert-danger An error occured during login!
+		p.alert.alert-danger
+			= error.message

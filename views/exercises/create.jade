@@ -2,4 +2,8 @@ extends ../layout
 
 block content
 
-	include _form
+	if session.user
+		include _form
+	else
+		p.alert.alert-info.
+			You need to be logged in to create exercises!

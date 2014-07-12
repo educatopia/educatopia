@@ -353,10 +353,12 @@ exports.login = function (username, passwordHash, callback) {
 				console.error('Could not find user supposed to be logged in.')
 				callback(error)
 			}
-
-			else if (user.password === passwordHash)
+			else if (user.confirmationCode) {
+				callback({message: 'Email-address must first be verified!'})
+			}
+			else if (passwordHash && passwordHash === user.password){
 				callback(null, user)
-
+			}
 			else
 				callback({message: 'Wrong password'})
 		}

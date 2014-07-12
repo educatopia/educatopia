@@ -24,7 +24,7 @@ function stringsToArrays (object) {
 	return object
 }
 
-function stringToDate (object){
+function stringToDate (object) {
 
 	var key
 
@@ -47,65 +47,60 @@ function addFields (request) {
 
 exercises.one = function (request, response) {
 
-	exercisesApi.getByIdRendered(request.params.id, function (error, exercise) {
+	exercisesApi.getByIdRendered(
+		request.params.id,
+		function (error, exercise) {
 
-		if (error)
-			throw new Error(error)
+			if (error)
+				throw new Error(error)
 
-		response.render('exercises/view', {
-			page: 'exerciseView',
-			exercise: exercise
-		})
-	})
+			response.render('exercises/view', {
+				page: 'exerciseView',
+				exercise: exercise
+			})
+		}
+	)
 }
 
 exercises.create = function (request, response) {
 
-	var renderObject
-
-	if (response.locals.authenticated) {
-
-		renderObject = {
-			page: 'exerciseCreate',
-			schema: schema,
-			fieldsets: fieldsets
-		}
+	var renderObject = {
+		page: 'exerciseCreate',
+		schema: schema,
+		fieldsets: fieldsets
+	}
 
 
-		if (request.method === 'POST') {
+	if (request.method === 'POST' && response.session.user) {
 
-			addFields(requestuest)
+		addFields(requestuest)
 
-			renderObject.exercise = stringsToArrays(request.body)
+		renderObject.exercise = stringsToArrays(request.body)
 
-			response.render('exercises/create', renderObject)
-		}
-		else {
-			renderObject.exercise = {}
-
-			response.render('exercises/create', renderObject)
-		}
+		response.render('exercises/create', renderObject)
 	}
 	else {
-		response.redirect('/')
+		renderObject.exercise = {}
+		delete renderObject.fieldsets[2]
+
+		response.render('exercises/create', renderObject)
 	}
 }
 
 
 exercises.submit = function (request, response) {
 
-	exercisesApi.add(request.body, function (error, exercise) {
+	if (request.session.user) {
+		exercisesApi.add(request.body, function (error, exercise) {
 
-		if (error)
-			throw new Error(error)
+			if (error)
+				throw new Error(error)
 
+			response.redirect('/exercises/' + exercise['_id'])
+		})
+	}
+	else
 		response.redirect('/exercises/' + exercise['_id'])
-
-		/*response.render('exercises/view', {
-		 page: 'exerciseView',
-		 exercise: exercise
-		 })*/
-	})
 }
 
 exercises.all = function (request, response) {
@@ -130,8 +125,7 @@ exercises.edit = function (request, response) {
 		fieldsets: fieldsets
 	}
 
-
-	if (request.method === 'POST') {
+	if (request.method === 'POST' && request.session.user) {
 
 		addFields(request)
 
@@ -139,7 +133,7 @@ exercises.edit = function (request, response) {
 
 		response.render('exercises/edit', renderObject)
 	}
-	else
+	else {
 		exercisesApi.getById(request.params.id, function (error, exercise) {
 
 			if (error)
@@ -149,24 +143,27 @@ exercises.edit = function (request, response) {
 
 			response.render('exercises/edit', renderObject)
 		})
-
+	}
 }
 
 exercises.history = function (request, response) {
 
-	exercisesApi.getHistoryById(request.params.id, function (error, history) {
+	exercisesApi.getHistoryById(
+		request.params.id,
+		function (error, history) {
 
-		if (error)
-			throw new Error(error)
+			if (error)
+				throw new Error(error)
 
-		response.render('exercises/history', {
-			page: 'exerciseHistory',
-			history: history,
-			exercise: {
-				id: request.params.id
-			}
-		})
-	})
+			response.render('exercises/history', {
+				page: 'exerciseHistory',
+				history: history,
+				exercise: {
+					id: request.params.id
+				}
+			})
+		}
+	)
 }
 
 exercises.update = function (request, response) {

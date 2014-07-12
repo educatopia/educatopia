@@ -25,9 +25,6 @@ var express = require('express'),
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
 
-if (env === 'development')
-	app.use(errorHandler())
-
 app.use(compress())
 app.use(express.static(path.join(__dirname, 'public')))
 
@@ -61,6 +58,13 @@ app
 app.get('/exercises', exercises.all)
 
 app
+	.route('/exercises/create')
+	.get(exercises.create)
+	.post(exercises.create)
+
+app.post('/exercises/submit', exercises.submit)
+
+app
 	.route('/exercises/:id')
 	.get(exercises.one)
 	.post(exercises.update)
@@ -72,18 +76,14 @@ app
 
 app.get('/exercises/:id/history', exercises.history)
 
-app
-	.route('/exercises/create')
-	.get(exercises.create)
-	.post(exercises.create)
-
-app.post('/exercises/submit', exercises.submit)
-
 
 app.get('/confirm/:confirmationCode', users.confirm)
 
 app.get('/:username', users.profile)
 
+
+if (env === 'development')
+	app.use(errorHandler())
 
 app.listen(port)
 console.log('Listening on port ' + port)
