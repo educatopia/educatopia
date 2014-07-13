@@ -6,6 +6,7 @@ var express = require('express'),
     errorHandler = require('errorhandler'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
+    favicon = require('serve-favicon'),
 
     app = express(),
 
@@ -24,6 +25,9 @@ var express = require('express'),
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
+
+
+app.use(favicon(__dirname + '/public/img/favicon.png'))
 
 app.use(compress())
 app.use(express.static(path.join(__dirname, 'public')))
@@ -83,7 +87,7 @@ app.get('/:username', users.profile)
 if (env === 'development')
 	app.use(errorHandler())
 
-app.use(function(req, res){
+app.use(function (req, res) {
 	res.render('404')
 })
 
