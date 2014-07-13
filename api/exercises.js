@@ -46,6 +46,16 @@ function exerciseToPrintFormat (exercise) {
 	return temp
 }
 
+function renderMarkdown(exerciseData){
+
+	exerciseData.task = marked(exerciseData.task)
+	exerciseData.approach = marked(exerciseData.approach)
+
+	exerciseData.solutions.forEach(function(solution, index){
+		exerciseData.solutions[index] = marked(solution)
+	})
+}
+
 
 exports.getById = function (id, callback) {
 
@@ -94,14 +104,7 @@ exports.getByIdRendered = function (id, callback) {
 				if (exercise.history)
 					exercise.current.createdBy = exercise.history[0].createdBy
 
-				marked(exercise.current.task, function (error, content) {
-
-					if (error)
-						callback(error)
-
-					else
-						exercise.current.task = content
-				})
+				renderMarkdown(exercise.current)
 
 				callback(null, exerciseToPrintFormat(exercise))
 			}
@@ -253,8 +256,12 @@ exports.update = function (exerciseFromForm, user, callback) {
 					if (error || result === 0)
 						callback('An error occurred while updating the exercise: ' + error)
 
-					else
+					else {
+
+						renderMarkdown(temp.current)
+
 						callback(null, exerciseToPrintFormat(temp))
+					}
 				}
 			)
 		}
@@ -278,6 +285,8 @@ exports.delete = function (id, callback) {
 		}
 	)
 }
+
+
 
 
 db.open(function (error, database) {
