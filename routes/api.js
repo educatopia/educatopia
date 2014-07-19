@@ -1,6 +1,7 @@
-var exercises = require('../api/exercises'),
-    users = require('../api/users'),
-    api = {}
+var api = {},
+    exercises = {},
+    users = {}
+
 
 api.exercises = {
 	getById: exercises.getById,
@@ -15,4 +16,11 @@ api.users = {
 	signup: users.signup
 }
 
-module.exports = api
+
+module.exports = function (config) {
+
+	exercises = require('../api/exercises')(config)
+	users = require('../api/users')(config)
+
+	return api
+}

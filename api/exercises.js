@@ -2,18 +2,18 @@ var mongo = require('mongodb'),
     marked = require('marked'),
     clone = require('clone'),
 
-    Server = mongo.Server,
-    Db = mongo.Db,
     BSON = mongo.BSONPure,
-    database = 'educatopiadev',
-    db = new Db(database, new Server("127.0.0.1", 27017,
-	    {auto_reconnect: true}), {w: 1}),
+    exportObject = {},
     exercisesCollection
 
 
-function deleteEmptyFields (obj) {
+function normalize (obj) {
 
-	for (var key in obj) {
+	// Delete empty fields and normalize line-breaks
+
+	var key
+
+	for (key in obj) {
 		if (obj.hasOwnProperty(key))
 			if (obj[key] === "" ||
 			    obj[key] === 0 ||
@@ -23,6 +23,8 @@ function deleteEmptyFields (obj) {
 
 				delete obj[key]
 			}
+			else if (typeof obj[key] === 'string')
+				obj[key] = obj[key].replace(/\r\n/g, '\n')
 	}
 
 	return obj
@@ -46,18 +48,22 @@ function exerciseToPrintFormat (exercise) {
 	return temp
 }
 
-function renderMarkdown(exerciseData){
+function renderMarkdown (exerciseData) {
 
-	exerciseData.task = marked(exerciseData.task)
-	exerciseData.approach = marked(exerciseData.approach)
+	if (exerciseData.task)
+		exerciseData.task = marked(exerciseData.task)
 
-	exerciseData.solutions.forEach(function(solution, index){
-		exerciseData.solutions[index] = marked(solution)
-	})
+	if (exerciseData.approach)
+		exerciseData.approach = marked(exerciseData.approach)
+
+	if (exerciseData.solutions)
+		exerciseData.solutions.forEach(function (solution, index) {
+			exerciseData.solutions[index] = marked(solution)
+		})
 }
 
 
-exports.getById = function (id, callback) {
+exportObject.getById = function (id, callback) {
 
 	try {
 		id = BSON.ObjectID(id)
@@ -81,7 +87,7 @@ exports.getById = function (id, callback) {
 	)
 }
 
-exports.getByIdRendered = function (id, callback) {
+exportObject.getByIdRendered = function (id, callback) {
 
 	try {
 		id = BSON.ObjectID(id)
@@ -112,7 +118,7 @@ exports.getByIdRendered = function (id, callback) {
 	)
 }
 
-exports.getHistoryById = function (id, callback) {
+exportObject.getHistoryById = function (id, callback) {
 
 	try {
 		id = BSON.ObjectID(id)
@@ -135,7 +141,7 @@ exports.getHistoryById = function (id, callback) {
 	})
 }
 
-exports.getAll = function (callback) {
+exportObject.getAll = function (callback) {
 
 	function execArray (error, items) {
 
@@ -168,7 +174,8 @@ exports.getAll = function (callback) {
 		.toArray(execArray)
 }
 
-exports.getByUser = function (username, callback) {
+exportObject.getByUser = function (username, callback) {
+
 	exercisesCollection
 		.find({
 			$or: [
@@ -189,14 +196,14 @@ exports.getByUser = function (username, callback) {
 		})
 }
 
-exports.add = function (exercise, user, callback) {
+exportObject.add = function (exercise, user, callback) {
 
 	var temp = {},
 	    now = new Date()
 
 	temp.updatedAt = now
 
-	temp.current = deleteEmptyFields(exercise)
+	temp.current = normalize(exercise)
 	temp.current.createdAt = now
 	temp.current.createdBy = user.username
 
@@ -218,14 +225,14 @@ exports.add = function (exercise, user, callback) {
 	)
 }
 
-exports.update = function (exerciseFromForm, user, callback) {
+exportObject.update = function (exerciseFromForm, user, callback) {
 
 	var temp = {},
 	    now = new Date()
 
 	temp['_id'] = new BSON.ObjectID(exerciseFromForm.id)
 
-	temp.current = clone(deleteEmptyFields(exerciseFromForm))
+	temp.current = clone(normalize(exerciseFromForm))
 
 
 	delete temp.current.id
@@ -268,7 +275,7 @@ exports.update = function (exerciseFromForm, user, callback) {
 	})
 }
 
-exports.delete = function (id, callback) {
+exportObject.delete = function (id, callback) {
 
 	console.log('Deleting exercise: ' + id)
 
@@ -287,14 +294,9 @@ exports.delete = function (id, callback) {
 }
 
 
+module.exports = function (config) {
 
+	exercisesCollection = config.database.collection('exercises')
 
-db.open(function (error, database) {
-
-	if (error)
-		throw error
-
-	console.log('Exercises module connected to database "' + database + '"')
-})
-
-exercisesCollection = db.collection('exercises')
+	return exportObject
+}

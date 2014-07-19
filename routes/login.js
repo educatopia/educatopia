@@ -1,6 +1,6 @@
-var usersApi = require('../api/users')
+var usersApi
 
-module.exports = function (request, response) {
+function login (request, response) {
 
 	if (request.method === 'POST')
 		usersApi.login(
@@ -28,4 +28,12 @@ module.exports = function (request, response) {
 		response.render('login', {
 			page: 'login'
 		})
+}
+
+
+module.exports = function (config) {
+
+	usersApi = require('../api/users')(config)
+
+	return login
 }

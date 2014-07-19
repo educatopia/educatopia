@@ -1,6 +1,6 @@
-var users = require('../api/users')
+var usersApi
 
-module.exports = function (request, response) {
+function signup (request, response) {
 
 	if (request.session.user) {
 		delete response.locals.session
@@ -8,7 +8,7 @@ module.exports = function (request, response) {
 	}
 
 	if (request.method === 'POST')
-		users.signup(
+		usersApi.signup(
 			request,
 			function (error, data) {
 
@@ -26,4 +26,11 @@ module.exports = function (request, response) {
 		response.render('signup', {
 			page: 'signup'
 		})
+}
+
+module.exports = function (config) {
+
+	usersApi = require('../api/users')(config)
+
+	return signup
 }

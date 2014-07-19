@@ -1,4 +1,5 @@
-var exercisesApi = require('../api/exercises'),
+var config,
+    exercisesApi,
     fs = require('fs'),
     path = require('path'),
     yaml = require('js-yaml'),
@@ -251,4 +252,9 @@ exercises.update = function (request, response) {
 }
 
 
-module.exports = exercises
+module.exports = function(config){
+
+	exercisesApi = require('../api/exercises')(config)
+
+	return exercises
+}

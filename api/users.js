@@ -1,16 +1,9 @@
-var email = require('./email-dispatcher'),
-    crypto = require('crypto'),
+var crypto = require('crypto'),
     bcrypt = require('bcrypt'),
-    MongoDB = require('mongodb').Db,
-    Server = require('mongodb').Server,
     nodemailer = require('nodemailer'),
     jade = require('jade'),
 
-    dbPort = 27017,
-    dbHost = 'localhost',
-    dbName = 'educatopiadev',
-    db = new MongoDB(dbName, new Server(dbHost, dbPort,
-	    {auto_reconnect: true}), {w: 1}),
+    exportObject = {},
     userCollection
 
 
@@ -53,7 +46,7 @@ function sendMail (userData) {
 }
 
 
-exports.getByUsername = function (username, callback) {
+exportObject.getByUsername = function (username, callback) {
 
 	userCollection.findOne(
 		{username: username},
@@ -67,7 +60,7 @@ exports.getByUsername = function (username, callback) {
 	)
 }
 
-exports.signup = function (request, callback) {
+exportObject.signup = function (request, callback) {
 
 	var now = new Date(),
 	    blackList = [
@@ -154,7 +147,7 @@ exports.signup = function (request, callback) {
 	})
 }
 
-exports.confirm = function (confirmationCode, callback) {
+exportObject.confirm = function (confirmationCode, callback) {
 
 	userCollection.findOne(
 		{'confirmationCode': confirmationCode},
@@ -186,7 +179,7 @@ exports.confirm = function (confirmationCode, callback) {
 	)
 }
 
-exports.login = function (username, password, callback) {
+exportObject.login = function (username, password, callback) {
 
 	userCollection.findOne(
 		{username: username},
@@ -220,12 +213,9 @@ exports.login = function (username, password, callback) {
 }
 
 
-db.open(function (error) {
+module.exports = function (config) {
 
-	if (error)
-		throw error
+	userCollection = config.database.collection('users')
 
-	console.log('User-management module connected to database "' + dbName + '"')
-})
-
-userCollection = db.collection('users')
+	return exportObject
+}

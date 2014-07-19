@@ -1,5 +1,5 @@
-var usersApi = require('../api/users'),
-    exercisesApi = require('../api/exercises'),
+var usersApi,
+    exercisesApi,
     users = {}
 
 
@@ -60,4 +60,11 @@ users.profile = function (request, response, next) {
 }
 
 
-module.exports = users
+module.exports = function(config){
+
+	exercisesApi = require('../api/exercises')(config)
+	usersApi = require('../api/users')(config)
+
+	return users
+}
+

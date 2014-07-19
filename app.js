@@ -7,89 +7,115 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
     favicon = require('serve-favicon'),
+    mongo = require('mongodb'),
 
     app = express(),
 
-    api = require('./routes/api'),
-    index = require('./routes/index'),
-    login = require('./routes/login'),
-    logout = require('./routes/logout'),
-    signup = require('./routes/signup'),
-    exercises = require('./routes/exercises'),
-    users = require('./routes/users'),
-    reference = require('./routes/reference'),
+    dbName = (app.get('env') === 'development') ? 'educatopiadev' : 'educatopia',
+    dbServer = new mongo.Server('127.0.0.1', 27017, {auto_reconnect: true})
 
-    port = process.env.PORT || 3000,
-    env = 'development' //process.env.NODE_ENV || 'development'
+new mongo
+	.Db(dbName, dbServer, {w: 1})
+	.open(addRoutes)
 
 
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'jade')
+function addRoutes (error, database) {
+
+	if (error)
+		console.error('Could not connect to database "' +
+		            database.databaseName + '"')
+
+	console.log('Connected to database "' +
+	            database.databaseName + '"')
+
+	var config = {
+		    database: database
+	    },
+
+	    api = require('./routes/api'),
+	    index = require('./routes/index'),
+	    login = require('./routes/login')(config),
+	    logout = require('./routes/logout'),
+	    signup = require('./routes/signup')(config),
+	    exercises = require('./routes/exercises')(config),
+	    users = require('./routes/users')(config),
+	    reference = require('./routes/reference'),
+
+	    port = process.env.PORT || 3000
 
 
-app.use(favicon(__dirname + '/public/img/favicon.png'))
-
-app.use(compress())
-app.use(express.static(path.join(__dirname, 'public')))
-
-app.use(env === 'development' ? morgan('dev') : morgan())
-
-app.use(bodyParser())
-app.use(cookieParser('mustached wookie'))
-app.use(session({secret: 'potential octo batman'}))
-
-app.use(function (request, response, next) {
-	response.locals.session = request.session
-	next()
-})
+	app.set('views', path.join(__dirname, 'views'))
+	app.set('view engine', 'jade')
 
 
-app.get('/', index)
+	app.use(favicon(__dirname + '/public/img/favicon.png'))
 
-app
-	.route('/login')
-	.get(login)
-	.post(login)
+	app.use(compress())
+	app.use(express.static(path.join(__dirname, 'public')))
 
-app.get('/logout', logout)
+	app.use(app.get('env') === 'development' ? morgan('dev') : morgan())
 
-app
-	.route('/signup')
-	.get(signup)
-	.post(signup)
+	app.use(bodyParser())
+	app.use(cookieParser('mustached wookie'))
+	app.use(session({
+		secret: 'potential octo batman',
+		saveUninitialized: true,
+		resave: true
+	}))
 
-
-app.get('/exercises', exercises.all)
-
-app
-	.route('/exercises/create')
-	.get(exercises.create)
-	.post(exercises.create)
-
-app
-	.route('/exercises/:id')
-	.get(exercises.one)
-	.post(exercises.update)
-
-app
-	.route('/exercises/:id/edit')
-	.get(exercises.edit)
-	.post(exercises.edit)
-
-app.get('/exercises/:id/history', exercises.history)
+	app.use(function (request, response, next) {
+		response.locals.session = request.session
+		next()
+	})
 
 
-app.get('/confirm/:confirmationCode', users.confirm)
+	app.get('/', index)
 
-app.get('/:username', users.profile)
+	app
+		.route('/login')
+		.get(login)
+		.post(login)
+
+	app.get('/logout', logout)
+
+	app
+		.route('/signup')
+		.get(signup)
+		.post(signup)
 
 
-if (env === 'development')
-	app.use(errorHandler())
+	app.get('/exercises', exercises.all)
 
-app.use(function (req, res) {
-	res.render('404')
-})
+	app
+		.route('/exercises/create')
+		.get(exercises.create)
+		.post(exercises.create)
 
-app.listen(port)
-console.log('Listening on port ' + port)
+	app
+		.route('/exercises/:id')
+		.get(exercises.one)
+		.post(exercises.update)
+
+	app
+		.route('/exercises/:id/edit')
+		.get(exercises.edit)
+		.post(exercises.edit)
+
+	app.get('/exercises/:id/history', exercises.history)
+
+
+	app.get('/confirm/:confirmationCode', users.confirm)
+
+	app.get('/:username', users.profile)
+
+
+	if (app.get('env') === 'development')
+		app.use(errorHandler())
+
+	app.use(function (req, res) {
+		res.render('404')
+	})
+
+	app.listen(port)
+	console.log('Listening on port ' + port)
+}
