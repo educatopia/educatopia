@@ -11,20 +11,32 @@ function normalize (obj) {
 
 	// Delete empty fields and normalize line-breaks
 
+	function normalizeLineBreaks (string) {
+		return string.replace(/\r\n/g, '\n')
+	}
+
 	var key
 
 	for (key in obj) {
-		if (obj.hasOwnProperty(key))
-			if (obj[key] === "" ||
-			    obj[key] === 0 ||
-			    obj[key] === null ||
-			    obj[key].length === 0 ||
-			    obj[key] === undefined) {
+		if (obj.hasOwnProperty(key) && obj[key] === "" ||
+		    obj[key] === 0 ||
+		    obj[key] === null ||
+		    obj[key].length === 0 ||
+		    obj[key] === undefined) {
 
-				delete obj[key]
-			}
-			else if (typeof obj[key] === 'string')
-				obj[key] = obj[key].replace(/\r\n/g, '\n')
+			delete obj[key]
+		}
+
+		else if (typeof obj[key] === 'string')
+			obj[key] = normalizeLineBreaks(obj[key])
+
+		else if (Array.isArray(obj[key])) {
+			obj[key] = obj[key].map(function (element) {
+				return (typeof element === 'string') ?
+				       normalizeLineBreaks(element) :
+				       element
+			})
+		}
 	}
 
 	return obj
