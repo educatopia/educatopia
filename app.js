@@ -4,7 +4,6 @@ var express = require('express'),
     compress = require('compression'),
     morgan = require('morgan'),
     errorHandler = require('errorhandler'),
-    cookieParser = require('cookie-parser'),
     session = require('express-session'),
     favicon = require('serve-favicon'),
     mongo = require('mongodb'),
@@ -13,6 +12,11 @@ var express = require('express'),
 
     dbName = (app.get('env') === 'development') ? 'educatopiadev' : 'educatopia',
     dbServer = new mongo.Server('127.0.0.1', 27017, {auto_reconnect: true})
+
+
+if (process.env.NODE_ENV === 'production') {
+	console.assert(process.env.SESSION_SECRET, 'Missing session secret')
+}
 
 new mongo
 	.Db(dbName, dbServer, {w: 1})
@@ -23,7 +27,7 @@ function addRoutes (error, database) {
 
 	if (error)
 		console.error('Could not connect to database "' +
-		            database.databaseName + '"')
+		              database.databaseName + '"')
 
 	console.log('Connected to database "' +
 	            database.databaseName + '"')
@@ -56,9 +60,8 @@ function addRoutes (error, database) {
 	app.use(app.get('env') === 'development' ? morgan('dev') : morgan())
 
 	app.use(bodyParser())
-	app.use(cookieParser('mustached wookie'))
 	app.use(session({
-		secret: 'potential octo batman',
+		secret: process.env.SESSION_SECRET || 'dev',
 		saveUninitialized: true,
 		resave: true
 	}))

@@ -61,8 +61,6 @@ function validateExercise (exercise) {
 		}
 		else
 			booleanSum++
-
-		console.log(booleanSum)
 	}
 
 	return booleanSum === Object.keys(schema).length

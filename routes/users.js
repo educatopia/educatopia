@@ -5,13 +5,9 @@ var usersApi,
 
 users.confirm = function (request, response, next) {
 
-	console.log(request, response, next)
-
 	usersApi.confirm(
 		request.params.confirmationCode,
 		function (error, user) {
-
-			console.log(error,user)
 
 			if (error)
 				console.error(error)
