@@ -11,6 +11,8 @@ var express = require('express'),
 
     app = express(),
 
+    port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000,
+    ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
     db = {
 	    username: process.env.OPENSHIFT_MONGODB_DB_USERNAME,
 	    password: process.env.OPENSHIFT_MONGODB_DB_PASSWORD,
@@ -33,7 +35,6 @@ function addRoutes (error, database) {
 	var config = {
 		    database: database
 	    },
-
 	    api = require('./routes/api'),
 	    index = require('./routes/index'),
 	    login = require('./routes/login')(config),
@@ -41,9 +42,7 @@ function addRoutes (error, database) {
 	    signup = require('./routes/signup')(config),
 	    exercises = require('./routes/exercises')(config),
 	    users = require('./routes/users')(config),
-	    reference = require('./routes/reference'),
-
-	    port = process.env.PORT || 3000
+	    reference = require('./routes/reference')
 
 
 	app.set('views', path.join(__dirname, 'views'))
@@ -117,8 +116,8 @@ function addRoutes (error, database) {
 		res.render('404')
 	})
 
-	app.listen(port)
-	console.log('Listening on port ' + port)
+	app.listen(port, ip)
+	console.log('Listening on ' + ip + ':' + port)
 }
 
 
@@ -126,7 +125,7 @@ if (process.env.NODE_ENV === 'production')
 	console.assert(process.env.SESSION_SECRET, 'Missing session secret')
 
 if (db.password)
-	connectionString = db.username + ":" + db.password + "@" +
+	connectionString = db.username + ':' + db.password + '@' +
 	                   db.ip + ':' + db.port + '/' + db.name
 
 MongoClient.connect('mongodb://' + connectionString, addRoutes)
