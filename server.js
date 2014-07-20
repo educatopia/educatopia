@@ -121,8 +121,12 @@ function addRoutes (error, database) {
 }
 
 
-if (app.get('env') === 'production')
+app.set('hostname', 'localhost:' + port)
+
+if (app.get('env') === 'production') {
 	console.assert(process.env.SESSION_SECRET, 'Missing session secret')
+	app.set('hostname', process.env.OPENSHIFT_APP_DNS || 'educatopia.org')
+}
 
 if (db.password)
 	connectionString = db.username + ':' + db.password + '@' +

@@ -21,7 +21,7 @@ function randomBase62String (length) {
 		.slice(0, length)
 }
 
-function sendMail (userData, environment, callback) {
+function sendMail (userData, app, callback) {
 
 	var mail = {
 		    from: "no-reply@educatopia.org",
@@ -32,7 +32,8 @@ function sendMail (userData, environment, callback) {
 		    html: jade.renderFile(
 			    'views/mails/signup.jade',
 			    {
-				    'userData': userData
+				    'userData': userData,
+				    'settings': app.settings
 			    }
 		    )
 	    },
@@ -50,7 +51,7 @@ function sendMail (userData, environment, callback) {
 	    }
 
 
-	if (environment === 'production')
+	if (app.get('env') === 'production')
 		sendgrid.send(mail, mailCallback)
 
 	else {
@@ -151,7 +152,7 @@ exportObject.signup = function (request, callback) {
 							else
 								sendMail(
 									userData,
-									request.app.get('env'),
+									request.app,
 									function (error, message) {
 
 										if (error) {
