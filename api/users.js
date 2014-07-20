@@ -3,6 +3,10 @@ var crypto = require('crypto'),
     nodemailer = require('nodemailer'),
     jade = require('jade'),
 
+    username = process.env.MAIL_USERNAME,
+    password = process.env.MAIL_PASSWORD,
+    sendgrid = require('sendgrid'),
+
     exportObject = {},
     userCollection
 
@@ -19,30 +23,40 @@ function randomBase62String (length) {
 
 function sendMail (userData) {
 
-	var sendmailTransport = nodemailer.createTransport("sendmail")
+	var sendmailTransport = nodemailer.createTransport("sendmail"),
+	    mail = {
+		    transport: sendmailTransport,
+		    from: "Educatopia <no-reply@educatopia.org>",
+		    to: userData.email,
+		    subject: "Verify your email-address for Educatopia",
+		    html: jade.renderFile(
+			    'views/mails/signup.jade',
+			    {
+				    'userData': userData
+			    }
+		    )
+	    },
+	    callback = function (error, response) {
 
-	nodemailer.sendMail(
-		{
-			transport: sendmailTransport,
-			from: "Educatopia <no-reply@educatopia.org>",
-			to: userData.email,
-			subject: "Verify your email-address for Educatopia",
-			html: jade.renderFile(
-				'views/mails/signup.jade',
-				{
-					'userData': userData
-				}
-			)
-		},
-		function (error, response) {
+		    if (error)
+			    throw error
 
-			if (error)
-				throw error
+		    else
+			    console.log("Message sent: " + response)
+	    }
 
-			else
-				console.log("Message sent: " + response)
-		}
-	)
+
+	if (process.env.NODE_ENV === 'production') {
+
+		delete mail.transport
+
+		sendgrid(username, password)
+			.send(mail, callback)
+	}
+
+	else
+		nodemailer.sendMail(mail, callback)
+
 }
 
 
@@ -78,7 +92,7 @@ exportObject.signup = function (request, callback) {
 		    'signup',
 		    'team',
 		    'user',
-		    'users',
+		    'users'
 	    ],
 	    userData = {
 		    username: request.body.username,
