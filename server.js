@@ -6,26 +6,24 @@ var express = require('express'),
     errorHandler = require('errorhandler'),
     session = require('express-session'),
     favicon = require('serve-favicon'),
-    mongo = require('mongodb'),
+    mongodb = require('mongodb'),
+    MongoClient = mongodb.MongoClient,
 
     app = express(),
 
-    dbName = (app.get('env') === 'development') ? 'educatopiadev' : 'educatopia',
-    dbServer = new mongo.Server('127.0.0.1', 27017, {auto_reconnect: true})
-
-
-if (process.env.NODE_ENV === 'production') {
-	console.assert(process.env.SESSION_SECRET, 'Missing session secret')
-}
-
-new mongo
-	.Db(dbName, dbServer, {w: 1})
-	.open(addRoutes)
+    db = {
+	    username: process.env.OPENSHIFT_MONGODB_DB_USERNAME,
+	    password: process.env.OPENSHIFT_MONGODB_DB_PASSWORD,
+	    ip: process.env.OPENSHIFT_MONGODB_DB_HOST || '127.0.0.1',
+	    port: process.env.OPENSHIFT_MONGODB_DB_PORT || 27017,
+	    name: app.get('env') === 'development' ? 'educatopiadev' : 'educatopia'
+    },
+    connectionString = db.ip + ':' + db.port + '/' + db.name
 
 
 function addRoutes (error, database) {
 
-	if (error)
+	if (error || !database)
 		console.error('Could not connect to database "' +
 		              database.databaseName + '"')
 
@@ -122,3 +120,13 @@ function addRoutes (error, database) {
 	app.listen(port)
 	console.log('Listening on port ' + port)
 }
+
+
+if (process.env.NODE_ENV === 'production')
+	console.assert(process.env.SESSION_SECRET, 'Missing session secret')
+
+if (db.password)
+	connectionString = db.username + ":" + db.password + "@" +
+	                   db.ip + ':' + db.port + '/' + db.name
+
+MongoClient.connect('mongodb://' + connectionString, addRoutes)
