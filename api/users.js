@@ -5,7 +5,7 @@ var crypto = require('crypto'),
 
     username = process.env.MAIL_USERNAME,
     password = process.env.MAIL_PASSWORD,
-    sendgrid = require('sendgrid'),
+    sendgrid = require('sendgrid')(username, password),
 
     exportObject = {},
     userCollection
@@ -21,13 +21,13 @@ function randomBase62String (length) {
 		.slice(0, length)
 }
 
-function sendMail (userData) {
+function sendMail (userData, environment, callback) {
 
-	var sendmailTransport = nodemailer.createTransport("sendmail"),
-	    mail = {
-		    transport: sendmailTransport,
-		    from: "Educatopia <no-reply@educatopia.org>",
+	var mail = {
+		    from: "no-reply@educatopia.org",
+		    fromname: "Educatopia",
 		    to: userData.email,
+		    toname: userData.username,
 		    subject: "Verify your email-address for Educatopia",
 		    html: jade.renderFile(
 			    'views/mails/signup.jade',
@@ -36,26 +36,27 @@ function sendMail (userData) {
 			    }
 		    )
 	    },
-	    callback = function (error, response) {
+	    mailCallback = function (error, response) {
 
-		    if (error)
-			    throw error
+		    if (error || !response) {
+
+			    console.error(error)
+
+			    callback(error)
+		    }
 
 		    else
-			    console.log("Message sent: " + response)
+			    callback(null, response)
 	    }
 
 
-	if (process.env.NODE_ENV === 'production') {
+	if (environment === 'production')
+		sendgrid.send(mail, mailCallback)
 
-		delete mail.transport
-
-		sendgrid(username, password)
-			.send(mail, callback)
+	else {
+		mail.transport = nodemailer.createTransport("sendmail")
+		nodemailer.sendMail(mail, mailCallback)
 	}
-
-	else
-		nodemailer.sendMail(mail, callback)
 
 }
 
@@ -139,7 +140,6 @@ exportObject.signup = function (request, callback) {
 						})
 				}
 				else {
-
 					userCollection.insert(
 						userData,
 						{safe: true},
@@ -148,11 +148,27 @@ exportObject.signup = function (request, callback) {
 							if (error)
 								callback('User could not be inserted.')
 
-							sendMail(userData)
+							else
+								sendMail(
+									userData,
+									request.app.get('env'),
+									function (error, message) {
 
-							callback(null, {
-								message: 'New user was created and mail was sent'
-							})
+										if (error) {
+
+											console.error(error)
+
+											callback(error, {
+												message: 'Mail could not be sent'
+											})
+										}
+
+										else
+											callback(null, {
+												message: 'New user was created and mail was sent'
+											})
+									}
+								)
 						}
 					)
 				}

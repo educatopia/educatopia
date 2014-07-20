@@ -121,7 +121,7 @@ function addRoutes (error, database) {
 }
 
 
-if (process.env.NODE_ENV === 'production')
+if (app.get('env') === 'production')
 	console.assert(process.env.SESSION_SECRET, 'Missing session secret')
 
 if (db.password)

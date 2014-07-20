@@ -110,7 +110,7 @@ exercises.one = function (request, response, next) {
 		function (error, exercise) {
 
 			if (error)
-				console.log(error)
+				console.error(error)
 
 			else if (exercise)
 				response.render('exercises/view', {
@@ -192,7 +192,7 @@ exercises.edit = function (request, response, next) {
 			function (error, exercise) {
 
 				if (error)
-					console.log(error)
+					console.error(error)
 
 				else if (exercise) {
 					renderObject.exercise = exercise
@@ -211,7 +211,7 @@ exercises.history = function (request, response, next) {
 		function (error, history) {
 
 			if (error)
-				console.log(error)
+				console.error(error)
 
 			if (history)
 				response.render('exercises/history', {

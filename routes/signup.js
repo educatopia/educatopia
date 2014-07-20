@@ -13,12 +13,13 @@ function signup (request, response) {
 			function (error, data) {
 
 				if (error)
-					throw new Error(error)
+					console.error(error)
 
-				response.render('signup', {
-					page: 'signup',
-					data: data
-				})
+				else
+					response.render('signup', {
+						page: 'signup',
+						data: data
+					})
 			}
 		)
 
