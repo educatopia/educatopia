@@ -7,7 +7,10 @@ var mongo = require('mongodb'),
     exercisesCollection
 
 
-marked.setOptions({breaks: true})
+marked.setOptions({
+	breaks: true,
+	sanitize: true
+})
 
 
 function normalize (obj) {
