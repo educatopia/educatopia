@@ -7,6 +7,9 @@ var mongo = require('mongodb'),
     exercisesCollection
 
 
+marked.setOptions({breaks: true})
+
+
 function normalize (obj) {
 
 	// Delete empty fields and normalize line-breaks

@@ -15,13 +15,12 @@ block content
 					th Tags
 					th Flags
 					th Note
-					th Date
-					th Time
+
 			tbody
 				each exercise, index in exercises
 					tr
 						td= index + 1
-						td= exercise.subjects
+						td= exercise.subjects.join(', ')
 						td= exercise.type
 						td
 							- var task = exercise.task
@@ -36,5 +35,3 @@ block content
 						td= (exercise.tags) ? exercise.tags.length : ''
 						td= (exercise.flags) ? exercise.flags.length : ''
 						td= (exercise.note) ? exercise.note.substr(0, 30) + '…' : ''
-						td= exercise.date
-						td= exercise.time
