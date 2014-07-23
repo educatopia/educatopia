@@ -114,6 +114,7 @@ exercises.one = function (request, response, next) {
 
 			else if (exercise)
 				response.render('exercises/view', {
+					title: 'Exercise',
 					page: 'exerciseView',
 					exercise: exercise
 				})
@@ -163,6 +164,7 @@ exercises.all = function (request, response) {
 			throw new Error(error)
 
 		response.render('exercises/all', {
+			title: 'Exercises',
 			page: 'exercises',
 			exercises: exercises
 		})
@@ -172,6 +174,7 @@ exercises.all = function (request, response) {
 exercises.edit = function (request, response, next) {
 
 	var renderObject = {
+		title: 'Edit',
 		page: 'exerciseEdit',
 		schema: schema,
 		fieldsets: fieldsets
@@ -215,6 +218,7 @@ exercises.history = function (request, response, next) {
 
 			if (history)
 				response.render('exercises/history', {
+					title: 'History',
 					page: 'exerciseHistory',
 					history: history,
 					exercise: {
@@ -241,6 +245,7 @@ exercises.update = function (request, response) {
 
 			else {
 				response.render('exercises/view', {
+					title: 'Update',
 					page: 'exerciseView',
 					exercise: exercise
 				})

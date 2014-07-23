@@ -34,7 +34,6 @@ footer a {
     margin: 0 10px;
 }
 
-
 /* Exercise Formular */
 
 #exerciseModal .modal-body {
@@ -65,16 +64,15 @@ footer a {
 }
 
 pre {
-    background-color: rgb(45,45,45);
+    background-color: rgb(45, 45, 45);
     border: none;
 }
-
 
 .alert {
     overflow: scroll;
 }
 
-.alert:empty{
+.alert:empty {
     display: none;
 }
 
@@ -82,20 +80,36 @@ pre {
     margin-bottom: 1.5em;
 }
 
-#viewTab #task{
-    margin-bottom: 3em;
-}
-#viewTab #solution{
+#viewTab #task {
     margin-bottom: 3em;
 }
 
+#viewTab table {
+    border-collapse: collapse;
+    border: 1px solid rgb(221, 221, 221);
+    margin-bottom: 1.5em;
+}
+
+#viewTab table thead {
+    border-bottom: 2px solid rgb(221, 221, 221);
+}
+
+#viewTab table td,
+#viewTab table th {
+    border: 1px solid rgb(221, 221, 221);
+    padding: 0.4em 0.8em;
+}
+
+#viewTab #solution {
+    margin-bottom: 3em;
+}
+
+#viewTab .panel-heading {
+    cursor: pointer;
+}
 
 #exerciseSidebar .progress {
     margin-bottom: 0;
-}
-
-#solution .panel-heading {
-    cursor: pointer;
 }
 
 .panel {
@@ -103,10 +117,11 @@ pre {
     box-shadow: none !important;
 }
 
-.form-control + button{
+.form-control + button {
     margin-top: 1em;
 }
-.form-control + .form-control{
+
+.form-control + .form-control {
     margin-top: 0.5em;
 }
 

@@ -38,7 +38,8 @@ block firstTab
 		#solution.panel-group
 			.panel.panel-primary
 				.panel-heading(data-toggle='collapse', data-target='#solution .list-group')
-					span.panel-title Solutions
+					span.panel-title Solution
+						= (exercise.solutions.length === 1) ? '' : 's'
 
 				if exercise.solutions && exercise.solutions.length > 0
 					ul.list-group.collapse
@@ -55,7 +56,10 @@ block sidebar
 		li.list-group-item
 			| URL:
 			input.form-control.input-sm(
-			type='url', readonly=true, value='educatopia.org' + url)
+			type='url',
+			readonly=true,
+			value= settings.hostname + url
+			)
 
 		li.list-group-item
 			| Difficulty: <!--space-->
