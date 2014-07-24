@@ -53,66 +53,61 @@ block firstTab
 
 block sidebar
 	#exerciseSidebar.col-lg-3
-		li.list-group-item
-			| URL:
+		li.list-group-item URL:
 			input.form-control.input-sm(
 			type='url',
 			readonly=true,
 			value= settings.hostname + url
 			)
 
-		li.list-group-item
-			| Difficulty: <!--space-->
-			small.pull-right
-				= (exercise.difficulty) ? exercise.difficulty * 10 : 0
-				| /10
-			.progress
-				.progress-bar(style='width:' + (exercise.difficulty * 100) + '%')
-
-		li.list-group-item
-			| Credits: <!--space-->
-			span.badge.pull-right= exercise.credits
-
-		li.list-group-item
-			| Type: <!--space-->
-			span.pull-right= exercise.type
-
-		li.list-group-item
-			| Subjects: <!--space-->
+		li.list-group-item Subjects: <!--space-->
 			if exercise.subjects
 				each subject in exercise.subjects
 					span.label.label-default= subject
-					| <!--space--> <!--space-->
+					= ' '
+		li.list-group-item Type: <!--space-->
+			span.pull-right= exercise.type
 
-		li.list-group-item
-			| Tags: <!--space-->
+		li.list-group-item Duration: <!--space-->
+			if exercise.duration
+				span.pull-right= exercise.duration
+					|  min
+
+		li.list-group-item Credits: <!--space-->
+				span.badge.pull-right= exercise.credits
+
+		li.list-group-item Difficulty: <!--space-->
+			if exercise.difficulty !== undefined
+				span.pull-right= exercise.difficulty
+				.progress
+					.progress-bar(style='width: #{exercise.difficulty * 100}%')
+
+		li.list-group-item Tags: <!--space-->
 			if exercise.tags
 				each tag in exercise.tags
 					span.label.label-default= tag
-					| <!--space--> <!--space-->
+					= ' '
 
-		li.list-group-item
-			| Note:
+		li.list-group-item Note: <!--space-->
 			br
 			small.text-muted
 				= exercise.note
 
-		li.list-group-item
-			| Created By: <!--space-->
+		li.list-group-item Created By: <!--space-->
 			if exercise.createdBy
 				a.pull-right(href='/' + exercise.createdBy)
 					= exercise.createdBy
 
-		li.list-group-item
+		li.list-group-item Created At: <!--space-->
 			- var createdAt = exercise.createdAt.toISOString().substr(0, 19).split('T').join(' ')
-			| Created:
-			br
 			if exercise.createdAt
-				small.text-muted= createdAt + ' (UTC)'
+				br
+				small.text-muted
+					= createdAt + ' UTC'
 
-		li.list-group-item
+		li.list-group-item Last Modified: <!--space-->
 			- var updatedAt = exercise.updatedAt.toISOString().substr(0, 19).split('T').join(' ')
-			| Last Modified:
-			br
 			if exercise.updatedAt
-				small.text-muted= updatedAt + ' (UTC)'
+				br
+				small.text-muted
+					= updatedAt + ' UTC'

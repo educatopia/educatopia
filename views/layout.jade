@@ -2,7 +2,7 @@ doctype html
 head
 	meta(charset='utf-8')
 	title
-		if settings.eng === dev
+		if settings.env === 'development'
 			= 'Dev '
 		= title ? title : 'Educatopia'
 

@@ -2,6 +2,7 @@
   legend: exercise
   fields:
     - task
+    - hints
     - approach
     - solutions
 
@@ -13,6 +14,5 @@
     - credits
     - difficulty
     - duration
-    - hints
     - tags
     - note
