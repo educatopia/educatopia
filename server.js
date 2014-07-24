@@ -96,6 +96,8 @@ function addRoutes (error, database) {
 		.get(exercises.one)
 		.post(exercises.update)
 
+	app.get('/e/:id', exercises.shortcut)
+
 	app
 		.route('/exercises/:id/edit')
 		.get(exercises.edit)

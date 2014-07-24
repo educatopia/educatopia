@@ -125,6 +125,11 @@ exercises.one = function (request, response, next) {
 	)
 }
 
+exercises.shortcut = function (request, response, next) {
+
+	response.redirect('/exercises/' + request.params.id)
+}
+
 exercises.create = function (request, response) {
 
 	var renderObject = {
