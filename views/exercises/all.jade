@@ -11,7 +11,6 @@ block content
 					th Task
 					th Difficulty
 					th Credits
-					th Hints
 					th Tags
 					th Flags
 					th Note
@@ -26,12 +25,31 @@ block content
 							- var task = exercise.task
 							a(
 							href= exercise.url,
-							title= task ? task.substr(0, 50) + '…' : ''
+							title= task ? task : ''
 							)
-								=(task) ? task.substr(0, 30) + '…' : ''
-						td= exercise.difficulty
-						td= exercise.credits
-						td= (exercise.hints) ? exercise.hints.length : ''
-						td= (exercise.tags) ? exercise.tags.length : ''
-						td= (exercise.flags) ? exercise.flags.length : ''
-						td= (exercise.note) ? exercise.note.substr(0, 30) + '…' : ''
+								=(task) ? task.substr(0, 80) + '…' : ''
+						td
+							= exercise.difficulty
+							.progress
+								.progress-bar(
+								style='width: #{exercise.difficulty * 100}%'
+								)
+
+						td
+							if exercise.credits
+								span.badge
+									= exercise.credits
+
+						td
+							if exercise.tags
+								span.label.label-default(
+								title=exercise.tags.join(', ')
+								)
+									= exercise.tags.length
+
+						td.text-center
+							if !exercise.solutions && !exercise.approach
+								span.text-danger ✗
+
+						td: small.text-muted
+							= (exercise.note) ? exercise.note : ''

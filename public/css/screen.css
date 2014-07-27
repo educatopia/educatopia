@@ -94,6 +94,10 @@ pre {
     border-bottom: 2px solid rgb(221, 221, 221);
 }
 
+#viewTab table th:empty {
+    display: none;
+}
+
 #viewTab table td,
 #viewTab table th {
     border: 1px solid rgb(221, 221, 221);
