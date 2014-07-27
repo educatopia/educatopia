@@ -5,14 +5,9 @@ script(src='/components/bootstrap/dist/js/bootstrap.js')
 script(src='/components/backbone-forms/distribution/backbone-forms.js')
 script(src='/components/backbone-forms/distribution/editors/list.js')
 script(src='/components/backbone-forms/distribution/templates/bootstrap.js')
-script(type='text/x-mathjax-config').
-	MathJax.Hub.Config({
-		asciimath2jax: {
-			delimiters: [['´','´'], ['\\\(','\\)']]
-		}
-	})
 
-script(src='/components/MathJax/MathJax.js?config=AM_HTMLorMML')
+block scripts
+
 script(src='/components/highlightjs/highlight.pack.js')
 script(src='/components/marked/lib/marked.js')
 //script(src='lang/de.js')

@@ -21,7 +21,7 @@ block firstTab
 					.panel-collapse.collapse(id='hint-' + index+1)
 						.panel-body!= hint
 
-	br
+		br
 
 	if exercise.approach
 		#approach.panel-group
@@ -32,7 +32,7 @@ block firstTab
 					.panel-body
 						!= exercise.approach
 
-	br
+		br
 
 	if exercise.solutions && exercise.solutions.length > 0
 		#solution.panel-group
@@ -50,6 +50,11 @@ block firstTab
 					.alert.alert-success
 						!= exercise.solution
 				// TODO: remove because deprecated
+
+	if !exercise.solutions && !exercise.approach
+		a(href=url + '/edit', class='btn btn-default btn-lg', role='button')
+			| Add a Solution
+
 
 block sidebar
 	#exerciseSidebar.col-lg-3
@@ -111,3 +116,12 @@ block sidebar
 				br
 				small.text-muted
 					= updatedAt + ' UTC'
+
+block scripts
+	script(type='text/x-mathjax-config').
+		MathJax.Hub.Config({
+			asciimath2jax: {
+				delimiters: [['´','´']]
+			}
+		})
+	script(src='/components/MathJax/MathJax.js?config=AM_HTMLorMML')
