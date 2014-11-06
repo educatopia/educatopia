@@ -20,17 +20,18 @@ var express = require('express'),
 	    port: process.env.OPENSHIFT_MONGODB_DB_PORT || 27017,
 	    name: app.get('env') === 'development' ? 'educatopiadev' : 'educatopia'
     },
-    connectionString = db.ip + ':' + db.port + '/' + db.name
+    connectionString = db.ip + ':' + db.port + '/' + db.name,
+    devMode = (app.get('env') === 'development')
 
 
 function addRoutes (error, database) {
 
-	if (error || !database)
-		console.error('Could not connect to database "' +
-		              database.databaseName + '"')
+	if (error || !database) {
+		console.error('Could not connect to database "' + db.name + '"')
+		return
+	}
 
-	console.log('Connected to database "' +
-	            database.databaseName + '"')
+	console.log('Connected to database "' + database.databaseName + '"')
 
 	var config = {
 		    database: database
@@ -48,13 +49,14 @@ function addRoutes (error, database) {
 	app.set('views', path.join(__dirname, 'views'))
 	app.set('view engine', 'jade')
 
-
-	app.use(favicon(__dirname + '/public/img/favicon.png'))
+	app.use(favicon(__dirname + '/public/img/favicon.png'), {
+		maxAge: devMode ? 1000 : '1d'
+	})
 
 	app.use(compress())
 	app.use(express.static(path.join(__dirname, 'public')))
 
-	app.use(app.get('env') === 'development' ? morgan('dev') : morgan())
+	app.use(devMode ? morgan('dev') : morgan())
 
 	app.use(bodyParser())
 	app.use(session({

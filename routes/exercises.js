@@ -3,6 +3,7 @@ var config,
     fs = require('fs'),
     path = require('path'),
     yaml = require('js-yaml'),
+    langs = require('langs'),
 
     exercises = {},
 
@@ -13,7 +14,14 @@ var config,
     fieldsets = yaml.safeLoad(fs.readFileSync(fieldsetsPath, 'utf8'))
 
 
-function stringsToObjects (object) {
+schema.language.options = langs
+	.names(true)
+	.sort(function (a, b) {
+		return a > b ? 1 : -1
+	})
+
+
+function reformatFormContent (object) {
 
 	var key
 
@@ -66,7 +74,6 @@ function validateExercise (exercise) {
 	return booleanSum === Object.keys(schema).length
 }
 
-
 function submit (request, response, renderObject) {
 
 	var isValid
@@ -77,7 +84,7 @@ function submit (request, response, renderObject) {
 
 		if (isValid)
 			exercisesApi.add(
-				stringsToObjects(request.body),
+				reformatFormContent(request.body),
 				request.session.user,
 				function (error, exercise) {
 
@@ -93,7 +100,7 @@ function submit (request, response, renderObject) {
 			renderObject.message = 'Exercise is not valid! ' +
 			                       'Please correct mistakes and try to submit again.'
 
-			renderObject.exercise = stringsToObjects(request.body)
+			renderObject.exercise = reformatFormContent(request.body)
 
 			response.render('exercises/create', renderObject)
 		}
@@ -146,7 +153,7 @@ exercises.create = function (request, response) {
 
 			addEmptyFields(request)
 
-			renderObject.exercise = stringsToObjects(request.body)
+			renderObject.exercise = reformatFormContent(request.body)
 
 			response.render('exercises/create', renderObject)
 		}
@@ -159,7 +166,6 @@ exercises.create = function (request, response) {
 		response.render('exercises/create', renderObject)
 	}
 }
-
 
 exercises.all = function (request, response) {
 
@@ -189,7 +195,7 @@ exercises.edit = function (request, response, next) {
 
 		addEmptyFields(request)
 
-		renderObject.exercise = stringsToObjects(request.body)
+		renderObject.exercise = reformatFormContent(request.body)
 
 		response.render('exercises/edit', renderObject)
 	}
@@ -238,7 +244,7 @@ exercises.history = function (request, response, next) {
 
 exercises.update = function (request, response) {
 
-	var updatedExercise = stringsToObjects(request.body, schema)
+	var updatedExercise = reformatFormContent(request.body)
 
 	exercisesApi.update(
 		updatedExercise,
@@ -260,7 +266,7 @@ exercises.update = function (request, response) {
 }
 
 
-module.exports = function(config){
+module.exports = function (config) {
 
 	exercisesApi = require('../api/exercises')(config)
 

@@ -65,6 +65,9 @@ block sidebar
 			value= settings.hostname + '/e/' + exercise.id
 			)
 
+		li.list-group-item Language: <!--space-->
+			span.pull-right= exercise.language
+
 		li.list-group-item Subjects: <!--space-->
 			if exercise.subjects
 				each subject in exercise.subjects
@@ -76,10 +79,10 @@ block sidebar
 		li.list-group-item Duration: <!--space-->
 			if exercise.duration
 				span.pull-right= exercise.duration
-					|  min
+					| min
 
 		li.list-group-item Credits: <!--space-->
-				span.badge.pull-right= exercise.credits
+			span.badge.pull-right= exercise.credits
 
 		li.list-group-item Difficulty: <!--space-->
 			if exercise.difficulty !== undefined

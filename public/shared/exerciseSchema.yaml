@@ -24,6 +24,11 @@ solutions:
     as possible to make them machine readable.
     All further information should be written down in the approach section.
 
+language:
+  type: select
+  options: []
+  help: The language of the exercise
+
 subjects:
   type: list
   subtype: text

@@ -234,8 +234,7 @@ exportObject.add = function (exercise, user, callback) {
 				callback(error)
 
 			else {
-				console.log('Successfully added following exercise:')
-				console.dir(result)
+				console.log('Successfully added an exercise')
 
 				callback(null, result[0])
 			}

@@ -9,6 +9,7 @@
 -
   legend: details
   fields:
+    - language
     - subjects
     - type
     - credits

@@ -6,7 +6,6 @@ if page === 'exerciseCreate'
 	- var actionUrl = '/exercises/create'
 	- var addFieldUrl = '/exercises/create?'
 
-- console.log(page)
 
 mixin textarea(element, field, index)
 	- var id = field.slice(0, -1) + index
@@ -40,7 +39,6 @@ role='form', action=actionUrl, method='POST')
 
 				- var fieldId = (subtype == 'textarea') ? field + 'Body' : field
 
-				- console.log(field, schema[field])
 
 				.form-group(id=field)
 					label.col-sm-2.control-label(for=fieldId)
@@ -95,7 +93,7 @@ role='form', action=actionUrl, method='POST')
 									select.form-control(id=field, name=field
 									)&attributes(attrs ? attrs : {})
 										each option in [""].concat(schema[field].options)
-											option(selected=exercise.type == option)
+											option(selected=(exercise[field] === option))
 												= option
 									p.help-block.small= help
 
