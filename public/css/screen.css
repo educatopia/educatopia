@@ -6,9 +6,18 @@ a {
     cursor: pointer;
 }
 
-/*.nav {
-    text-transform: capitalize;
-}*/
+.navbar-brand {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 2em;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 100%;
+}
+
+#logo {
+    width: 24px;
+    height: 24px;
+}
 
 s {
     color: rgb(185, 74, 72) !important;
