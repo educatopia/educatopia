@@ -49,9 +49,9 @@ function addRoutes (error, database) {
 	app.set('views', path.join(__dirname, 'views'))
 	app.set('view engine', 'jade')
 
-	app.use(favicon(__dirname + '/public/img/favicon.png'), {
+	app.use(favicon(__dirname + '/public/img/favicon.png', {
 		maxAge: devMode ? 1000 : '1d'
-	})
+	}))
 
 	app.use(compress())
 	app.use(express.static(path.join(__dirname, 'public')))

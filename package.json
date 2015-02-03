@@ -21,7 +21,7 @@
     "morgan": "~1.1.1",
     "nodemailer": "~0.6.4",
     "sendgrid": "~1.1.1",
-    "serve-favicon": "~2.0.1"
+    "serve-favicon": "^2.2.0"
   },
   "engines": {
     "node": "0.10.x",
