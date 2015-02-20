@@ -43,6 +43,43 @@ footer a {
     margin: 0 10px;
 }
 
+#home {
+    padding: 50px 0 0 0;
+}
+
+#home #contentWrapper {
+    width: 100%;
+    padding: 0;
+    background-image: url('/img/galaxy.jpg');
+    background-size: 100% 100%;
+}
+
+#banner {
+    padding: 4em 0;
+    text-align: center;
+}
+
+#banner .title {
+    display: block;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 100;
+    letter-spacing: 3px;
+    color: white;
+    font-size: 3.8em;
+    margin-bottom: 0.4em;
+}
+
+#banner .subtitle {
+    color: rgb(200,200,200);
+    font-weight: 200;
+    font-size: 1.4em;
+    margin-bottom: 2em;
+}
+
+#banner .btn {
+    margin-bottom: 1em;
+}
+
 /* Exercise Formular */
 
 #exerciseModal .modal-body {
