@@ -21,7 +21,7 @@ block content
 						td= index + 1
 						td= exercise.subjects.join(', ')
 						td= exercise.type
-						td
+						td.small
 							- var task = exercise.task
 							a(
 							href= exercise.url,
@@ -29,11 +29,10 @@ block content
 							)
 								=(task) ? task.substr(0, 80) + '…' : ''
 						td
-							= exercise.difficulty
-							.progress
-								.progress-bar(
-								style='width: #{exercise.difficulty * 100}%'
-								)
+							if exercise.difficulty
+								span.text-muted.small= exercise.difficulty
+								.progress
+									.progress-bar(style='width: #{exercise.difficulty * 100}%')
 
 						td
 							if exercise.credits
@@ -51,5 +50,5 @@ block content
 							if !exercise.solutions && !exercise.approach
 								span.text-danger ✗
 
-						td: small.text-muted
+						td.small.text-muted
 							= (exercise.note) ? exercise.note : ''

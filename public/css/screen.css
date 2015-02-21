@@ -191,3 +191,8 @@ pre {
 .profile img {
     width: 100%;
 }
+
+#exercises .progress {
+    margin-bottom: 0;
+    height: 1em;
+}

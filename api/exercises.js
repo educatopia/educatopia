@@ -1,10 +1,11 @@
 var mongo = require('mongodb'),
-    marked = require('marked'),
-    clone = require('clone'),
+	marked = require('marked'),
+	clone = require('clone'),
+	capitalizer = require('capitalizer'),
 
-    BSON = mongo.BSONPure,
-    exportObject = {},
-    exercisesCollection
+	BSON = mongo.BSONPure,
+	exportObject = {},
+	exercisesCollection
 
 
 marked.setOptions({
@@ -161,35 +162,35 @@ exportObject.getHistoryById = function (id, callback) {
 
 exportObject.getAll = function (callback) {
 
-	function execArray (error, items) {
-
-		if (error)
-			callback(error)
-
-		var tempArray = []
-
-		items.forEach(function (item) {
-
-			var temp = {},
-			    key
-
-			temp.id = item._id // TODO: Introduce extra url id
-			temp.url = '/exercises/' + item._id
-
-			for (key in item.current)
-				if (item.current.hasOwnProperty(key))
-					temp[key] = item.current[key]
-
-			tempArray.push(temp)
-		})
-
-		callback(null, tempArray)
-	}
-
 	exercisesCollection
 		.find()
 		.sort({_id: 1})
-		.toArray(execArray)
+		.toArray(function (error, items) {
+
+			if (error)
+				callback(error)
+
+			var tempArray = []
+
+			items.forEach(function (item) {
+
+				var temp = {},
+					key
+
+				temp.id = item._id // TODO: Introduce extra url id
+				temp.url = '/exercises/' + item._id
+
+				for (key in item.current)
+					if (item.current.hasOwnProperty(key))
+						temp[key] = item.current[key]
+
+				temp.subjects = capitalizer(temp.subjects)
+
+				tempArray.push(temp)
+			})
+
+			callback(null, tempArray)
+		})
 }
 
 exportObject.getByUser = function (username, callback) {
@@ -197,10 +198,12 @@ exportObject.getByUser = function (username, callback) {
 	exercisesCollection
 		.find({
 			$or: [
-				{$and: [
-					{'current.createdBy': username},
-					{'history': {$exists: false}}
-				]},
+				{
+					$and: [
+						{'current.createdBy': username},
+						{'history': {$exists: false}}
+					]
+				},
 				{'history.0.createdBy': username}
 			]
 		})
@@ -217,7 +220,7 @@ exportObject.getByUser = function (username, callback) {
 exportObject.add = function (exercise, user, callback) {
 
 	var temp = {},
-	    now = new Date()
+		now = new Date()
 
 	temp.updatedAt = now
 
@@ -245,7 +248,7 @@ exportObject.add = function (exercise, user, callback) {
 exportObject.update = function (exerciseFromForm, user, callback) {
 
 	var temp = {},
-	    now = new Date()
+		now = new Date()
 
 	temp['_id'] = new BSON.ObjectID(exerciseFromForm.id)
 
