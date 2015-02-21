@@ -5,21 +5,17 @@ block content
 		fieldset
 			legend Login
 
-			label(for='username') Username
-			br
-			input#identifier(type='text', name='username')
+			.form-group
+				label(for='username') Username
+				input#identifier.form-control(type='text', name='username')
+
+			.form-group
+				label(for='password') Password
+				input#password.form-control(type='password', name='password')
 
 			br
-			br
+			input.btn.btn-default(type='submit', value='Login')
 
-			label(for='password') Password
-			br
-			input#password(type='password', name='password')
-
-			br
-			br
-
-			input(type='submit', value='Login')
 	if error
 		br
 		p.alert.alert-danger

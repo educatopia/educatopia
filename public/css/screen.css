@@ -6,6 +6,15 @@ a {
     cursor: pointer;
 }
 
+.navbar {
+    background-color: white;
+    border-bottom: 1px solid rgb(220,220,220);
+}
+
+.navbar a {
+    color: inherit;
+}
+
 .navbar-brand {
     font-family: 'Josefin Sans', sans-serif;
     font-size: 2em;
@@ -70,7 +79,7 @@ footer a {
 }
 
 #banner .subtitle {
-    color: rgb(200,200,200);
+    color: rgb(200, 200, 200);
     font-weight: 200;
     font-size: 1.4em;
     margin-bottom: 2em;

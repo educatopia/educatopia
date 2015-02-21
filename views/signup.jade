@@ -5,28 +5,20 @@ block content
 		fieldset
 			legend Signup
 
-			label(for='username') Username
-			br
-			input#username(type='text', name='username')
+			.form-group
+				label(for='username') Username
+				input#username.form-control(type='text', name='username')
+
+			.form-group
+				label(for='email') Email
+				input#email.form-control(type='text', name='email')
+
+			.form-group
+				label(for='password') Password
+				input#password.form-control(type='password', name='password')
 
 			br
-			br
-
-			label(for='email') Email
-			br
-			input#email(type='text', name='email')
-
-			br
-			br
-
-			label(for='password') Password
-			br
-			input#password(type='password', name='password')
-
-			br
-			br
-
-			input(type='submit', value='Create Account')
+			input.btn.btn-default(type='submit', value='Create Account')
 
 	if data && data.message
 		br
