@@ -1,3 +1,5 @@
+'use strict'
+
 var express = require('express'),
     path = require('path'),
     compress = require('compression'),
@@ -25,6 +27,8 @@ var express = require('express'),
 
 function addRoutes (error, database) {
 
+	// jshint maxstatements: 30
+
 	if (error || !database) {
 		console.error('Could not connect to database "' + db.name + '"')
 		return
@@ -35,14 +39,12 @@ function addRoutes (error, database) {
 	var config = {
 		    database: database
 	    },
-	    api = require('./routes/api'),
 	    index = require('./routes/index'),
 	    login = require('./routes/login')(config),
 	    logout = require('./routes/logout'),
 	    signup = require('./routes/signup')(config),
 	    exercises = require('./routes/exercises')(config),
-	    users = require('./routes/users')(config),
-	    reference = require('./routes/reference')
+	    users = require('./routes/users')(config)
 
 
 	app.set('views', path.join(__dirname, 'views'))

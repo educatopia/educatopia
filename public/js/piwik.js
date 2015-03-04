@@ -1,3 +1,8 @@
+'use strict'
+
+/* global document */
+// jshint expr: true
+
 var _paq = _paq || []
 
 _paq.push(['trackPageView'])

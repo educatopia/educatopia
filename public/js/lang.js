@@ -1,4 +1,6 @@
-function i18n(data) {
+'use strict'
+
+function I18n (data) {
 
 	var count = 0,
 		subs = [],
@@ -7,18 +9,20 @@ function i18n(data) {
 		history = [],
 		untranslated = []
 
-	this.map = function() {
+	this.dict = function () {
+
+		// jshint maxstatements: 12
+
 		var args = arguments,
 			string = args[0],
 			replacedString
 
-		//Build history of all string
+		// Build history of all string
 		history.push(string)
 
-		/* Exit program when no translation exists
-		 * and add to list of untranslated strings
-		 */
-		if(!data[string]) {
+		// Exit program when no translation exists
+		// and add to list of untranslated strings
+		if (!data[string]) {
 
 			untranslated.push(string)
 
@@ -26,26 +30,25 @@ function i18n(data) {
 		}
 
 
-
-		for(i = 1; i < args.length; i++) {
+		for (i = 1; i < args.length; i++) {
 
 			temp = args[i]
 
-			//if String
-			if(temp.big)
+			// if String
+			if (temp.big)
 				subs.push(temp)
 
-			//if Number
-			else if(temp.toFixed)
+			// if Number
+			else if (temp.toFixed)
 				count += temp - 1
 		}
 
 
-		for(i = 0; i < subs.length; i++) {
+		for (i = 0; i < subs.length; i++) {
 
 			var regexp = new RegExp('\\{' + i + '\\}', 'gi')
 
-			if(i == 0)
+			if (i === 0)
 				replacedString = data[string][count].replace(regexp, subs[i])
 			else
 				replacedString = replacedString.replace(regexp, subs[i])
@@ -54,13 +57,15 @@ function i18n(data) {
 		return replacedString || data[string][count]
 	}
 
-	this.getHistory = function() {
+	this.getHistory = function () {
 		return untranslated
 	}
 
-	this.getUntranslated = function() {
+	this.getUntranslated = function () {
 		return untranslated
 	}
 
 	return this
 }
+
+module.exports = I18n

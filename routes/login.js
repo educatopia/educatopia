@@ -1,3 +1,5 @@
+'use strict'
+
 var usersApi
 
 function login (request, response) {
@@ -9,8 +11,10 @@ function login (request, response) {
 			function (error, user) {
 
 				if (error || !user) {
-					console.error('Following error occurred during login: '
-						+ error.message)
+					console.error(
+						'Following error occurred during login: ' +
+						error.message
+					)
 
 					response.render('login', {
 						page: 'login',

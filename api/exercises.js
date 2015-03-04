@@ -1,3 +1,5 @@
+'use strict'
+
 var mongo = require('mongodb'),
 	marked = require('marked'),
 	clone = require('clone'),
@@ -25,7 +27,7 @@ function normalize (obj) {
 	var key
 
 	for (key in obj) {
-		if (obj.hasOwnProperty(key) && obj[key] === "" ||
+		if (obj.hasOwnProperty(key) && obj[key] === '' ||
 		    obj[key] === 0 ||
 		    obj[key] === null ||
 		    obj[key].length === 0 ||
@@ -38,6 +40,7 @@ function normalize (obj) {
 			obj[key] = normalizeLineBreaks(obj[key])
 
 		else if (Array.isArray(obj[key])) {
+			// jshint loopfunc: true
 			obj[key] = obj[key].map(function (element) {
 				return (typeof element === 'string') ?
 				       normalizeLineBreaks(element) :
@@ -250,7 +253,7 @@ exportObject.update = function (exerciseFromForm, user, callback) {
 	var temp = {},
 		now = new Date()
 
-	temp['_id'] = new BSON.ObjectID(exerciseFromForm.id)
+	temp._id = new BSON.ObjectID(exerciseFromForm.id)
 
 	temp.current = clone(normalize(exerciseFromForm))
 
@@ -307,7 +310,7 @@ exportObject.delete = function (id, callback) {
 				callback(error)
 			else {
 				console.log('' + result + ' document(s) deleted')
-				callback(req.body)
+				callback()
 			}
 		}
 	)

@@ -1,3 +1,5 @@
+'use strict'
+
 var usersApi
 
 function signup (request, response) {

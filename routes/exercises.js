@@ -1,5 +1,6 @@
-var config,
-    exercisesApi,
+'use strict'
+
+var exercisesApi,
     fs = require('fs'),
     path = require('path'),
     yaml = require('js-yaml'),
@@ -37,13 +38,14 @@ function reformatFormContent (object) {
 }
 
 function addEmptyFields (request) {
-
 	// Adds empty fields to render empty input-fields in form
+
+	var key
 
 	for (key in request.query)
 		if (request.query.hasOwnProperty(key)) {
 			request.body[key] = request.body[key] || []
-			request.body[key].push("")
+			request.body[key].push('')
 		}
 }
 
@@ -56,13 +58,14 @@ function validateExercise (exercise) {
 
 		if (schema.hasOwnProperty(fieldName) && schema[fieldName].validators) {
 
+			// jshint loopfunc: true
+
 			booleanSum += schema[fieldName].validators.every(function (constraint) {
 
 				// TODO: Add more types of validators
 
-				if (constraint === 'required') {
+				if (constraint === 'required')
 					return Boolean(exercise[fieldName])
-				}
 				else
 					return true
 			})
@@ -92,7 +95,7 @@ function submit (request, response, renderObject) {
 						console.error(error)
 
 					else
-						response.redirect('/exercises/' + exercise['_id'])
+						response.redirect('/exercises/' + exercise._id)
 				}
 			)
 
@@ -106,7 +109,7 @@ function submit (request, response, renderObject) {
 		}
 	}
 	else
-		response.redirect('/exercises/' + exercise['_id'])
+		response.redirect('/exercises')
 }
 
 
@@ -132,7 +135,7 @@ exercises.one = function (request, response, next) {
 	)
 }
 
-exercises.shortcut = function (request, response, next) {
+exercises.shortcut = function (request, response) {
 
 	response.redirect('/exercises/' + request.params.id)
 }

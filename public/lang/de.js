@@ -1,8 +1,0 @@
-var dictionary = {
-	"Task": ["Aufgabe", "Aufgaben"],
-	"What's up Mr. {0} {2} {1}": ["Was geht ab Mr. {0} {2} {1}"],
-	"math": ["mathe"],
-	"digital electronics": ["digitaltechnik"],
-	"modelling": ["modellierung"],
-	"programming": ["programmierung"]
-}

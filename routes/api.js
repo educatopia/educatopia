@@ -1,3 +1,5 @@
+'use strict'
+
 var api = {},
     exercises = {},
     users = {}

@@ -1,14 +1,16 @@
+'use strict'
+
 var crypto = require('crypto'),
-    bcrypt = require('bcrypt'),
-    nodemailer = require('nodemailer'),
-    jade = require('jade'),
+	bcrypt = require('bcrypt'),
+	nodemailer = require('nodemailer'),
+	jade = require('jade'),
 
-    username = process.env.MAIL_USERNAME,
-    password = process.env.MAIL_PASSWORD,
-    sendgrid = require('sendgrid')(username, password),
+	username = process.env.MAIL_USERNAME,
+	password = process.env.MAIL_PASSWORD,
+	sendgrid = require('sendgrid')(username, password),
 
-    exportObject = {},
-    userCollection
+	exportObject = {},
+	userCollection
 
 
 function randomBase62String (length) {
@@ -24,38 +26,38 @@ function randomBase62String (length) {
 function sendMail (userData, app, callback) {
 
 	var mail = {
-		    from: "no-reply@educatopia.org",
-		    fromname: "Educatopia",
-		    to: userData.email,
-		    toname: userData.username,
-		    subject: "Verify your email-address for Educatopia",
-		    html: jade.renderFile(
-			    'views/mails/signup.jade',
-			    {
-				    'userData': userData,
-				    'settings': app.settings
-			    }
-		    )
-	    },
-	    mailCallback = function (error, response) {
+			from: 'no-reply@educatopia.org',
+			fromname: 'Educatopia',
+			to: userData.email,
+			toname: userData.username,
+			subject: 'Verify your email-address for Educatopia',
+			html: jade.renderFile(
+				'views/mails/signup.jade',
+				{
+					'userData': userData,
+					'settings': app.settings
+				}
+			)
+		},
+		mailCallback = function (error, response) {
 
-		    if (error || !response) {
+			if (error || !response) {
 
-			    console.error(error)
+				console.error(error)
 
-			    callback(error)
-		    }
+				callback(error)
+			}
 
-		    else
-			    callback(null, response)
-	    }
+			else
+				callback(null, response)
+		}
 
 
 	if (app.get('env') === 'production')
 		sendgrid.send(mail, mailCallback)
 
 	else {
-		mail.transport = nodemailer.createTransport("sendmail")
+		mail.transport = nodemailer.createTransport('sendmail')
 		nodemailer.sendMail(mail, mailCallback)
 	}
 
@@ -79,32 +81,32 @@ exportObject.getByUsername = function (username, callback) {
 exportObject.signup = function (request, callback) {
 
 	var now = new Date(),
-	    blackList = [
-		    'about',
-		    'api',
-		    'confirm',
-		    'exercise',
-		    'exercises',
-		    'help',
-		    'imprint',
-		    'login',
-		    'logout',
-		    'request',
-		    'settings',
-		    'signup',
-		    'team',
-		    'user',
-		    'users'
-	    ],
-	    userData = {
-		    username: request.body.username,
-		    email: request.body.email,
-		    confirmationCode: randomBase62String(33),
-		    createdAt: now,
-		    updatedAt: now
-	    }
+		blackList = [
+			'about',
+			'api',
+			'confirm',
+			'exercise',
+			'exercises',
+			'help',
+			'imprint',
+			'login',
+			'logout',
+			'request',
+			'settings',
+			'signup',
+			'team',
+			'user',
+			'users'
+		],
+		userData = {
+			username: request.body.username,
+			email: request.body.email,
+			confirmationCode: randomBase62String(33),
+			createdAt: now,
+			updatedAt: now
+		}
 
-	if (blackList.indexOf(userData.username) != -1) {
+	if (blackList.indexOf(userData.username) !== -1) {
 		callback(null, {message: 'This username is not allowed.'})
 		return
 	}
@@ -117,10 +119,12 @@ exportObject.signup = function (request, callback) {
 		userData.password = hash
 
 		userCollection.findOne(
-			{ $or: [
-				{email: userData.email},
-				{username: userData.username}
-			]},
+			{
+				$or: [
+					{email: userData.email},
+					{username: userData.username}
+				]
+			},
 			function (error, user) {
 
 				if (error)
@@ -153,20 +157,23 @@ exportObject.signup = function (request, callback) {
 								sendMail(
 									userData,
 									request.app,
-									function (error, message) {
+									function (error) {
 
 										if (error) {
 
 											console.error(error)
 
 											callback(error, {
-												message: 'Mail could not be sent'
+												message: 'Mail could ' +
+												         'not be sent'
 											})
 										}
 
 										else
 											callback(null, {
-												message: 'New user was created and mail was sent'
+												message: 'New user ' +
+												         'was created ' +
+												         'and mail was sent'
 											})
 									}
 								)
@@ -198,8 +205,11 @@ exportObject.confirm = function (confirmationCode, callback) {
 					function (error, result) {
 
 						if (error || result === 0)
-							callback('Following error occurred while updating user ' +
-							         username + ': ' + error)
+							callback(
+								'Following error occurred ' +
+								'while updating user ' +
+								username + ': ' + error
+							)
 
 						else
 							callback(null, user)
@@ -228,17 +238,21 @@ exportObject.login = function (username, password, callback) {
 				callback({message: 'Email-address must first be verified!'})
 
 			else
-				bcrypt.compare(password, user.password, function (error, result) {
+				bcrypt.compare(
+					password,
+					user.password,
+					function (error, result) {
 
-					if (error)
-						throw new Error(error)
+						if (error)
+							throw new Error(error)
 
-					if (result)
-						callback(null, user)
+						if (result)
+							callback(null, user)
 
-					else
-						callback({message: 'Wrong password or username!'})
-				})
+						else
+							callback({message: 'Wrong password or username!'})
+					}
+				)
 		}
 	)
 }

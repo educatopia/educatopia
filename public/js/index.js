@@ -1,9 +1,20 @@
+'use strict'
+
+/*
+global Backbone, MathJax, marked,
+$, _, DOMinate, shared,
+hljs, Login, window, document, alert
+*/
+
+// jshint expr: true
+
 !function (window, document) {
+
+	// jshint maxstatements: 35
 
 	var ExerciseTabView,
 		appRouter,
 		AppRouter,
-		ExerciseFormView,
 		AppView,
 		ExerciseSidebarView,
 		ExerciseView,
@@ -11,50 +22,44 @@
 		ExercisesListView,
 		Exercise,
 		Exercises,
-		international = i18n(dictionary),
-		t8 = international.map,
-		auto,
-		specified,
-		rootExercise,
-		ExerciseForm,
-		exerciseFormData,
+	// international = i18n(dictionary),
+	// t8 = international.map,
+	// auto,
+	// specified,
+	// rootExercise,
+	// ExerciseForm,
+	// exerciseFormData,
 		ReferenceView,
 		ReferenceListView,
-		subjects = [
-			'math',
-			'programming',
-			'digital electronics',
-			'modelling',
-			'internet technologies'
-		],
-		subjectsExtended = {
-			'math': {
-				proposition: "",
-				set: "",
-				proof: "",
-				relation: "",
-				function: ""
-
-			},
-			'programming': {
-
-			},
-			'digital electronics': {
-
-			},
-			'modelling': {
-
-			}
-		},
+	/*
+	 subjects = [
+	 'math',
+	 'programming',
+	 'digital electronics',
+	 'modelling',
+	 'internet technologies'
+	 ],
+	 subjectsExtended = {
+	 'math': {
+	 proposition: '',
+	 set: '',
+	 proof: '',
+	 relation: '',
+	 function: ''
+	 },
+	 'programming': {},
+	 'digital electronics': {},
+	 'modelling': {}
+	 },
+	 */
 		ExercisesView,
 		ReferenceListItemView,
-		c = console,
 		appView,
 		BannerView,
 		ExerciseEditView,
 		ExercisesTableView,
 		ExerciseEditForm,
-		ExerciseHistoryForm,
+	// ExerciseHistoryForm,
 		ExerciseHistoryView,
 		LoginView,
 		NavbarView,
@@ -82,34 +87,34 @@
 
 	/*
 	 offlineScripts = [
-	 "components/MathJax/index.js",
-	 "components/jquery/jquery.js",
-	 "components/underscore/underscore.js",
-	 "components/backbone/backbone.js",
-	 "components/backbone-forms/distribution/backbone-forms.js",
-	 "components/bootstrap-template/index.js",
-	 "components/dominate/index.js",
-	 "components/highlight/index.js",
-	 "components/bootstrap/bootstrap.js"
+	 'components/MathJax/index.js',
+	 'components/jquery/jquery.js',
+	 'components/underscore/underscore.js',
+	 'components/backbone/backbone.js',
+	 'components/backbone-forms/distribution/backbone-forms.js',
+	 'components/bootstrap-template/index.js',
+	 'components/dominate/index.js',
+	 'components/highlight/index.js',
+	 'components/bootstrap/bootstrap.js'
 	 ],
 	 onlineScripts = [
-	 "//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML",
-	 "//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js",
-	 "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js",
-	 "//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js",
-	 "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.0/bootstrap.min.js",
-	 "//raw.github.com/powmedia/backbone-forms/v0.10.0/distribution/backbone-forms.min.js",
-	 "//raw.github.com/powmedia/backbone-forms/v0.10.0/distribution/templates/bootstrap.js",
-	 "//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js",
-	 "//raw.github.com/adius/DOMinate/master/src/dominate.js"
+	 '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML',
+	 '//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js',
+	 '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js',
+	 '//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js',
+	 '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.0/bootstrap.min.js',
+	 '//raw.github.com/powmedia/backbone-forms/v0.10.0/distribution/backbone-forms.min.js',
+	 '//raw.github.com/powmedia/backbone-forms/v0.10.0/distribution/templates/bootstrap.js',
+	 '//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js',
+	 '//raw.github.com/adius/DOMinate/master/src/dominate.js'
 	 ]
 
 
 	 onlineScripts.forEach(function(script){
 	 var link
-	 link = document.createElement("script")
-	 link.setAttribute("src", "http:" + script)
-	 link.setAttribute("type", "text/javascript")
+	 link = document.createElement('script')
+	 link.setAttribute('src', 'http:' + script)
+	 link.setAttribute('type', 'text/javascript')
 
 	 document.body.appendChild(link)
 	 })
@@ -140,21 +145,21 @@
 	Exercise = Backbone.Model.extend({
 		url: '/api/exercises',
 		parse: function (item) {
-
+			// jshint maxstatements: 15
 			// Add missing fields
 
-			item.task = item.task || ""
-			item.approach = item.approach || ""
-			item.solutions = item.solutions || ""
-			item.subjects = item.subjects || ""
-			item.type = item.type || ""
-			item.credits = item.credits || ""
-			item.difficulty = item.difficulty || ""
-			item.duration = item.duration || ""
-			item.tags = item.tags || ""
-			item.note = item.note || ""
-			item.hints = item.hints || ""
-			item.flags = item.flags || ""
+			item.task = item.task || ''
+			item.approach = item.approach || ''
+			item.solutions = item.solutions || ''
+			item.subjects = item.subjects || ''
+			item.type = item.type || ''
+			item.credits = item.credits || ''
+			item.difficulty = item.difficulty || ''
+			item.duration = item.duration || ''
+			item.tags = item.tags || ''
+			item.note = item.note || ''
+			item.hints = item.hints || ''
+			item.flags = item.flags || ''
 
 			return item
 		},
@@ -191,28 +196,32 @@
 				type: 'Date',
 				editorClass: 'form-control',
 				editorAttrs: {min: 0},
-				help: 'Consider difficulty, necessary steps and importance of the exercise. ' +
-					'Each credit-point represents a noteworthy accomplishment while solving the task. ' +
-					'Recommended range is 1 - 10 credits.'
+				help: 'Consider difficulty, necessary steps and' +
+				      'importance of the exercise. ' +
+				      'Each credit-point represents a noteworthy accomplishment' +
+				      'while solving the task. ' +
+				      'Recommended range is 1 - 10 credits.'
 			},
 			difficulty: {
 				type: 'Number',
 				editorClass: 'form-control',
 				editorAttrs: {min: 0, max: 1, step: 0.1, title: 'Tooltip help'},
 				help: 'The difficulty level of the exercise ranges ' +
-					'from excluded 0 (So easy that everybody can solve it) ' +
-					'to excluded 1 (So difficult that nobody can solve it)'
+				      'from excluded 0 (So easy that everybody can solve it) ' +
+				      'to excluded 1 (So difficult that nobody can solve it)'
 			},
 			duration: {
 				type: 'Number',
 				editorClass: 'form-control',
 				editorAttrs: {min: 0},
-				help: 'How long does it take to solve the exercise for an average person?'
+				help: 'How long does it take to solve the exercise' +
+				      'for an average person?'
 			},
 			tags: {
 				type: 'List',
 				editorClass: 'form-control',
-				help: 'All the things that should be associated with this exercise'
+				help: 'All the things that should be associated with ' +
+				      'this exercise'
 			},
 			note: {
 				type: 'TextArea',
@@ -223,7 +232,8 @@
 			hints: {
 				type: 'List',
 				editorClass: 'form-control',
-				help: 'Any information which helps one to solve the exercise when he\'s stuck.'
+				help: 'Any information which helps one to solve the exercise ' +
+				      'when they\'re stuck.'
 			}
 		}
 	})
@@ -285,7 +295,8 @@
 				this
 					.$('#tab2')
 					.html(new ExerciseEditView({model: this.model}).render().el)
-			} else {
+			}
+			else {
 				this
 					.$('#tab2')
 					.html(new ExerciseEditView().render().el)
@@ -316,6 +327,8 @@
 
 		render: function () {
 
+			// jshint maxstatements: 11
+
 			this.renderExercise()
 			this.renderEdit()
 			this.renderHistory()
@@ -324,28 +337,29 @@
 				this
 					.renderExerciseTab()
 					.renderSidebar()
-			} else {
+			}
+			else {
 				this.$el
-					.addClass("well")
-					.addClass("col-lg-12")
+					.addClass('well')
+					.addClass('col-lg-12')
 
 				this.$('#tabHandlers li:nth-of-type(1)')
-					.removeClass("active")
+					.removeClass('active')
 
 				this.$('#tabHandlers li:nth-of-type(2)')
-					.addClass("active")
+					.addClass('active')
 
-				this.$("#tab2").css("display", "block")
+				this.$('#tab2').css('display', 'block')
 			}
 
-			MathJax.Hub.Queue(["Typeset", MathJax.Hub, this.el])
+			MathJax.Hub.Queue(['Typeset', MathJax.Hub, this.el])
 
 			return this
 		}
 	})
 
 	ExerciseTabView = Backbone.View.extend({
-		tagName: "div",
+		tagName: 'div',
 		template: _.template($('#exerciseTabTemplate').html()),
 		render: function () {
 
@@ -383,7 +397,7 @@
 		id: 'exerciseEdit',
 		template: _.template($('#exerciseEditTemplate').html()),
 		events: {
-			"click #exerciseEditSubmit": 'submit'
+			'click #exerciseEditSubmit': 'submit'
 		},
 		//template: _.template($('#exerciseEditTemplate').html()),
 
@@ -418,8 +432,8 @@
 					.addClass('glyphicon-refresh')
 
 
-				ExerciseEditForm.model.save("", "", {
-					success: function (model, repsonse, options) {
+				ExerciseEditForm.model.save('', '', {
+					success: function () {
 						this
 							.$('.successInfo')
 							.removeClass('alert-danger')
@@ -430,7 +444,7 @@
 							.removeClass('glyphicon')
 							.removeClass('glyphicon-refresh')
 					},
-					error: function (model, repsonse, options) {
+					error: function () {
 
 						submitSpan
 							.removeClass('glyphicon')
@@ -487,8 +501,7 @@
 
 			// TODO: Listen to change event and redraw
 
-			var exercises = [],
-				_this = this,
+			var _this = this,
 				url
 
 			if (this.model.id) {
@@ -513,7 +526,7 @@
 		className: 'list-group',
 		template: _.template($('#exerciseSideBarTemplate').html()),
 		events: {
-			"click #showHint": "showHint"
+			'click #showHint': 'showHint'
 		},
 		showHint: function () {
 
@@ -523,19 +536,21 @@
 
 				var hints = $('#hints')
 
-				if (counter == 0)
+				if (counter === 0)
 					$('<hr>')
 						.hide()
 						.appendTo(hints)
 						.slideDown('fast')
 
 
-				var el = $('<div class="alert alert-info">' + this.model.get('hints')[counter] + '</div>')
+				var el = $('<div class="alert alert-info">' +
+				           this.model.get('hints')[counter] +
+				           '</div>')
 					.hide()
 					.appendTo(hints)
 					.slideDown('fast')
 
-				MathJax.Hub.Queue(["Typeset", MathJax.Hub, el[0]])
+				MathJax.Hub.Queue(['Typeset', MathJax.Hub, el[0]])
 
 				counter++
 				this.model.set('displayedHints', counter)
@@ -549,7 +564,7 @@
 
 				this.$el.html(this.template({data: this.model.toJSON()}))
 
-				this.$("[rel=tooltip]").tooltip()
+				this.$('[rel=tooltip]').tooltip()
 			}
 
 			return this
@@ -590,9 +605,9 @@
 	})
 
 	ExercisesListItemView = Backbone.View.extend({
-		tagName: "li",
+		tagName: 'li',
 		events: {
-			"click .exerciseLink": function () {
+			'click .exerciseLink': function () {
 
 				var id = this.model.get('id'),
 					task = appRouter.tasksList.get(id),
@@ -605,15 +620,19 @@
 		},
 		initialize: function () {
 
-			this.muted = (!(this.model.get('solution') || this.model.get('solutions'))) ? 'muted' : ''
+			this.muted = (!(this.model.get('solution') ||
+			                this.model.get('solutions'))) ? 'muted' : ''
 
 		},
 		render: function () {
 
 			DOMinate(
-				[this.el,
-					['small.exerciseLink',
-						['a', String(this.id) + '. Aufgabe',
+				[
+					this.el,
+					[
+						'small.exerciseLink',
+						[
+							'a', String(this.id) + '. Aufgabe',
 							{class: this.muted}
 						]
 					]
@@ -631,11 +650,14 @@
 
 			var exercises = []
 
-			_.each(this.collection.models, function (exercise, i) {
+			_.each(this.collection.models, function (exercise) {
 
 				var enhancedExercise = exercise.attributes,
 					timestamp = enhancedExercise.id.substring(0, 8),
-					datetime = new Date(parseInt(timestamp, 16) * 1000).toISOString().substr(0, 19).split('T')
+					datetime = new Date(parseInt(timestamp, 16) * 1000)
+						.toISOString()
+						.substr(0, 19)
+						.split('T')
 
 				enhancedExercise.url = '#exercises/' + enhancedExercise.id
 				enhancedExercise.date = datetime[0]
@@ -664,7 +686,9 @@
 
 			this
 				.$('#referenceSidebar')
-				.html(new ReferenceListView({collection: this.options.data}).render().el)
+				.html(new ReferenceListView({collection: this.options.data})
+					.render()
+					.el)
 
 			return this
 		}
@@ -673,12 +697,15 @@
 	ReferenceListView = Backbone.View.extend({
 		tagName: 'ul',
 		className: 'list-group',
-		//attributes: {'data-spy': "affix"},
+		//attributes: {'data-spy': 'affix'},
 		render: function () {
 
-			_.each(this.collection.references.math, function (value, key, list) {
+			_.each(this.collection.references.math, function (value, key) {
 
-				this.$el.append(new ReferenceListItemView({model: value, id: key}).render().el)
+				this.$el.append(new ReferenceListItemView({
+					model: value,
+					id: key
+				}).render().el)
 
 			}, this)
 
@@ -687,10 +714,10 @@
 	})
 
 	ReferenceListItemView = Backbone.View.extend({
-		tagName: "li",
-		className: "list-group-item",
+		tagName: 'li',
+		className: 'list-group-item',
 		events: {
-			"click a": function () {
+			'click a': function () {
 
 				var ref,
 					cont
@@ -698,23 +725,25 @@
 				ref = $('#referenceContent').html('')
 
 				cont = DOMinate(
-					[ref[0],
+					[
+						ref[0],
 						['div.panel-heading', this.id],
 						['ul.list-group$list']
 					])
 
-				_.each(this.model, function (item, index) {
+				_.each(this.model, function (item) {
 
 					$(cont.list).append($('<li class=list-group-item>' + item + '</li>'))
 				})
 
-				MathJax.Hub.Queue(["Typeset", MathJax.Hub, cont.list])
+				MathJax.Hub.Queue(['Typeset', MathJax.Hub, cont.list])
 			}
 		},
 		render: function () {
 
 			DOMinate(
-				[this.el,
+				[
+					this.el,
 					['a', String(this.id)]
 				]
 			)
@@ -728,8 +757,8 @@
 		className: 'modal fade',
 		template: _.template($('#loginModalTemplate').html()),
 		events: {
-			"click .submit": 'submit',
-			"click #forgotPassword": 'forgotPassword'
+			'click .submit': 'submit',
+			'click #forgotPassword': 'forgotPassword'
 		},
 		initialize: function () {
 
@@ -748,10 +777,10 @@
 				type: 'POST',
 				url: '/api/register',
 				data: Login.getValue,
-				success: function(){
+				success: function () {
 					alert('worked')
 				},
-				error: function(e){
+				error: function (e) {
 					throw e
 				}
 			})
@@ -778,7 +807,7 @@
 		className: 'modal fade',
 		template: _.template($('#signupModalTemplate').html()),
 		events: {
-			"click .submit": 'submit'
+			'click .submit': 'submit'
 		},
 		initialize: function () {
 
@@ -803,12 +832,12 @@
 				type: 'POST',
 				url: '/api/register',
 				data: SignupForm.getValue(),
-				success: function(data, textStatus, jqXHR){
+				success: function () {
 					console.log('Signup was successful')
 
 					element.modal('hide')
 				},
-				error: function(jqXHR, textStatus, errorThrown){
+				error: function (jqXHR, textStatus, errorThrown) {
 					console.log('Signup was not successful')
 					console.log(textStatus)
 					console.log(errorThrown)
@@ -860,8 +889,7 @@
 
 	AppView = Backbone.View.extend({
 
-		events: {
-		},
+		events: {},
 		initialize: function () {
 
 		},
@@ -906,8 +934,8 @@
 	})
 
 	NavbarView = Backbone.View.extend({
-		id: "navbar",
-		className: "navbar navbar-inverse navbar-fixed-top",
+		id: 'navbar',
+		className: 'navbar navbar-inverse navbar-fixed-top',
 		render: function () {
 
 			this.$el.html(_.template($('#navbarTemplate').html()))
@@ -921,16 +949,16 @@
 
 	AppRouter = Backbone.Router.extend({
 		routes: {
-			"": "home",
-			"exercises": "table",
-			"exercises/:subject": "list",
-			"reference/:subject": "reference"
+			'': 'home',
+			'exercises': 'table',
+			'exercises/:subject': 'list',
+			'reference/:subject': 'reference'
 		},
 		initialize: function () {
 			this.tasksList = new Exercises()
 			this.exercisesList = new Exercises()
 
-			this.route(/^exercises\/(\d+)$/, "taskDetails")
+			this.route(/^exercises\/(\d+)$/, 'taskDetails')
 
 			//$('body').append(new ExerciseFormView().render().el)
 		},
@@ -944,7 +972,7 @@
 						var tasksListView = new ExercisesListView({
 
 								collection: collection.filter(function (task) {
-									return _.contains(task.get("subjects"), subject)
+									return _.contains(task.get('subjects'), subject)
 								})
 							}
 						)
@@ -969,7 +997,9 @@
 					dataType: 'json',
 					success: function (collection) {
 
-						var exercisesTableView = new ExercisesTableView({collection: collection})
+						var exercisesTableView = new ExercisesTableView({
+							collection: collection
+						})
 
 						$('#contentWrapper')
 							.html(exercisesTableView.render().el)
@@ -981,11 +1011,11 @@
 			$('#tasks').fadeIn()
 		},
 
-		reference: function (subject) {
+		reference: function () {
 
 			$.ajax({
-				url: "js/references.json",
-				dataType: "json",
+				url: 'js/references.json',
+				dataType: 'json',
 				context: this,
 				success: function (data) {
 
@@ -1000,7 +1030,7 @@
 		taskDetails: function (id) {
 
 
-			if (this.tasksList.length == 0) {
+			if (this.tasksList.length === 0) {
 
 				var self = this
 
@@ -1010,7 +1040,8 @@
 					}
 				})
 
-			} else {
+			}
+			else {
 
 
 				$('#contentWrapper')
