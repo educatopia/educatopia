@@ -67,6 +67,9 @@ function addRoutes (error, database) {
 		resave: true
 	}))
 
+	app.use(bodyParser.json())
+	app.use(bodyParser.urlencoded({extended: false}))
+
 	app.use(function (request, response, next) {
 		response.locals.session = request.session
 		next()
