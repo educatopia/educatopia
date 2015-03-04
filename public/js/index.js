@@ -530,11 +530,13 @@ hljs, Login, window, document, alert
 		},
 		showHint: function () {
 
-			var counter = this.model.get('displayedHints')
+			var counter = this.model.get('displayedHints'),
+				hints,
+				el
 
 			if (counter < this.model.get('hints').length) {
 
-				var hints = $('#hints')
+				hints = $('#hints')
 
 				if (counter === 0)
 					$('<hr>')
@@ -543,9 +545,9 @@ hljs, Login, window, document, alert
 						.slideDown('fast')
 
 
-				var el = $('<div class="alert alert-info">' +
-				           this.model.get('hints')[counter] +
-				           '</div>')
+				el = $('<div class="alert alert-info">' +
+				       this.model.get('hints')[counter] +
+				       '</div>')
 					.hide()
 					.appendTo(hints)
 					.slideDown('fast')
@@ -950,7 +952,7 @@ hljs, Login, window, document, alert
 	AppRouter = Backbone.Router.extend({
 		routes: {
 			'': 'home',
-			'exercises': 'table',
+			exercises: 'table',
 			'exercises/:subject': 'list',
 			'reference/:subject': 'reference'
 		},

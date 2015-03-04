@@ -97,7 +97,7 @@ exportObject.getById = function (id, callback) {
 
 
 	exercisesCollection.findOne(
-		{'_id': id},
+		{_id: id},
 		function (error, exercise) {
 
 			if (error || !exercise)
@@ -120,7 +120,7 @@ exportObject.getByIdRendered = function (id, callback) {
 	}
 
 	exercisesCollection.findOne(
-		{'_id': id},
+		{_id: id},
 		function (error, exercise) {
 
 			if (error || !exercise)
@@ -150,7 +150,7 @@ exportObject.getHistoryById = function (id, callback) {
 		return
 	}
 
-	exercisesCollection.findOne({'_id': id}, function (error, exercise) {
+	exercisesCollection.findOne({_id: id}, function (error, exercise) {
 
 		if (error)
 			callback(error)
@@ -204,7 +204,7 @@ exportObject.getByUser = function (username, callback) {
 				{
 					$and: [
 						{'current.createdBy': username},
-						{'history': {$exists: false}}
+						{history: {$exists: false}}
 					]
 				},
 				{'history.0.createdBy': username}
@@ -267,7 +267,7 @@ exportObject.update = function (exerciseFromForm, user, callback) {
 	temp.current.createdBy = user.username
 
 
-	exercisesCollection.findOne({'_id': temp._id}, function (error, item) {
+	exercisesCollection.findOne({_id: temp._id}, function (error, item) {
 
 		if (error)
 			callback('An error occurred while loading the exercise: ' + error)
@@ -278,7 +278,7 @@ exportObject.update = function (exerciseFromForm, user, callback) {
 			temp.history.push(item.current)
 
 			exercisesCollection.update(
-				{'_id': temp._id},
+				{_id: temp._id},
 				temp,
 				{safe: true},
 				function (error, result) {
@@ -303,7 +303,7 @@ exportObject.delete = function (id, callback) {
 	console.log('Deleting exercise: ' + id)
 
 	exercisesCollection.remove(
-		{'_id': new BSON.ObjectID(id)},
+		{_id: new BSON.ObjectID(id)},
 		{safe: true},
 		function (error, result) {
 			if (error)

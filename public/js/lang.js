@@ -13,7 +13,8 @@ function I18n (data) {
 
 		// jshint maxstatements: 12
 
-		var args = arguments,
+		var regexp,
+			args = arguments,
 			string = args[0],
 			replacedString
 
@@ -46,7 +47,7 @@ function I18n (data) {
 
 		for (i = 0; i < subs.length; i++) {
 
-			var regexp = new RegExp('\\{' + i + '\\}', 'gi')
+			regexp = new RegExp('\\{' + i + '\\}', 'gi');
 
 			if (i === 0)
 				replacedString = data[string][count].replace(regexp, subs[i])

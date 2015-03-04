@@ -1,8 +1,8 @@
 'use strict'
 
 var usersApi,
-    exercisesApi,
-    users = {}
+	exercisesApi,
+	users = {}
 
 
 users.confirm = function (request, response, next) {
@@ -58,7 +58,7 @@ users.profile = function (request, response, next) {
 }
 
 
-module.exports = function(config){
+module.exports = function (config) {
 
 	exercisesApi = require('../api/exercises')(config)
 	usersApi = require('../api/users')(config)

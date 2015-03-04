@@ -34,8 +34,8 @@ function sendMail (userData, app, callback) {
 			html: jade.renderFile(
 				'views/mails/signup.jade',
 				{
-					'userData': userData,
-					'settings': app.settings
+					userData: userData,
+					settings: app.settings
 				}
 			)
 		},
@@ -188,7 +188,7 @@ exportObject.signup = function (request, callback) {
 exportObject.confirm = function (confirmationCode, callback) {
 
 	userCollection.findOne(
-		{'confirmationCode': confirmationCode},
+		{confirmationCode: confirmationCode},
 		function (error, user) {
 
 			if (error || !user)
@@ -199,7 +199,7 @@ exportObject.confirm = function (confirmationCode, callback) {
 				delete user.confirmationCode
 
 				userCollection.update(
-					{'_id': user._id},
+					{_id: user._id},
 					user,
 					{safe: true},
 					function (error, result) {
