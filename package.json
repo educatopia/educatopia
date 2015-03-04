@@ -4,7 +4,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "checkStyle": "jshint --exclude-path .gitignore --exclude public/components ."
+    "jshint": "jshint --exclude-path .gitignore --exclude public/components .",
+    "jscs": "jscs .",
+    "checkStyle": "npm run jshint && npm run jscs"
   },
   "dependencies": {
     "atob": "^1.1.0",
@@ -31,6 +33,7 @@
     "npm": "1.2.x"
   },
   "devDependencies": {
+    "jscs": "^1.11.3",
     "jshint": "^2.6.3"
   }
 }
