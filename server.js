@@ -1,28 +1,29 @@
 'use strict'
 
 var express = require('express'),
-    path = require('path'),
-    compress = require('compression'),
-    morgan = require('morgan'),
-    errorHandler = require('errorhandler'),
-    session = require('express-session'),
-    favicon = require('serve-favicon'),
-    mongodb = require('mongodb'),
-    MongoClient = mongodb.MongoClient,
+	path = require('path'),
+	compress = require('compression'),
+	morgan = require('morgan'),
+	errorHandler = require('errorhandler'),
+	session = require('express-session'),
+	favicon = require('serve-favicon'),
+	bodyParser = require('body-parser'),
+	mongodb = require('mongodb'),
+	MongoClient = mongodb.MongoClient,
 
-    app = express(),
+	app = express(),
 
-    port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000,
-    ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
-    db = {
-	    username: process.env.OPENSHIFT_MONGODB_DB_USERNAME,
-	    password: process.env.OPENSHIFT_MONGODB_DB_PASSWORD,
-	    ip: process.env.OPENSHIFT_MONGODB_DB_HOST || '127.0.0.1',
-	    port: process.env.OPENSHIFT_MONGODB_DB_PORT || 27017,
-	    name: app.get('env') === 'development' ? 'educatopiadev' : 'educatopia'
-    },
-    connectionString = db.ip + ':' + db.port + '/' + db.name,
-    devMode = (app.get('env') === 'development')
+	port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000,
+	ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
+	db = {
+		username: process.env.OPENSHIFT_MONGODB_DB_USERNAME,
+		password: process.env.OPENSHIFT_MONGODB_DB_PASSWORD,
+		ip:   process.env.OPENSHIFT_MONGODB_DB_HOST || '127.0.0.1',
+		port: process.env.OPENSHIFT_MONGODB_DB_PORT || 27017,
+		name: app.get('env') === 'development' ? 'educatopiadev' : 'educatopia'
+	},
+	connectionString = db.ip + ':' + db.port + '/' + db.name,
+	devMode = (app.get('env') === 'development')
 
 
 function addRoutes (error, database) {
@@ -37,14 +38,14 @@ function addRoutes (error, database) {
 	console.log('Connected to database "' + database.databaseName + '"')
 
 	var config = {
-		    database: database
-	    },
-	    index = require('./routes/index'),
-	    login = require('./routes/login')(config),
-	    logout = require('./routes/logout'),
-	    signup = require('./routes/signup')(config),
-	    exercises = require('./routes/exercises')(config),
-	    users = require('./routes/users')(config)
+			database: database
+		},
+		index = require('./routes/index'),
+		login = require('./routes/login')(config),
+		logout = require('./routes/logout'),
+		signup = require('./routes/signup')(config),
+		exercises = require('./routes/exercises')(config),
+		users = require('./routes/users')(config)
 
 
 	app.set('views', path.join(__dirname, 'views'))
@@ -56,6 +57,7 @@ function addRoutes (error, database) {
 
 	app.use(compress())
 	app.use(express.static(path.join(__dirname, 'public')))
+	app.use('/modules', express.static(path.join(__dirname, 'node_modules')))
 
 	app.use(devMode ? morgan('dev') : morgan())
 
