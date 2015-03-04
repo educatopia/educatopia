@@ -3,6 +3,9 @@
   "description": "education for everybody",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "checkStyle": "jshint --exclude-path .gitignore --exclude public/components ."
+  },
   "dependencies": {
     "atob": "^1.1.0",
     "bcrypt": "^0.8.1",
@@ -26,5 +29,8 @@
   "engines": {
     "node": "0.10.x",
     "npm": "1.2.x"
+  },
+  "devDependencies": {
+    "jshint": "^2.6.3"
   }
 }
