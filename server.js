@@ -1,6 +1,5 @@
 var express = require('express'),
     path = require('path'),
-    bodyParser = require('body-parser'),
     compress = require('compression'),
     morgan = require('morgan'),
     errorHandler = require('errorhandler'),
@@ -58,7 +57,6 @@ function addRoutes (error, database) {
 
 	app.use(devMode ? morgan('dev') : morgan())
 
-	app.use(bodyParser())
 	app.use(session({
 		secret: process.env.SESSION_SECRET || 'dev',
 		saveUninitialized: true,
