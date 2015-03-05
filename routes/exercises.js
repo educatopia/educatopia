@@ -38,15 +38,15 @@ function reformatFormContent (object) {
 }
 
 function addEmptyFields (request) {
-	// Adds empty fields to render empty input-fields in form
+	// Adds empty fields to render new empty input-fields in form
 
-	var key
+	Object.keys(request.query).forEach(function (key) {
 
-	for (key in request.query)
-		if (request.query.hasOwnProperty(key)) {
-			request.body[key] = request.body[key] || []
-			request.body[key].push('')
-		}
+		if(!Array.isArray(request.body[key]))
+			request.body[key] = [request.body[key]]
+
+		request.body[key].push('')
+	})
 }
 
 function validateExercise (exercise) {
