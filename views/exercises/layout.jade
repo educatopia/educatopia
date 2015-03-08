@@ -4,7 +4,7 @@ block content
 	if exercise
 		- var url = '/exercises/' + exercise.id
 
-	.tabbable.col-lg-9
+	.tabbable.col-sm-9
 		ul#tabHandlers.nav.nav-tabs
 			li(class= (page == 'exerciseView') ? 'active' : '')
 				a(href=url, exercise-toggle='tab') Exercise
