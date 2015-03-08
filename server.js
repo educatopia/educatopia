@@ -45,6 +45,7 @@ function addRoutes (error, database) {
 		logout = require('./routes/logout'),
 		signup = require('./routes/signup')(config),
 		exercises = require('./routes/exercises')(config),
+		courses = require('./routes/courses'),//(config),
 		users = require('./routes/users')(config)
 
 
@@ -91,6 +92,7 @@ function addRoutes (error, database) {
 		.post(signup)
 
 
+	app.get('/courses', courses.all)
 	app.get('/exercises', exercises.all)
 
 	app
