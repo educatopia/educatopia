@@ -57,8 +57,8 @@ function sendMail (userData, app, callback) {
 		sendgrid.send(mail, mailCallback)
 
 	else {
-		mail.transport = nodemailer.createTransport('sendmail')
-		nodemailer.sendMail(mail, mailCallback)
+		mail.transporter = nodemailer.createTransport()
+		mail.transporter.sendMail(mail, mailCallback)
 	}
 
 }
