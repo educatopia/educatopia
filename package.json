@@ -1,7 +1,7 @@
 {
   "name": "educatopia",
   "description": "education for everybody",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "jshint": "jshint --exclude-path .gitignore --exclude public/components .",
