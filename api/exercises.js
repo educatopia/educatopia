@@ -27,12 +27,16 @@ function normalize (obj) {
 	var key
 
 	for (key in obj) {
-		if (obj.hasOwnProperty(key) && obj[key] === '' ||
-		    obj[key] === 0 ||
-		    obj[key] === null ||
-		    obj[key].length === 0 ||
-		    obj[key] === undefined) {
-
+		if (obj.hasOwnProperty(key) &&
+		    (
+		        obj[key] === '' ||
+		        obj[key] === 0 ||
+		        obj[key] === null ||
+		        obj[key] === undefined ||
+		        (Array.isArray(obj[key]) &&
+		            (obj[key].length === 0 || obj[key][0] === ''))
+		    )
+		) {
 			delete obj[key]
 		}
 
