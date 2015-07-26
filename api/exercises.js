@@ -18,7 +18,7 @@ marked.setOptions({
 
 function normalize (obj) {
 
-	// Delete empty fields and normalize line-breaks
+	// Delete empty fields, normalize line-breaks and fix data-types
 
 	function normalizeLineBreaks (string) {
 		return string.replace(/\r\n/g, '\n')
@@ -52,6 +52,14 @@ function normalize (obj) {
 			})
 		}
 	}
+
+
+	// Convert fields to arrays
+	if (typeof obj.solutions === 'string')
+		obj.solutions = [obj.solutions]
+
+	if (typeof obj.hints === 'string')
+		obj.hints = [obj.hints]
 
 	return obj
 }
