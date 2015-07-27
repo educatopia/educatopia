@@ -2,10 +2,12 @@ script(src='/modules/jquery/dist/jquery.min.js')
 script(src='/modules/underscore/underscore-min.js')
 script(src='/modules/bootstrap/dist/js/bootstrap.min.js')
 
-block scripts
-
-script(src='/modules/highlight.js/lib/highlight.js')
+script(
+src='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js'
+)
 script(src='/modules/marked/marked.min.js')
+
+block scripts
 
 script(src="/js/piwik.js")
 noscript
@@ -15,4 +17,3 @@ noscript
 		style='border:0',
 		alt=''
 		)
-
