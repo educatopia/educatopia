@@ -199,7 +199,14 @@ exportObject.getAll = function (callback) {
 					if (item.current.hasOwnProperty(key))
 						temp[key] = item.current[key]
 
-				temp.subjects = capitalizer(temp.subjects)
+				if (temp.subjects != null) {
+					temp.subjects = capitalizer(temp.subjects)
+
+					if (Array.isArray(temp.subjects))
+						temp.subjects = temp.subjects.join(', ')
+				}
+				else
+					temp.subjects = ''
 
 				tempArray.push(temp)
 			})
