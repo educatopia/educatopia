@@ -19,7 +19,6 @@
     "errorhandler": "^1.1.1",
     "express": "^4.12.2",
     "express-session": "^1.6.3",
-    "highlight.js": "^8.4.0",
     "jade": "^1.9.2",
     "jake": "^8.0.10",
     "jquery": "^2.1.3",
