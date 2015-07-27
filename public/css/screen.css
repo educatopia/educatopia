@@ -122,6 +122,12 @@ footer a {
 pre {
     background-color: rgb(45, 45, 45);
     border: none;
+    color: rgb(200,200,200);
+}
+
+pre code {
+    display: block;
+    padding: 0.5em;
 }
 
 .alert {
