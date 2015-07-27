@@ -121,14 +121,19 @@ block sidebar
 					= updatedAt + ' UTC'
 
 block scripts
+	script.
+		hljs.initHighlightingOnLoad()
+
 	script(type='text/x-mathjax-config').
 		MathJax.Hub.Config({
 			asciimath2jax: {
 				delimiters: [['´','´']]
 			}
 		})
+
 	if settings.env == 'development'
 		script(src='/modules/mathjax/MathJax.js?config=AM_HTMLorMML')
+
 	else
 		script(src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.1/MathJax.js' +
 				'?config=AM_HTMLorMML')
