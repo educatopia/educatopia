@@ -103,6 +103,12 @@ function addRoutes (error, database) {
 
 
 	app.get('/lessons', lessons.all)
+	app.get('/lessons/:slug', lessons.getById)
+	app.use(
+		'/lessons',
+		express.static(path.join(knowledgeBasePath, 'lessons'))
+	)
+
 	app.get('/exercises', exercises.all)
 
 	app
