@@ -46,7 +46,7 @@ function addRoutes (error, database) {
 		logout = require('./routes/logout'),
 		signup = require('./routes/signup')(config),
 		exercises = require('./routes/exercises')(config),
-		lessons = require('./routes/lessons')(config),
+		lessons = require('./routes/lessons'),
 		courses = require('./routes/courses'),//(config),
 		users = require('./routes/users')(config)
 
@@ -100,6 +100,7 @@ function addRoutes (error, database) {
 		'/courses',
 		express.static(path.join(knowledgeBasePath, 'courses'))
 	)
+
 
 	app.get('/lessons', lessons.all)
 	app.get('/exercises', exercises.all)
