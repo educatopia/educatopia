@@ -1,0 +1,18 @@
+extends layout
+
+block content
+	h1= title
+	p= summary
+
+	hr
+
+	for lessonName in lessons
+		.media
+			.media-left
+				.media-object
+					img(src=thumbnailUrl, alt='Thumbnail for #{lessonName}')
+			.media-body
+				h3.media-heading: a(href='/lessons/#{lessonName}')
+					= lessonName
+				p.
+					Here should be some interesting description text.

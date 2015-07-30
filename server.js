@@ -23,7 +23,8 @@ var express = require('express'),
 		name: app.get('env') === 'development' ? 'educatopiadev' : 'educatopia'
 	},
 	connectionString = db.ip + ':' + db.port + '/' + db.name,
-	devMode = (app.get('env') === 'development')
+	devMode = (app.get('env') === 'development'),
+	knowledgeBasePath = path.resolve('node_modules/knowledge_base')
 
 
 function addRoutes (error, database) {
@@ -45,6 +46,7 @@ function addRoutes (error, database) {
 		logout = require('./routes/logout'),
 		signup = require('./routes/signup')(config),
 		exercises = require('./routes/exercises')(config),
+		lessons = require('./routes/lessons')(config),
 		courses = require('./routes/courses'),//(config),
 		users = require('./routes/users')(config)
 
@@ -93,6 +95,13 @@ function addRoutes (error, database) {
 
 
 	app.get('/courses', courses.all)
+	app.get('/courses/:slug', courses.getById)
+	app.use(
+		'/courses',
+		express.static(path.join(knowledgeBasePath, 'courses'))
+	)
+
+	app.get('/lessons', lessons.all)
 	app.get('/exercises', exercises.all)
 
 	app

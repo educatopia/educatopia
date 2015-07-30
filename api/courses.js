@@ -10,7 +10,8 @@ var path = require('path'),
 	exportObject = {},
 	knowledgeBasePath = path.resolve(
 		__dirname, '../node_modules/knowledge_base'
-	)
+	),
+	coursesPath = path.join(knowledgeBasePath, 'courses')
 
 
 marked.setOptions({
@@ -20,8 +21,6 @@ marked.setOptions({
 
 
 exportObject.getAll = function () {
-
-	var coursesPath = path.join(knowledgeBasePath, 'courses')
 
 	return fsp
 		.readdir(path.resolve(coursesPath))
@@ -38,6 +37,21 @@ exportObject.getAll = function () {
 			})
 
 			return Promise.all(coursesPromises)
+		})
+		.catch(function (error) {
+			if (error.code !== 'ENOENT')
+				throw error
+		})
+}
+
+exportObject.getById = function(id){
+
+	return fsp
+		.readFile(path.resolve(
+			coursesPath, id, 'description.yaml'
+		))
+		.then(function (fileContent) {
+			return yaml.safeLoad(fileContent)
 		})
 		.catch(function (error) {
 			if (error.code !== 'ENOENT')

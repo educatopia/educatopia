@@ -203,3 +203,8 @@ pre code {
     margin-bottom: 0;
     height: 1em;
 }
+
+#course .media-object img {
+    width: 4em;
+    height: 4em;
+}
