@@ -44,7 +44,7 @@ exportObject.getAll = function () {
 		})
 }
 
-exportObject.getById = function(id){
+exportObject.getById = function (id) {
 
 	return fsp
 		.readFile(path.resolve(
