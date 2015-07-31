@@ -2,6 +2,11 @@ extends layout
 
 block content
 	h1= title
+	p.lead= subtitle
+	p.text-muted
+		span= numberOfWords +  ' Words'
+		= ' - '
+		span= readingDuration +  ' Minutes'
 	p= summary
 
 	hr

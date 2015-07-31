@@ -41,8 +41,8 @@ lessons.getById = function (request, response) {
 		.then(function (descriptionObject) {
 
 			descriptionObject.page = 'lesson'
-			descriptionObject
-				.thumbnailUrl = '/lessons/' + slug + '/images/thumbnail.png'
+			descriptionObject.thumbnailUrl = '/lessons/' +
+				slug + '/images/thumbnail.png'
 
 			response.render(
 				'lesson',

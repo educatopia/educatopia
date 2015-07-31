@@ -57,16 +57,24 @@ exportObject.getAll = function () {
 
 exportObject.getById = function (id) {
 
-	return fsp
-		.readFile(path.resolve(
-			lessonsPath, id, 'index.md'
-		))
-		.then(function (fileContent) {
-			return {
-				id: id,
-				title: id,
-				content: marked(fileContent.toString())
-			}
+	return Promise
+		.all([
+			fsp.readFile(path.resolve(lessonsPath, id, 'index.yaml')),
+			fsp.readFile(path.resolve(lessonsPath, id, 'index.md'))
+		])
+		.then(function (array) {
+			var descriptionObject = yaml.safeLoad(array[0]),
+				contentString = array[1].toString(),
+				numberOfWords = contentString.split(' ').length,
+				wordsPerMinute = 90
+
+			descriptionObject.numberOfWords = numberOfWords
+			descriptionObject.readingDuration = Math.round(
+				numberOfWords / wordsPerMinute
+			)
+			descriptionObject.content = marked(contentString)
+
+			return descriptionObject
 		})
 		.catch(function (error) {
 			if (error.code !== 'ENOENT')
