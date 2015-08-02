@@ -6,6 +6,11 @@ a {
     cursor: pointer;
 }
 
+code {
+    color: rgb(50,50,50);
+    background-color: rgb(230, 230, 230);
+}
+
 .navbar {
     background-color: white;
     border-bottom: 1px solid rgb(220,220,220);
@@ -207,4 +212,31 @@ pre code {
 #course .media-object img {
     width: 4em;
     height: 4em;
+}
+
+#lesson article img {
+    display: block;
+    width: 90%;
+    margin: 1.5em auto;
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 768px) {
+    #lesson p {
+        max-width: 70%;
+    }
+}
+
+@media (min-width: 992px) {
+    #lesson .container,
+    #course .container {
+        width: 750px;
+    }
+}
+
+@media (min-width: 1200px) {
+    #lesson .container,
+    #course .container {
+        width: 750px;
+    }
 }
