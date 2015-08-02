@@ -6,13 +6,14 @@ block content
 
 	hr
 
-	for lessonName in lessons
+	for lesson in lessons
 		.media
-			.media-left
-				.media-object
-					img(src=thumbnailUrl, alt='Thumbnail for #{lessonName}')
+			if lesson.thumbnailUrl
+				.media-left
+					.media-object
+							img(src=lesson.thumbnailUrl, alt='Thumbnail for #{lesson.title}')
+			
 			.media-body
-				h3.media-heading: a(href='/lessons/#{lessonName}')
-					= lessonName
-				p.
-					Here should be some interesting description text.
+				h3.media-heading: a(href='/lessons/#{lesson.id}')
+					= lesson.title
+				p= lesson.subtitle

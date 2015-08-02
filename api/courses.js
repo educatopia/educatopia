@@ -11,7 +11,8 @@ var path = require('path'),
 	knowledgeBasePath = path.resolve(
 		__dirname, '../node_modules/knowledge_base'
 	),
-	coursesPath = path.join(knowledgeBasePath, 'courses')
+	coursesPath = path.join(knowledgeBasePath, 'courses'),
+	lessonsPath = path.join(knowledgeBasePath, 'lessons')
 
 
 marked.setOptions({
@@ -34,6 +35,10 @@ exportObject.getAll = function () {
 					.then(function (fileContent) {
 						return yaml.safeLoad(fileContent)
 					})
+					.catch(function (error) {
+						if (error.code !== 'ENOENT')
+							throw error
+					})
 			})
 
 			return Promise.all(coursesPromises)
@@ -46,12 +51,49 @@ exportObject.getAll = function () {
 
 exportObject.getById = function (id) {
 
+	var courseObject = {}
+
 	return fsp
 		.readFile(path.resolve(
 			coursesPath, id, 'description.yaml'
 		))
 		.then(function (fileContent) {
-			return yaml.safeLoad(fileContent)
+
+			function createLessonPromise (lesson) {
+
+				return fsp
+					.readFile(path.resolve(
+						lessonsPath, lesson, 'index.yaml'
+					))
+					.catch(function (error) {
+						if (error.code !== 'ENOENT')
+							throw error
+					})
+					.then(function (fileContent) {
+						var lessonObject = {}
+
+						if (fileContent != null)
+							lessonObject = yaml.safeLoad(fileContent)
+
+							lessonObject.id = lesson
+							lessonObject.title = lessonObject.title || lesson
+							lessonObject.thumbnailUrl = '/lessons/' +
+								lesson + '/' + 'images/thumbnail.png'
+
+						return lessonObject
+					})
+			}
+
+			courseObject = yaml.safeLoad(fileContent)
+
+			var lessonsPromises = courseObject.lessons.map(createLessonPromise)
+
+			return Promise.all(lessonsPromises)
+		})
+		.then(function (lessons) {
+			courseObject.lessons = lessons
+
+			return courseObject
 		})
 		.catch(function (error) {
 			if (error.code !== 'ENOENT')

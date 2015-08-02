@@ -37,13 +37,16 @@ courses.getById = function (request, response) {
 		.then(function (descriptionObject) {
 
 			descriptionObject.page = 'course'
-			descriptionObject
-				.thumbnailUrl = '/courses/' + slug + '/images/thumbnail.png'
+			descriptionObject.thumbnailUrl = '/courses/' +
+				slug + '/images/thumbnail.png'
 
 			response.render(
 				'course',
 				descriptionObject
 			)
+		})
+		.catch(function (error) {
+			throw error
 		})
 }
 
