@@ -16,6 +16,23 @@ var path = require('path'),
 	writer = new commonmark.HtmlRenderer()
 
 
+function resolveIncludes (contentString, id) {
+	var includeSection,
+		includePath
+
+	while (includeSection = contentString.match(/\{\{(.+)\}\}/i)) {
+
+		includePath = path.resolve(lessonsPath, id, includeSection[1])
+
+		contentString = contentString.replace(
+			includeSection[0],
+			fsp.readFileSync(includePath)
+		)
+	}
+
+	return contentString
+}
+
 exportObject.getAll = function () {
 
 	return fsp
@@ -91,11 +108,19 @@ exportObject.getById = function (id) {
 		.then(function (array) {
 			var descriptionObject = yaml.safeLoad(array[0]),
 				contentString = array[1].toString(),
-				numberOfWords = contentString.split(' ').length,
-				wordsPerMinute = 90,
-				parsedMarkdown = reader.parse(contentString),
-				walker = parsedMarkdown.walker(),
+				wordsPerMinute = 50,
+				numberOfWords,
+				includeSection,
+				parsedMarkdown,
+				walker,
 				nodeEvent
+
+
+			contentString = resolveIncludes(contentString, id)
+			numberOfWords = contentString.split(' ').length
+
+			parsedMarkdown = reader.parse(contentString)
+			walker = parsedMarkdown.walker()
 
 			while (nodeEvent = walker.next())
 				improveImageNode(nodeEvent)
