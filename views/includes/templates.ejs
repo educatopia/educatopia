@@ -187,14 +187,14 @@
 	<% if(data.hints && data.hints.length > 0){ %>
 	<li class="list-group-item">
 		<%
-			var clas = ''
+			var class = ''
 			viewedHints = data.displayedHints + 1
 			if (data.displayedHints == data.hints.length) {
-				clas = 'disabled'
+				class = 'disabled'
 				viewedHints = data.displayedHints
 			}
 		%>
-		<button id="showHint" class="btn btn-info btn-sm btn-block <%= clas %>">
+		<button id="showHint" class="btn btn-info btn-sm btn-block <%= class %>">
 			Show Hint <%= viewedHints %>/<%= data.hints.length %></button>
 	</li>
 	<% } %>
