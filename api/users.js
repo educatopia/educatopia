@@ -227,7 +227,7 @@ exportObject.login = function (username, password, callback) {
 		function (error, user) {
 
 			if (error) {
-				console.error('Error occured during lookup of user.')
+				console.error('Error occurred during lookup of user.')
 				callback(error)
 			}
 			else if (!user) {
