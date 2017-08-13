@@ -1,199 +1,199 @@
 body {
-    padding-top: 70px;
+  padding-top: 70px;
 }
 
 a {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .navbar {
-    background-color: white;
-    border-bottom: 1px solid rgb(220,220,220);
+  background-color: white;
+  border-bottom: 1px solid rgb(220, 220, 220);
 }
 
 .navbar a {
-    color: inherit;
+  color: inherit;
 }
 
 .navbar-brand {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 2em;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    line-height: 100%;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 2em;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  line-height: 100%;
 }
 
 #logo {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
 }
 
 s {
-    color: rgb(185, 74, 72) !important;
-    text-decoration: none;
+  color: rgb(185, 74, 72) !important;
+  text-decoration: none;
 }
 
 .tooltip {
-    text-shadow: none;
-    font-weight: normal;
-    line-height: normal;
-    text-transform: none;
+  text-shadow: none;
+  font-weight: normal;
+  line-height: normal;
+  text-transform: none;
 }
 
 footer {
-    background-color: #f5f5f5;
-    padding: 20px 0;
-    border-top: 1px solid #E5E5E5;
-    text-align: center;
-    margin-top: 40px;
+  background-color: #f5f5f5;
+  padding: 20px 0;
+  border-top: 1px solid #e5e5e5;
+  text-align: center;
+  margin-top: 40px;
 }
 
 footer a {
-    margin: 0 10px;
+  margin: 0 10px;
 }
 
 #home {
-    padding: 50px 0 0 0;
+  padding: 50px 0 0 0;
 }
 
 #home #contentWrapper {
-    width: 100%;
-    padding: 0;
-    background-image: url('/img/galaxy.jpg');
-    background-size: 100% 100%;
+  width: 100%;
+  padding: 0;
+  background-image: url('/img/galaxy.jpg');
+  background-size: 100% 100%;
 }
 
 #banner {
-    padding: 4em 0;
-    text-align: center;
+  padding: 4em 0;
+  text-align: center;
 }
 
 #banner .title {
-    display: block;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 100;
-    letter-spacing: 3px;
-    color: white;
-    font-size: 3.8em;
-    margin-bottom: 0.4em;
+  display: block;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 100;
+  letter-spacing: 3px;
+  color: white;
+  font-size: 3.8em;
+  margin-bottom: 0.4em;
 }
 
 #banner .subtitle {
-    color: rgb(200, 200, 200);
-    font-weight: 200;
-    font-size: 1.4em;
-    margin-bottom: 2em;
+  color: rgb(200, 200, 200);
+  font-weight: 200;
+  font-size: 1.4em;
+  margin-bottom: 2em;
 }
 
 #banner .btn {
-    margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 
 /* Exercise Formular */
 
 #exerciseModal .modal-body {
-    max-height: 500px;
+  max-height: 500px;
 }
 
 #exerciseModal .form-horizontal .control-label {
-    float: left;
-    width: 100px;
-    padding-top: 5px;
-    text-align: right;
+  float: left;
+  width: 100px;
+  padding-top: 5px;
+  text-align: right;
 }
 
 #exerciseModal .form-horizontal .controls {
-    margin-left: 120px;
+  margin-left: 120px;
 }
 
 #exerciseModal .icon-question-sign {
-    opacity: 0.3
+  opacity: 0.3;
 }
 
 .qed {
-    float: right;
+  float: right;
 }
 
 .qed:before {
-    content: "\220E"
+  content: "\220E";
 }
 
 pre {
-    background-color: rgb(45, 45, 45);
-    border: none;
+  background-color: rgb(45, 45, 45);
+  border: none;
 }
 
 .alert {
-    overflow: scroll;
+  overflow: scroll;
 }
 
 .alert:empty {
-    display: none;
+  display: none;
 }
 
 .nav-tabs {
-    margin-bottom: 1.5em;
+  margin-bottom: 1.5em;
 }
 
 #viewTab #task {
-    margin-bottom: 3em;
+  margin-bottom: 3em;
 }
 
 #viewTab table {
-    border-collapse: collapse;
-    border: 1px solid rgb(221, 221, 221);
-    margin-bottom: 1.5em;
+  border-collapse: collapse;
+  border: 1px solid rgb(221, 221, 221);
+  margin-bottom: 1.5em;
 }
 
 #viewTab table thead {
-    border-bottom: 2px solid rgb(221, 221, 221);
+  border-bottom: 2px solid rgb(221, 221, 221);
 }
 
 #viewTab table th:empty {
-    display: none;
+  display: none;
 }
 
 #viewTab table td,
 #viewTab table th {
-    border: 1px solid rgb(221, 221, 221);
-    padding: 0.4em 0.8em;
+  border: 1px solid rgb(221, 221, 221);
+  padding: 0.4em 0.8em;
 }
 
 #viewTab #solution {
-    margin-bottom: 3em;
+  margin-bottom: 3em;
 }
 
 #viewTab .panel-heading {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #exerciseSidebar .progress {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .panel {
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 .form-control + button {
-    margin-top: 1em;
+  margin-top: 1em;
 }
 
 .form-control + .form-control {
-    margin-top: 0.5em;
+  margin-top: 0.5em;
 }
 
 .sr-only + textarea {
-    margin-top: 0.3em;
+  margin-top: 0.3em;
 }
 
 .profile img {
-    width: 100%;
+  width: 100%;
 }
 
 #exercises .progress {
-    margin-bottom: 0;
-    height: 1em;
+  margin-bottom: 0;
+  height: 1em;
 }
