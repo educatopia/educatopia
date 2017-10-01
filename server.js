@@ -13,27 +13,31 @@ const MongoClient = mongodb.MongoClient
 
 const app = express()
 
-const port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000
-const ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
-const db = {
-  username: process.env.OPENSHIFT_MONGODB_DB_USERNAME,
-  password: process.env.OPENSHIFT_MONGODB_DB_PASSWORD,
-  ip: process.env.OPENSHIFT_MONGODB_DB_HOST || '127.0.0.1',
-  port: process.env.OPENSHIFT_MONGODB_DB_PORT || 27017,
-  name: app.get('env') === 'development' ? 'educatopiadev' : 'educatopia',
-}
-let connectionString = `${db.ip}:${db.port}/${db.name}`
 const devMode = app.get('env') === 'development'
+const port = 3000
+const db = {
+  host: 'mongo',
+  port: 27017,
+  name: devMode
+    ? 'educatopia-dev'
+    : 'educatopia',
+}
+let connectionString = `${db.host}:${db.port}/${db.name}`
 const knowledgeBasePath = path.resolve('node_modules/knowledge_base')
 
 
 function addRoutes (error, database) {
-  if (error || !database) {
-    console.error('Could not connect to database "' + db.name + '"')
+  if (error) {
+    console.error(error)
     return
   }
 
-  console.info('Connected to database "' + database.databaseName + '"')
+  if (!database) {
+    console.error(`Could not connect to database "${db.name}"`)
+    return
+  }
+
+  console.info(`Connected to database "${database.databaseName}"`)
 
   const config = {
     database: database,
@@ -144,8 +148,9 @@ function addRoutes (error, database) {
     response.render('404')
   })
 
-  app.listen(port, ip)
-  console.info('Listening on ' + ip + ':' + port)
+  app.listen(port, () => {
+    console.info(`Listening on http://localhost:${port}`)
+  })
 }
 
 
@@ -158,7 +163,7 @@ if (app.get('env') === 'production') {
 
 if (db.password) {
   connectionString =
-    `${db.username}:${db.password}@${db.ip}:${db.port}/${db.name}`
+    `${db.username}:${db.password}@${db.host}:${db.port}/${db.name}`
 }
 
 MongoClient.connect('mongodb://' + connectionString, addRoutes)
