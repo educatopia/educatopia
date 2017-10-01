@@ -1,18 +1,16 @@
-'use strict'
+const mongo = require('mongodb')
+const marked = require('marked')
+const clone = require('clone')
+const capitalizer = require('capitalizer')
 
-var mongo = require('mongodb'),
-  marked = require('marked'),
-  clone = require('clone'),
-  capitalizer = require('capitalizer'),
-
-  BSON = mongo.BSONPure,
-  exportObject = {},
-  exercisesCollection
+const BSON = mongo.BSONPure
+const exportObject = {}
+let exercisesCollection
 
 
 marked.setOptions({
   breaks: true,
-  sanitize: true
+  sanitize: true,
 })
 
 function normalizeLineBreaks (string) {
@@ -21,12 +19,12 @@ function normalizeLineBreaks (string) {
 
 // Delete empty fields, normalize line-breaks and fix data-types
 function normalize (obj) {
-  var key
+  let key
 
   for (key in obj) {
     if (obj.hasOwnProperty(key) &&
         (
-            obj[key] === '' ||
+          obj[key] === '' ||
             obj[key] === 0 ||
             obj[key] === null ||
             obj[key] === undefined ||
@@ -37,182 +35,197 @@ function normalize (obj) {
       delete obj[key]
     }
 
-    else if (typeof obj[key] === 'string')
+    else if (typeof obj[key] === 'string') {
       obj[key] = normalizeLineBreaks(obj[key])
+    }
 
     else if (Array.isArray(obj[key])) {
       // jshint loopfunc: true
-      obj[key] = obj[key].map(function (element) {
-        return (typeof element === 'string') ?
-               normalizeLineBreaks(element) :
-               element
+      obj[key] = obj[key].map((element) => {
+        return typeof element === 'string'
+          ? normalizeLineBreaks(element)
+          : element
       })
     }
   }
 
 
   // Convert fields to arrays
-  if (typeof obj.solutions === 'string')
+  if (typeof obj.solutions === 'string') {
     obj.solutions = [obj.solutions]
+  }
 
-  if (typeof obj.hints === 'string')
+  if (typeof obj.hints === 'string') {
     obj.hints = [obj.hints]
+  }
 
   return obj
 }
 
 function exerciseToPrintFormat (exercise) {
 
-  var temp = clone(exercise.current)
+  const temp = clone(exercise.current)
 
   temp.id = exercise._id
   temp.updatedAt = exercise.updatedAt
 
-  temp.createdAt = exercise.history ?
-                   exercise.history[0].createdAt :
-                   exercise.current.createdAt
+  temp.createdAt = exercise.history
+    ? exercise.history[0].createdAt
+    : exercise.current.createdAt
 
-  temp.createdBy = exercise.history ?
-                   exercise.history[0].createdBy :
-                   exercise.current.createdBy
+  temp.createdBy = exercise.history
+    ? exercise.history[0].createdBy
+    : exercise.current.createdBy
 
   return temp
 }
 
 function renderMarkdown (exerciseData) {
 
-  if (exerciseData.task)
+  if (exerciseData.task) {
     exerciseData.task = marked(exerciseData.task)
+  }
 
-  if (exerciseData.approach)
+  if (exerciseData.approach) {
     exerciseData.approach = marked(exerciseData.approach)
+  }
 
-  if (exerciseData.solutions)
-    exerciseData.solutions.forEach(function (solution, index) {
+  if (exerciseData.solutions) {
+    exerciseData.solutions.forEach((solution, index) => {
       exerciseData.solutions[index] = marked(solution)
     })
+  }
 }
 
 
-exportObject.getById = function (id, callback) {
+exportObject.getById = function (id, done) {
 
   try {
-    id = BSON.ObjectID(id)
+    id = BSON.ObjectID(id) // eslint-disable-line new-cap
   }
   catch (error) {
-    callback({message: 'Invalid Id'})
+    done({message: 'Invalid Id'})
     return
   }
 
 
   exercisesCollection.findOne(
     {_id: id},
-    function (error, exercise) {
+    (error, exercise) => {
 
-      if (error || !exercise)
-        callback(error)
-
-      else
-        callback(null, exerciseToPrintFormat(exercise))
-    }
-  )
-}
-
-exportObject.getByIdRendered = function (id, callback) {
-
-  try {
-    id = BSON.ObjectID(id)
-  }
-  catch (error) {
-    callback({message: 'Invalid Id'})
-    return
-  }
-
-  exercisesCollection.findOne(
-    {_id: id},
-    function (error, exercise) {
-
-      if (error || !exercise)
-        callback(error)
+      if (error || !exercise) {
+        done(error)
+      }
 
       else {
-
-        // TODO: Distinguish between different exercise data formats
-        if (exercise.history)
-          exercise.current.createdBy = exercise.history[0].createdBy
-
-        renderMarkdown(exercise.current)
-
-        callback(null, exerciseToPrintFormat(exercise))
+        done(null, exerciseToPrintFormat(exercise))
       }
     }
   )
 }
 
-exportObject.getHistoryById = function (id, callback) {
+exportObject.getByIdRendered = function (id, done) {
 
   try {
-    id = BSON.ObjectID(id)
+    id = BSON.ObjectID(id) // eslint-disable-line new-cap
   }
   catch (error) {
-    callback({message: 'Invalid Id'})
+    done({message: 'Invalid Id'})
     return
   }
 
-  exercisesCollection.findOne({_id: id}, function (error, exercise) {
+  exercisesCollection.findOne(
+    {_id: id},
+    (error, exercise) => {
 
-    if (error)
-      callback(error)
+      if (error || !exercise) {
+        done(error)
+      }
+
+      else {
+
+        // TODO: Distinguish between different exercise data formats
+        if (exercise.history) {
+          exercise.current.createdBy = exercise.history[0].createdBy
+        }
+
+        renderMarkdown(exercise.current)
+
+        done(null, exerciseToPrintFormat(exercise))
+      }
+    }
+  )
+}
+
+exportObject.getHistoryById = function (id, done) {
+
+  try {
+    id = BSON.ObjectID(id) // eslint-disable-line new-cap
+  }
+  catch (error) {
+    done({message: 'Invalid Id'})
+    return
+  }
+
+  exercisesCollection.findOne({_id: id}, (error, exercise) => {
+
+    if (error) {
+      done(error)
+    }
 
     else {
       exercise.history = exercise.history || []
 
-      callback(null, exercise.history.concat(exercise.current))
+      done(null, exercise.history.concat(exercise.current))
     }
   })
 }
 
-exportObject.getAll = function (callback) {
+exportObject.getAll = function (done) {
 
   exercisesCollection
     .find()
     .sort({_id: 1})
-    .toArray(function (error, items) {
+    .toArray((error, items) => {
 
-      if (error)
-        callback(error)
+      if (error) {
+        done(error)
+      }
 
-      var tempArray = []
+      const tempArray = []
 
-      items.forEach(function (item) {
+      items.forEach((item) => {
 
-        var temp = {},
-          key
+        const temp = {}
 
         temp.id = item._id // TODO: Introduce extra url id
         temp.url = '/exercises/' + item._id
 
-        for (key in item.current)
-          if (item.current.hasOwnProperty(key))
+        for (const key in item.current) {
+          if (item.current.hasOwnProperty(key)) {
             temp[key] = item.current[key]
+          }
+        }
 
         if (temp.subjects != null) {
           temp.subjects = capitalizer(temp.subjects)
 
-          if (Array.isArray(temp.subjects))
+          if (Array.isArray(temp.subjects)) {
             temp.subjects = temp.subjects.join(', ')
+          }
         }
-        else
+        else {
           temp.subjects = ''
+        }
 
         tempArray.push(temp)
       })
 
-      callback(null, tempArray)
+      done(null, tempArray)
     })
 }
 
-exportObject.getByUser = function (username, callback) {
+exportObject.getByUser = function (username, done) {
 
   exercisesCollection
     .find({
@@ -220,26 +233,28 @@ exportObject.getByUser = function (username, callback) {
         {
           $and: [
             {'current.createdBy': username},
-            {history: {$exists: false}}
-          ]
+            {history: {$exists: false}},
+          ],
         },
-        {'history.0.createdBy': username}
-      ]
+        {'history.0.createdBy': username},
+      ],
     })
     .sort({_id: 1})
-    .toArray(function (error, exercises) {
+    .toArray((error, exercises) => {
 
-      if (error)
-        callback(error)
-      else
-        callback(null, exercises)
+      if (error) {
+        done(error)
+      }
+      else {
+        done(null, exercises)
+      }
     })
 }
 
-exportObject.add = function (exercise, user, callback) {
+exportObject.add = function (exercise, user, done) {
 
-  var temp = {},
-    now = new Date()
+  const temp = {}
+  const now = new Date()
 
   temp.updatedAt = now
 
@@ -250,24 +265,25 @@ exportObject.add = function (exercise, user, callback) {
   exercisesCollection.insert(
     temp,
     {safe: true},
-    function (error, result) {
+    (error, result) => {
 
-      if (error)
-        callback(error)
+      if (error) {
+        done(error)
+      }
 
       else {
-        console.log('Successfully added an exercise')
+        console.info('Successfully added an exercise')
 
-        callback(null, result[0])
+        done(null, result[0])
       }
     }
   )
 }
 
-exportObject.update = function (exerciseFromForm, user, callback) {
+exportObject.update = function (exerciseFromForm, user, done) {
 
-  var temp = {},
-    now = new Date()
+  const temp = {}
+  const now = new Date()
 
   temp._id = new BSON.ObjectID(exerciseFromForm.id)
 
@@ -283,10 +299,11 @@ exportObject.update = function (exerciseFromForm, user, callback) {
   temp.current.createdBy = user.username
 
 
-  exercisesCollection.findOne({_id: temp._id}, function (error, item) {
+  exercisesCollection.findOne({_id: temp._id}, (error, item) => {
 
-    if (error)
-      callback('An error occurred while loading the exercise: ' + error)
+    if (error) {
+      done('An error occurred while loading the exercise: ' + error)
+    }
 
     else {
 
@@ -297,16 +314,16 @@ exportObject.update = function (exerciseFromForm, user, callback) {
         {_id: temp._id},
         temp,
         {safe: true},
-        function (error, result) {
-
-          if (error || result === 0)
-            callback('An error occurred while updating the exercise: ' + error)
-
+        (updateError, result) => {
+          if (updateError || result === 0) {
+            done(
+              `An error occurred while updating the exercise: ${updateError}`
+            )
+          }
           else {
-
             renderMarkdown(temp.current)
 
-            callback(null, exerciseToPrintFormat(temp))
+            done(null, exerciseToPrintFormat(temp))
           }
         }
       )
@@ -314,19 +331,20 @@ exportObject.update = function (exerciseFromForm, user, callback) {
   })
 }
 
-exportObject.delete = function (id, callback) {
+exportObject.delete = function (id, done) {
 
-  console.log('Deleting exercise: ' + id)
+  console.info('Deleting exercise: ' + id)
 
   exercisesCollection.remove(
     {_id: new BSON.ObjectID(id)},
     {safe: true},
-    function (error, result) {
-      if (error)
-        callback(error)
+    (error, result) => {
+      if (error) {
+        done(error)
+      }
       else {
-        console.log('' + result + ' document(s) deleted')
-        callback()
+        console.info(String(result) + ' document(s) deleted')
+        done()
       }
     }
   )

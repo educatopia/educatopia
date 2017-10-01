@@ -1,15 +1,11 @@
-'use strict'
-
-var usersApi
+let usersApi
 
 function login (request, response) {
-
-  if (request.method === 'POST')
+  if (request.method === 'POST') {
     usersApi.login(
       request.body.username,
       request.body.password,
-      function (error, user) {
-
+      (error, user) => {
         if (error || !user) {
           console.error(
             'Following error occurred during login: ' +
@@ -18,7 +14,7 @@ function login (request, response) {
 
           response.render('login', {
             page: 'login',
-            error: error
+            error: error,
           })
         }
         else {
@@ -27,16 +23,16 @@ function login (request, response) {
         }
       }
     )
-
-  else
+  }
+  else {
     response.render('login', {
-      page: 'login'
+      page: 'login',
     })
+  }
 }
 
 
 module.exports = function (config) {
-
   usersApi = require('../api/users')(config)
 
   return login

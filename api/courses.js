@@ -1,83 +1,82 @@
-'use strict'
+const path = require('path')
+const marked = require('marked')
+const fsp = require('fs-promise')
+const yaml = require('js-yaml')
 
-require('es6-promise').polyfill()
-
-var path = require('path'),
-  marked = require('marked'),
-  fsp = require('fs-promise'),
-  yaml = require('js-yaml'),
-
-  exportObject = {},
-  knowledgeBasePath = path.resolve(
-    __dirname, '../node_modules/knowledge_base'
-  ),
-  coursesPath = path.join(knowledgeBasePath, 'courses'),
-  lessonsPath = path.join(knowledgeBasePath, 'lessons')
+const exportObject = {}
+const knowledgeBasePath = path.resolve(
+  __dirname,
+  '../node_modules/knowledge_base'
+)
+const coursesPath = path.join(knowledgeBasePath, 'courses')
+const lessonsPath = path.join(knowledgeBasePath, 'lessons')
 
 
 marked.setOptions({
   breaks: false,
-  sanitize: true
+  sanitize: true,
 })
 
 
 exportObject.getAll = function () {
-
   return fsp
     .readdir(path.resolve(coursesPath))
-    .then(function (courses) {
+    .then((courses) => {
 
-      var coursesPromises = courses.map(function (course) {
+      const coursesPromises = courses.map((course) => {
         return fsp
           .readFile(path.resolve(
             coursesPath, course, 'description.yaml'
           ))
-          .then(function (fileContent) {
+          .then((fileContent) => {
             return yaml.safeLoad(fileContent)
           })
-          .catch(function (error) {
-            if (error.code !== 'ENOENT')
+          .catch((error) => {
+            if (error.code !== 'ENOENT') {
               throw error
+            }
           })
       })
 
       return Promise.all(coursesPromises)
     })
-    .catch(function (error) {
-      if (error.code !== 'ENOENT')
+    .catch((error) => {
+      if (error.code !== 'ENOENT') {
         throw error
+      }
     })
 }
 
-exportObject.getById = function (id) {
 
-  var courseObject = {}
+exportObject.getById = function (id) {
+  let courseObject = {}
 
   return fsp
     .readFile(path.resolve(
       coursesPath, id, 'description.yaml'
     ))
-    .then(function (fileContent) {
+    .then((fileContent) => {
 
       function createLessonPromise (lesson) {
-
         return fsp
           .readFile(path.resolve(
             lessonsPath, lesson, 'index.yaml'
           ))
-          .catch(function (error) {
-            if (error.code !== 'ENOENT')
+          .catch((error) => {
+            if (error.code !== 'ENOENT') {
               throw error
+            }
           })
-          .then(function (fileContent) {
-            var lessonObject = {}
+          .then((yamlContent) => {
+            let lessonObject = {}
 
-            if (fileContent != null)
-              lessonObject = yaml.safeLoad(fileContent)
+            if (yamlContent != null) {
+              lessonObject = yaml.safeLoad(yamlContent)
+            }
 
-              lessonObject.id = lesson
-              lessonObject.title = lessonObject.title || lesson
-              lessonObject.thumbnailUrl = '/lessons/' +
+            lessonObject.id = lesson
+            lessonObject.title = lessonObject.title || lesson
+            lessonObject.thumbnailUrl = '/lessons/' +
                 lesson + '/' + 'images/thumbnail.png'
 
             return lessonObject
@@ -86,19 +85,21 @@ exportObject.getById = function (id) {
 
       courseObject = yaml.safeLoad(fileContent)
 
-      var lessonsPromises = courseObject.lessons.map(createLessonPromise)
+      const lessonsPromises = courseObject.lessons.map(createLessonPromise)
 
       return Promise.all(lessonsPromises)
     })
-    .then(function (lessons) {
+    .then((lessons) => {
       courseObject.lessons = lessons
 
       return courseObject
     })
-    .catch(function (error) {
-      if (error.code !== 'ENOENT')
+    .catch((error) => {
+      if (error.code !== 'ENOENT') {
         throw error
+      }
     })
 }
+
 
 module.exports = exportObject

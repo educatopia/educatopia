@@ -1,20 +1,12 @@
-'use strict'
-
-var fs = require('fs'),
-  path = require('path'),
-  yaml = require('js-yaml'),
-  langs = require('langs'),
-
-  lessonsApi = require('../api/lessons.js'),
-  lessons = {}
+const lessonsApi = require('../api/lessons.js')
+const lessonsModule = {}
 
 
-lessons.all = function (request, response, next) {
-
+lessonsModule.all = function (request, response, next) {
   lessonsApi
     .getAll()
-    .then(function (lessons) {
-      lessons = lessons.filter(function (element) {
+    .then(allLessons => {
+      allLessons = allLessons.filter((element) => {
         return element
       })
 
@@ -23,22 +15,22 @@ lessons.all = function (request, response, next) {
         {
           title: 'lessons',
           page: 'lessons',
-          lessons: lessons || []
+          lessons: allLessons || [],
         }
       )
     })
-    .catch(function (error) {
+    .catch((error) => {
       next(error)
     })
 }
 
-lessons.getById = function (request, response) {
 
-  var slug = request.params.slug
+lessonsModule.getById = function (request, response) {
+  const slug = request.params.slug
 
   lessonsApi
     .getById(slug)
-    .then(function (descriptionObject) {
+    .then((descriptionObject) => {
 
       descriptionObject.page = 'lesson'
       descriptionObject.thumbnailUrl = '/lessons/' +
@@ -51,4 +43,5 @@ lessons.getById = function (request, response) {
     })
 }
 
-module.exports = lessons
+
+module.exports = lessonsModule

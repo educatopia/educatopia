@@ -1,17 +1,15 @@
-'use strict'
-
 /**
- * Include this template file after backbone-forms.amd.js to override the default templates
+ * Include this template file after backbone-forms.amd.js
+ * to override the default templates
  *
  * 'data-*' attributes control where elements are placed
  */
 
-/* jshint expr: true*/
+/* eslint-disable no-multi-str */
 /* global _ */
 /* global Backbone */
 
-!function (Form) {
-
+!(function (Form) {
   /**
    * Bootstrap templates for Backbone Forms
    */
@@ -75,4 +73,4 @@
 
   Form.editors.List.Object.template = Form.editors.List.NestedModel.template
 
-}(Backbone.Form)
+})(Backbone.Form)
