@@ -1,61 +1,58 @@
-'use strict'
+const path = require('path')
+const assert = require('assert')
 
-var express = require('express'),
-  path = require('path'),
-  compress = require('compression'),
-  morgan = require('morgan'),
-  errorHandler = require('errorhandler'),
-  session = require('express-session'),
-  favicon = require('serve-favicon'),
-  bodyParser = require('body-parser'),
-  mongodb = require('mongodb'),
-  MongoClient = mongodb.MongoClient,
+const express = require('express')
+const compress = require('compression')
+const morgan = require('morgan')
+const errorHandler = require('errorhandler')
+const session = require('express-session')
+const favicon = require('serve-favicon')
+const bodyParser = require('body-parser')
+const mongodb = require('mongodb')
+const MongoClient = mongodb.MongoClient
 
-  app = express(),
+const app = express()
 
-  port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000,
-  ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
-  db = {
-    username: process.env.OPENSHIFT_MONGODB_DB_USERNAME,
-    password: process.env.OPENSHIFT_MONGODB_DB_PASSWORD,
-    ip:   process.env.OPENSHIFT_MONGODB_DB_HOST || '127.0.0.1',
-    port: process.env.OPENSHIFT_MONGODB_DB_PORT || 27017,
-    name: app.get('env') === 'development' ? 'educatopiadev' : 'educatopia'
-  },
-  connectionString = db.ip + ':' + db.port + '/' + db.name,
-  devMode = (app.get('env') === 'development'),
-  knowledgeBasePath = path.resolve('node_modules/knowledge_base')
+const port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000
+const ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
+const db = {
+  username: process.env.OPENSHIFT_MONGODB_DB_USERNAME,
+  password: process.env.OPENSHIFT_MONGODB_DB_PASSWORD,
+  ip: process.env.OPENSHIFT_MONGODB_DB_HOST || '127.0.0.1',
+  port: process.env.OPENSHIFT_MONGODB_DB_PORT || 27017,
+  name: app.get('env') === 'development' ? 'educatopiadev' : 'educatopia',
+}
+let connectionString = `${db.ip}:${db.port}/${db.name}`
+const devMode = app.get('env') === 'development'
+const knowledgeBasePath = path.resolve('node_modules/knowledge_base')
 
 
 function addRoutes (error, database) {
-
-  // jshint maxstatements: 30
-
   if (error || !database) {
     console.error('Could not connect to database "' + db.name + '"')
     return
   }
 
-  console.log('Connected to database "' + database.databaseName + '"')
+  console.info('Connected to database "' + database.databaseName + '"')
 
-  var config = {
-      database: database
-    },
-    index = require('./routes/index'),
-    login = require('./routes/login')(config),
-    logout = require('./routes/logout'),
-    signup = require('./routes/signup')(config),
-    exercises = require('./routes/exercises')(config),
-    lessons = require('./routes/lessons'),
-    courses = require('./routes/courses'),//(config),
-    users = require('./routes/users')(config)
+  const config = {
+    database: database,
+  }
+  const index = require('./routes/index')
+  const login = require('./routes/login')(config)
+  const logout = require('./routes/logout')
+  const signup = require('./routes/signup')(config)
+  const exercises = require('./routes/exercises')(config)
+  const lessons = require('./routes/lessons')
+  const courses = require('./routes/courses') // (config)
+  const users = require('./routes/users')(config)
 
 
   app.set('views', path.join(__dirname, 'views'))
   app.set('view engine', 'jade')
 
   app.use(favicon(__dirname + '/public/img/favicon.png', {
-    maxAge: devMode ? 1000 : '1d'
+    maxAge: devMode ? 1000 : '1d',
   }))
 
   app.use(compress())
@@ -67,13 +64,13 @@ function addRoutes (error, database) {
   app.use(session({
     secret: process.env.SESSION_SECRET || 'dev',
     saveUninitialized: true,
-    resave: true
+    resave: true,
   }))
 
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({extended: false}))
 
-  app.use(function (request, response, next) {
+  app.use((request, response, next) => {
     response.locals.session = request.session
     next()
   })
@@ -139,27 +136,29 @@ function addRoutes (error, database) {
   app.get('/:username', users.profile)
 
 
-  if (app.get('env') === 'development')
+  if (app.get('env') === 'development') {
     app.use(errorHandler())
+  }
 
-  app.use(function (req, res) {
-    res.render('404')
+  app.use((request, response) => {
+    response.render('404')
   })
 
   app.listen(port, ip)
-  console.log('Listening on ' + ip + ':' + port)
+  console.info('Listening on ' + ip + ':' + port)
 }
 
 
 app.set('hostname', 'localhost:' + port)
 
 if (app.get('env') === 'production') {
-  console.assert(process.env.SESSION_SECRET, 'Missing session secret')
+  assert(process.env.SESSION_SECRET, 'Missing session secret')
   app.set('hostname', process.env.OPENSHIFT_APP_DNS || 'educatopia.org')
 }
 
-if (db.password)
-  connectionString = db.username + ':' + db.password + '@' +
-                     db.ip + ':' + db.port + '/' + db.name
+if (db.password) {
+  connectionString =
+    `${db.username}:${db.password}@${db.ip}:${db.port}/${db.name}`
+}
 
 MongoClient.connect('mongodb://' + connectionString, addRoutes)

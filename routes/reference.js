@@ -1,8 +1,5 @@
-'use strict'
-
-module.exports = function (req, res) {
-
-  res.render('reference', {
-    page: 'reference'
+module.exports = (request, response) => {
+  response.render('reference', {
+    page: 'reference',
   })
 }

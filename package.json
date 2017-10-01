@@ -1,12 +1,11 @@
 {
   "name": "educatopia",
-  "description": "education for everybody",
+  "description": "Free education for everyone",
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "jshint": "jshint --exclude-path .gitignore --exclude public/components .",
-    "jscs": "jscs .",
-    "checkStyle": "npm run jshint && npm run jscs"
+    "lint": "eslint --max-warnings 0 .",
+    "test": "npm run lint"
   },
   "dependencies": {
     "atob": "^1.1.0",
@@ -28,7 +27,7 @@
     "js-yaml": "^3.2.7",
     "langs": "^1.0.1",
     "marked": "^0.3.3",
-    "mongodb": "^1.4.5",
+    "mongodb": "^2.2.31",
     "morgan": "^1.1.1",
     "nodemailer": "^1.3.1",
     "sendgrid": "^1.1.1",

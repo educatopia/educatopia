@@ -1,9 +1,6 @@
-'use strict'
-
-var api = {},
-    exercises = {},
-    users = {}
-
+const api = {}
+let exercises = {}
+let users = {}
 
 api.exercises = {
   getById: exercises.getById,
@@ -11,16 +8,15 @@ api.exercises = {
   getAll: exercises.getAll,
   add: exercises.add,
   update: exercises.update,
-  delete: exercises.delete
+  delete: exercises.delete,
 }
 
 api.users = {
-  signup: users.signup
+  signup: users.signup,
 }
 
 
-module.exports = function (config) {
-
+module.exports = config => {
   exercises = require('../api/exercises')(config)
   users = require('../api/users')(config)
 

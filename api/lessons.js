@@ -1,27 +1,25 @@
-'use strict'
+const path = require('path')
+const fsp = require('fs-promise')
+const yaml = require('js-yaml')
+const commonmark = require('commonmark')
 
-require('es6-promise').polyfill()
-
-var path = require('path'),
-  fsp = require('fs-promise'),
-  yaml = require('js-yaml'),
-  commonmark = require('commonmark'),
-
-  exportObject = {},
-  knowledgeBasePath = path.resolve(
-    __dirname, '../node_modules/knowledge_base'
-  ),
-  lessonsPath = path.join(knowledgeBasePath, 'lessons'),
-  reader = new commonmark.Parser(),
-  writer = new commonmark.HtmlRenderer()
+const exportObject = {}
+const knowledgeBasePath = path.resolve(
+  __dirname, '../node_modules/knowledge_base'
+)
+const lessonsPath = path.join(knowledgeBasePath, 'lessons')
+const reader = new commonmark.Parser()
+const writer = new commonmark.HtmlRenderer()
 
 
 function resolveIncludes (contentString, id) {
-  var includeSection,
-    includePath
+  let includeSection
+  let includePath
 
-  while (includeSection = contentString.match(/\{\{(.+)\}\}/i)) {
-
+  do {
+    includeSection = contentString.match(/\{\{(.+)\}\}/i)
+  }
+  while (includeSection) {
     includePath = path.resolve(lessonsPath, id, includeSection[1])
 
     contentString = contentString.replace(
@@ -33,26 +31,28 @@ function resolveIncludes (contentString, id) {
   return contentString
 }
 
-exportObject.getAll = function () {
 
+exportObject.getAll = function () {
   return fsp
     .readdir(lessonsPath)
-    .then(function (lessons) {
+    .then((lessons) => {
 
-      var lessonsPromises = lessons .map(function (lesson) {
+      const lessonsPromises = lessons.map((lesson) => {
         return fsp
           .readFile(path.resolve(
             lessonsPath, lesson, 'index.yaml'
           ))
-          .catch(function (error) {
-            if (error.code !== 'ENOENT')
+          .catch((error) => {
+            if (error.code !== 'ENOENT') {
               throw error
+            }
           })
-          .then(function (fileContent) {
-            var descriptionObject = {}
+          .then((fileContent) => {
+            let descriptionObject = {}
 
-            if (fileContent)
+            if (fileContent) {
               descriptionObject = yaml.safeLoad(fileContent)
+            }
 
             descriptionObject.id = lesson
             descriptionObject.title = descriptionObject.title ||
@@ -60,34 +60,36 @@ exportObject.getAll = function () {
 
             return descriptionObject
           })
-          .catch(function (error) {
-            if (error.code !== 'ENOTDIR')
+          .catch((error) => {
+            if (error.code !== 'ENOTDIR') {
               throw error
+            }
           })
       })
 
       return Promise.all(lessonsPromises)
     })
-    .catch(function (error) {
-      if (error.code !== 'ENOENT')
+    .catch((error) => {
+      if (error.code !== 'ENOENT') {
         throw error
+      }
     })
 }
 
-exportObject.getById = function (id) {
 
+exportObject.getById = function (id) {
   function improveImageNode (nodeEvent) {
 
-    var node = nodeEvent.node,
-      imageNode
+    const node = nodeEvent.node
+    let imageNode
 
     if (node.type === 'Paragraph' &&
       !nodeEvent.entering &&
       node.firstChild === node.lastChild &&
       node.firstChild.type === 'Image'
     ) {
-        imageNode = new commonmark.Node('HtmlBlock')
-        imageNode.literal = '<img srcset="' +
+      imageNode = new commonmark.Node('HtmlBlock')
+      imageNode.literal = '<img srcset="' +
           id + '/' + node.firstChild.destination + ' 1x, ' +
           id + '/' +
           node.firstChild.destination.replace('.', '_hq.') + ' 2x' +
@@ -95,35 +97,31 @@ exportObject.getById = function (id) {
           node.firstChild.literal +
           '">'
 
-        node.insertAfter(imageNode)
-        node.unlink()
-      }
+      node.insertAfter(imageNode)
+      node.unlink()
+    }
   }
 
   return Promise
     .all([
       fsp.readFile(path.resolve(lessonsPath, id, 'index.yaml')),
-      fsp.readFile(path.resolve(lessonsPath, id, 'index.md'))
+      fsp.readFile(path.resolve(lessonsPath, id, 'index.md')),
     ])
-    .then(function (array) {
-      var descriptionObject = yaml.safeLoad(array[0]),
-        contentString = array[1].toString(),
-        wordsPerMinute = 50,
-        numberOfWords,
-        includeSection,
-        parsedMarkdown,
-        walker,
-        nodeEvent
+    .then((array) => {
+      const descriptionObject = yaml.safeLoad(array[0])
+      const wordsPerMinute = 50
+      const contentString = resolveIncludes(array[1].toString(), id)
+      const numberOfWords = contentString.split(' ').length
+      const parsedMarkdown = reader.parse(contentString)
+      const walker = parsedMarkdown.walker()
+      let nodeEvent
 
-
-      contentString = resolveIncludes(contentString, id)
-      numberOfWords = contentString.split(' ').length
-
-      parsedMarkdown = reader.parse(contentString)
-      walker = parsedMarkdown.walker()
-
-      while (nodeEvent = walker.next())
+      do {
+        nodeEvent = walker.next()
+      }
+      while (nodeEvent) {
         improveImageNode(nodeEvent)
+      }
 
       descriptionObject.numberOfWords = numberOfWords
       descriptionObject.readingDuration = Math.round(
@@ -133,10 +131,12 @@ exportObject.getById = function (id) {
 
       return descriptionObject
     })
-    .catch(function (error) {
-      if (error.code !== 'ENOENT')
+    .catch((error) => {
+      if (error.code !== 'ENOENT') {
         throw error
+      }
     })
 }
+
 
 module.exports = exportObject

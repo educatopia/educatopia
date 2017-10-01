@@ -1,58 +1,60 @@
-'use strict'
-
-var usersApi,
-  exercisesApi,
-  users = {}
+let usersApi
+let exercisesApi
+const users = {}
 
 
 users.confirm = function (request, response, next) {
-
   usersApi.confirm(
     request.params.confirmationCode,
-    function (error, user) {
+    (error, user) => {
 
-      if (error)
+      if (error) {
         console.error(error)
+      }
 
-      else if (user)
+      else if (user) {
         response.render('login', {
           page: 'login',
           message: 'You are email-address has been confirmed. ' +
-                   'You can log in now!'
+                   'You can log in now!',
         })
+      }
 
-      else
+      else {
         next()
+      }
     }
   )
 }
 
-users.profile = function (request, response, next) {
 
+users.profile = function (request, response, next) {
   usersApi.getByUsername(
     request.params.username,
-    function (error, user) {
-
-      if (error)
+    (error, user) => {
+      if (error) {
         console.error(error)
+      }
 
-      else if (user)
+      else if (user) {
         exercisesApi.getByUser(
           request.params.username,
-          function (error, exercises) {
-
-            if (error)
-              console.error(error)
+          (loadError, exercises) => {
+            if (loadError) {
+              console.error(loadError)
+            }
 
             response.render('users/profile', {
               page: 'profile',
               user: user,
-              exercises: exercises
+              exercises: exercises,
             })
           }
         )
-      else
+      }
+      else {
         next()
+      }
     }
   )
 }
@@ -65,4 +67,3 @@ module.exports = function (config) {
 
   return users
 }
-

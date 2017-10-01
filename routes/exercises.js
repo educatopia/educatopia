@@ -1,38 +1,42 @@
-'use strict'
+let exercisesApi
+const fs = require('fs')
+const path = require('path')
+const yaml = require('js-yaml')
+const langs = require('langs')
 
-var exercisesApi,
-    fs = require('fs'),
-    path = require('path'),
-    yaml = require('js-yaml'),
-    langs = require('langs'),
+const exercisesModule = {}
 
-    exercises = {},
+const schemaPath = path
+  .resolve(__dirname, '../public/shared/exerciseSchema.yaml')
+const schema = yaml.safeLoad(fs.readFileSync(schemaPath, 'utf8'))
 
-    schemaPath = path.resolve(__dirname, '../public/shared/exerciseSchema.yaml'),
-    schema = yaml.safeLoad(fs.readFileSync(schemaPath, 'utf8')),
-
-    fieldsetsPath = path.resolve(__dirname, '../public/shared/exerciseFieldsets.yaml'),
-    fieldsets = yaml.safeLoad(fs.readFileSync(fieldsetsPath, 'utf8'))
+const fieldsetsPath = path
+  .resolve(__dirname, '../public/shared/exerciseFieldsets.yaml')
+const fieldsets = yaml.safeLoad(fs.readFileSync(fieldsetsPath, 'utf8'))
 
 
 schema.language.options = langs
   .names(true)
-  .sort(function (a, b) {
-    return a > b ? 1 : -1
-  })
+  .sort((langA, langB) =>
+    langA > langB ? 1 : -1
+  )
 
 
 function reformatFormContent (object) {
 
-  var key
+  let key
 
-  for (key in schema)
-    if (schema.hasOwnProperty(key))
-      if (schema[key].type === 'list' && schema[key].subtype === 'text')
+  for (key in schema) {
+    if (schema.hasOwnProperty(key)) {
+      if (schema[key].type === 'list' && schema[key].subtype === 'text') {
         object[key] = object[key].split(/\s*,\s*/)
+      }
 
-      else if (schema[key].type === 'date')
+      else if (schema[key].type === 'date') {
         object[key] = new Date(object[key])
+      }
+    }
+  }
 
   return object
 }
@@ -40,38 +44,39 @@ function reformatFormContent (object) {
 function addEmptyFields (request) {
   // Adds empty fields to render new empty input-fields in form
 
-  Object.keys(request.query).forEach(function (key) {
+  Object.keys(request.query)
+    .forEach((key) => {
 
-    if(!Array.isArray(request.body[key]))
-      request.body[key] = [request.body[key]]
+      if (!Array.isArray(request.body[key])) {
+        request.body[key] = [request.body[key]]
+      }
 
-    request.body[key].push('')
-  })
+      request.body[key].push('')
+    })
 }
 
 function validateExercise (exercise) {
 
-  var fieldName,
-      booleanSum = 0
+  let fieldName
+  let booleanSum = 0
 
   for (fieldName in schema) {
-
     if (schema.hasOwnProperty(fieldName) && schema[fieldName].validators) {
+      booleanSum += schema[fieldName].validators
+        .every(constraint => { // eslint-disable-line no-loop-func
+          // TODO: Add more types of validators
 
-      // jshint loopfunc: true
-
-      booleanSum += schema[fieldName].validators.every(function (constraint) {
-
-        // TODO: Add more types of validators
-
-        if (constraint === 'required')
-          return Boolean(exercise[fieldName])
-        else
-          return true
-      })
+          if (constraint === 'required') {
+            return Boolean(exercise[fieldName])
+          }
+          else {
+            return true
+          }
+        })
     }
-    else
+    else {
       booleanSum++
+    }
   }
 
   return booleanSum === Object.keys(schema).length
@@ -79,25 +84,28 @@ function validateExercise (exercise) {
 
 function submit (request, response, renderObject) {
 
-  var isValid
+  let isValid
 
   if (request.session.user) {
 
     isValid = validateExercise(request.body)
 
-    if (isValid)
+    if (isValid) {
       exercisesApi.add(
         reformatFormContent(request.body),
         request.session.user,
-        function (error, exercise) {
+        (error, exercise) => {
 
-          if (error)
+          if (error) {
             console.error(error)
+          }
 
-          else
+          else {
             response.redirect('/exercises/' + exercise._id)
+          }
         }
       )
+    }
 
     else {
       renderObject.message = 'Exercise is not valid! ' +
@@ -108,45 +116,49 @@ function submit (request, response, renderObject) {
       response.render('exercises/create', renderObject)
     }
   }
-  else
+  else {
     response.redirect('/exercises')
+  }
 }
 
 
-exercises.one = function (request, response, next) {
+exercisesModule.one = function (request, response, next) {
 
   exercisesApi.getByIdRendered(
     request.params.id,
-    function (error, exercise) {
+    (error, exercise) => {
 
-      if (error)
+      if (error) {
         console.error(error)
+      }
 
-      else if (exercise)
+      else if (exercise) {
         response.render('exercises/view', {
           title: 'Exercise',
           page: 'exerciseView',
-          exercise: exercise
+          exercise: exercise,
         })
+      }
 
-      else
+      else {
         next()
+      }
     }
   )
 }
 
-exercises.shortcut = function (request, response) {
+exercisesModule.shortcut = function (request, response) {
 
   response.redirect('/exercises/' + request.params.id)
 }
 
-exercises.create = function (request, response) {
+exercisesModule.create = function (request, response) {
 
-  var renderObject = {
+  const renderObject = {
     page: 'exerciseCreate',
     schema: schema,
     fieldsets: fieldsets,
-    exercise: {}
+    exercise: {},
   }
 
 
@@ -160,8 +172,9 @@ exercises.create = function (request, response) {
 
       response.render('exercises/create', renderObject)
     }
-    else
+    else {
       submit(request, response, renderObject)
+    }
   }
   else {
     delete renderObject.fieldsets[2]
@@ -170,28 +183,28 @@ exercises.create = function (request, response) {
   }
 }
 
-exercises.all = function (request, response) {
+exercisesModule.all = function (request, response) {
 
-  exercisesApi.getAll(function (error, exercises) {
-
-    if (error)
+  exercisesApi.getAll((error, exercises) => {
+    if (error) {
       throw new Error(error)
+    }
 
     response.render('exercises/all', {
       title: 'Exercises',
       page: 'exercises',
-      exercises: exercises
+      exercises: exercises,
     })
   })
 }
 
-exercises.edit = function (request, response, next) {
+exercisesModule.edit = function (request, response, next) {
 
-  var renderObject = {
+  const renderObject = {
     title: 'Edit',
     page: 'exerciseEdit',
     schema: schema,
-    fieldsets: fieldsets
+    fieldsets: fieldsets,
   }
 
   if (request.method === 'POST' && request.session.user) {
@@ -203,65 +216,72 @@ exercises.edit = function (request, response, next) {
     response.render('exercises/edit', renderObject)
   }
 
-  else
+  else {
     exercisesApi.getById(
       request.params.id,
-      function (error, exercise) {
+      (error, exercise) => {
 
-        if (error)
+        if (error) {
           console.error(error)
+        }
 
         else if (exercise) {
           renderObject.exercise = exercise
           response.render('exercises/edit', renderObject)
         }
-        else
+        else {
           next()
+        }
       }
     )
+  }
 }
 
-exercises.history = function (request, response, next) {
+exercisesModule.history = function (request, response, next) {
 
   exercisesApi.getHistoryById(
     request.params.id,
-    function (error, history) {
+    (error, history) => {
 
-      if (error)
+      if (error) {
         console.error(error)
+      }
 
-      if (history)
+      if (history) {
         response.render('exercises/history', {
           title: 'History',
           page: 'exerciseHistory',
           history: history,
           exercise: {
-            id: request.params.id
-          }
+            id: request.params.id,
+          },
         })
-      else
+      }
+      else {
         next()
+      }
     }
   )
 }
 
-exercises.update = function (request, response) {
+exercisesModule.update = function (request, response) {
 
-  var updatedExercise = reformatFormContent(request.body)
+  const updatedExercise = reformatFormContent(request.body)
 
   exercisesApi.update(
     updatedExercise,
     request.session.user,
-    function (error, exercise) {
+    (error, exercise) => {
 
-      if (error)
+      if (error) {
         throw new Error(error)
+      }
 
       else {
         response.render('exercises/view', {
           title: 'Update',
           page: 'exerciseView',
-          exercise: exercise
+          exercise: exercise,
         })
       }
     }
@@ -269,9 +289,7 @@ exercises.update = function (request, response) {
 }
 
 
-module.exports = function (config) {
-
+module.exports = config => {
   exercisesApi = require('../api/exercises')(config)
-
-  return exercises
+  return exercisesModule
 }

@@ -1,40 +1,33 @@
-'use strict'
+const coursesApi = require('../api/courses.js')
 
-var fs = require('fs'),
-  path = require('path'),
-  yaml = require('js-yaml'),
-  langs = require('langs'),
-
-  coursesApi = require('../api/courses.js'),
-  courses = {}
+const coursesModule = {}
 
 
-courses.all = function (request, response, next) {
-
+coursesModule.all = function (request, response, next) {
   coursesApi
     .getAll()
-    .then(function (courses) {
+    .then(courses => {
       response.render(
         'courses',
         {
           title: 'Courses',
           page: 'courses',
-          courses: courses || []
+          courses: courses || [],
         }
       )
     })
-    .catch(function (error) {
+    .catch(error => {
       next(error)
     })
 }
 
-courses.getById = function (request, response) {
 
-  var slug = request.params.slug
+coursesModule.getById = function (request, response) {
+  const slug = request.params.slug
 
   coursesApi
     .getById(slug)
-    .then(function (descriptionObject) {
+    .then(descriptionObject => {
 
       descriptionObject.page = 'course'
       descriptionObject.thumbnailUrl = '/courses/' +
@@ -45,9 +38,10 @@ courses.getById = function (request, response) {
         descriptionObject
       )
     })
-    .catch(function (error) {
+    .catch((error) => {
       throw error
     })
 }
 
-module.exports = courses
+
+module.exports = coursesModule
