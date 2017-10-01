@@ -4,40 +4,40 @@ var usersApi
 
 function login (request, response) {
 
-	if (request.method === 'POST')
-		usersApi.login(
-			request.body.username,
-			request.body.password,
-			function (error, user) {
+  if (request.method === 'POST')
+    usersApi.login(
+      request.body.username,
+      request.body.password,
+      function (error, user) {
 
-				if (error || !user) {
-					console.error(
-						'Following error occurred during login: ' +
-						error.message
-					)
+        if (error || !user) {
+          console.error(
+            'Following error occurred during login: ' +
+            error.message
+          )
 
-					response.render('login', {
-						page: 'login',
-						error: error
-					})
-				}
-				else {
-					request.session.user = user
-					response.redirect('/' + user.username)
-				}
-			}
-		)
+          response.render('login', {
+            page: 'login',
+            error: error
+          })
+        }
+        else {
+          request.session.user = user
+          response.redirect('/' + user.username)
+        }
+      }
+    )
 
-	else
-		response.render('login', {
-			page: 'login'
-		})
+  else
+    response.render('login', {
+      page: 'login'
+    })
 }
 
 
 module.exports = function (config) {
 
-	usersApi = require('../api/users')(config)
+  usersApi = require('../api/users')(config)
 
-	return login
+  return login
 }

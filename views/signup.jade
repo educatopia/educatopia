@@ -1,26 +1,26 @@
 extends layout
 
 block content
-	form(action='/signup', method='post')
-		fieldset
-			legend Signup
+  form(action='/signup', method='post')
+    fieldset
+      legend Signup
 
-			.form-group
-				label(for='username') Username
-				input#username.form-control(type='text', name='username')
+      .form-group
+        label(for='username') Username
+        input#username.form-control(type='text', name='username')
 
-			.form-group
-				label(for='email') Email
-				input#email.form-control(type='text', name='email')
+      .form-group
+        label(for='email') Email
+        input#email.form-control(type='text', name='email')
 
-			.form-group
-				label(for='password') Password
-				input#password.form-control(type='password', name='password')
+      .form-group
+        label(for='password') Password
+        input#password.form-control(type='password', name='password')
 
-			br
-			input.btn.btn-default(type='submit', value='Create Account')
+      br
+      input.btn.btn-default(type='submit', value='Create Account')
 
-	if data && data.message
-		br
-		p.alert.alert-info
-			= data.message
+  if data && data.message
+    br
+    p.alert.alert-info
+      = data.message

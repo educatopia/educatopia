@@ -1,29 +1,29 @@
 extends ../layout
 
 block content
-	.row
-		.col-md-3
-			img(
-			src='/img/placeholderProfilePicture.png',
-			alt='Profile picture of' + user.username
-			)
-			h2= user.name
-			h3 @#{user.username}
-			hr
-		.col-md-9
-			- var length = exercises.length
-			h3= length + ' created exercise' + (length !== 1 ? 's' : '')
-			table.table.table-condensed
-				tbody
-					each exercise, index in exercises
-						- var slug = '…'
+  .row
+    .col-md-3
+      img(
+      src='/img/placeholderProfilePicture.png',
+      alt='Profile picture of' + user.username
+      )
+      h2= user.name
+      h3 @#{user.username}
+      hr
+    .col-md-9
+      - var length = exercises.length
+      h3= length + ' created exercise' + (length !== 1 ? 's' : '')
+      table.table.table-condensed
+        tbody
+          each exercise, index in exercises
+            - var slug = '…'
 
-						if exercise.current.task
-							- var slug = exercise.current.task.substr(0, 110)
-							if exercise.current.task.length > 110
-								- slug += '…'
-						tr
-							td= index + 1
-							td
-								a(href='/exercises/' + exercise._id)
-									= slug
+            if exercise.current.task
+              - var slug = exercise.current.task.substr(0, 110)
+              if exercise.current.task.length > 110
+                - slug += '…'
+            tr
+              td= index + 1
+              td
+                a(href='/exercises/' + exercise._id)
+                  = slug

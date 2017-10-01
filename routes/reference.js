@@ -2,7 +2,7 @@
 
 module.exports = function (req, res) {
 
-	res.render('reference', {
-		page: 'reference'
-	})
+  res.render('reference', {
+    page: 'reference'
+  })
 }

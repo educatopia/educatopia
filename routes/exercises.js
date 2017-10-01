@@ -16,262 +16,262 @@ var exercisesApi,
 
 
 schema.language.options = langs
-	.names(true)
-	.sort(function (a, b) {
-		return a > b ? 1 : -1
-	})
+  .names(true)
+  .sort(function (a, b) {
+    return a > b ? 1 : -1
+  })
 
 
 function reformatFormContent (object) {
 
-	var key
+  var key
 
-	for (key in schema)
-		if (schema.hasOwnProperty(key))
-			if (schema[key].type === 'list' && schema[key].subtype === 'text')
-				object[key] = object[key].split(/\s*,\s*/)
+  for (key in schema)
+    if (schema.hasOwnProperty(key))
+      if (schema[key].type === 'list' && schema[key].subtype === 'text')
+        object[key] = object[key].split(/\s*,\s*/)
 
-			else if (schema[key].type === 'date')
-				object[key] = new Date(object[key])
+      else if (schema[key].type === 'date')
+        object[key] = new Date(object[key])
 
-	return object
+  return object
 }
 
 function addEmptyFields (request) {
-	// Adds empty fields to render new empty input-fields in form
+  // Adds empty fields to render new empty input-fields in form
 
-	Object.keys(request.query).forEach(function (key) {
+  Object.keys(request.query).forEach(function (key) {
 
-		if(!Array.isArray(request.body[key]))
-			request.body[key] = [request.body[key]]
+    if(!Array.isArray(request.body[key]))
+      request.body[key] = [request.body[key]]
 
-		request.body[key].push('')
-	})
+    request.body[key].push('')
+  })
 }
 
 function validateExercise (exercise) {
 
-	var fieldName,
-	    booleanSum = 0
+  var fieldName,
+      booleanSum = 0
 
-	for (fieldName in schema) {
+  for (fieldName in schema) {
 
-		if (schema.hasOwnProperty(fieldName) && schema[fieldName].validators) {
+    if (schema.hasOwnProperty(fieldName) && schema[fieldName].validators) {
 
-			// jshint loopfunc: true
+      // jshint loopfunc: true
 
-			booleanSum += schema[fieldName].validators.every(function (constraint) {
+      booleanSum += schema[fieldName].validators.every(function (constraint) {
 
-				// TODO: Add more types of validators
+        // TODO: Add more types of validators
 
-				if (constraint === 'required')
-					return Boolean(exercise[fieldName])
-				else
-					return true
-			})
-		}
-		else
-			booleanSum++
-	}
+        if (constraint === 'required')
+          return Boolean(exercise[fieldName])
+        else
+          return true
+      })
+    }
+    else
+      booleanSum++
+  }
 
-	return booleanSum === Object.keys(schema).length
+  return booleanSum === Object.keys(schema).length
 }
 
 function submit (request, response, renderObject) {
 
-	var isValid
+  var isValid
 
-	if (request.session.user) {
+  if (request.session.user) {
 
-		isValid = validateExercise(request.body)
+    isValid = validateExercise(request.body)
 
-		if (isValid)
-			exercisesApi.add(
-				reformatFormContent(request.body),
-				request.session.user,
-				function (error, exercise) {
+    if (isValid)
+      exercisesApi.add(
+        reformatFormContent(request.body),
+        request.session.user,
+        function (error, exercise) {
 
-					if (error)
-						console.error(error)
+          if (error)
+            console.error(error)
 
-					else
-						response.redirect('/exercises/' + exercise._id)
-				}
-			)
+          else
+            response.redirect('/exercises/' + exercise._id)
+        }
+      )
 
-		else {
-			renderObject.message = 'Exercise is not valid! ' +
-			                       'Please correct mistakes and try to submit again.'
+    else {
+      renderObject.message = 'Exercise is not valid! ' +
+                             'Please correct mistakes and try to submit again.'
 
-			renderObject.exercise = reformatFormContent(request.body)
+      renderObject.exercise = reformatFormContent(request.body)
 
-			response.render('exercises/create', renderObject)
-		}
-	}
-	else
-		response.redirect('/exercises')
+      response.render('exercises/create', renderObject)
+    }
+  }
+  else
+    response.redirect('/exercises')
 }
 
 
 exercises.one = function (request, response, next) {
 
-	exercisesApi.getByIdRendered(
-		request.params.id,
-		function (error, exercise) {
+  exercisesApi.getByIdRendered(
+    request.params.id,
+    function (error, exercise) {
 
-			if (error)
-				console.error(error)
+      if (error)
+        console.error(error)
 
-			else if (exercise)
-				response.render('exercises/view', {
-					title: 'Exercise',
-					page: 'exerciseView',
-					exercise: exercise
-				})
+      else if (exercise)
+        response.render('exercises/view', {
+          title: 'Exercise',
+          page: 'exerciseView',
+          exercise: exercise
+        })
 
-			else
-				next()
-		}
-	)
+      else
+        next()
+    }
+  )
 }
 
 exercises.shortcut = function (request, response) {
 
-	response.redirect('/exercises/' + request.params.id)
+  response.redirect('/exercises/' + request.params.id)
 }
 
 exercises.create = function (request, response) {
 
-	var renderObject = {
-		page: 'exerciseCreate',
-		schema: schema,
-		fieldsets: fieldsets,
-		exercise: {}
-	}
+  var renderObject = {
+    page: 'exerciseCreate',
+    schema: schema,
+    fieldsets: fieldsets,
+    exercise: {}
+  }
 
 
-	if (request.method === 'POST' && request.session.user) {
+  if (request.method === 'POST' && request.session.user) {
 
-		if (Object.keys(request.query).length) {
+    if (Object.keys(request.query).length) {
 
-			addEmptyFields(request)
+      addEmptyFields(request)
 
-			renderObject.exercise = reformatFormContent(request.body)
+      renderObject.exercise = reformatFormContent(request.body)
 
-			response.render('exercises/create', renderObject)
-		}
-		else
-			submit(request, response, renderObject)
-	}
-	else {
-		delete renderObject.fieldsets[2]
+      response.render('exercises/create', renderObject)
+    }
+    else
+      submit(request, response, renderObject)
+  }
+  else {
+    delete renderObject.fieldsets[2]
 
-		response.render('exercises/create', renderObject)
-	}
+    response.render('exercises/create', renderObject)
+  }
 }
 
 exercises.all = function (request, response) {
 
-	exercisesApi.getAll(function (error, exercises) {
+  exercisesApi.getAll(function (error, exercises) {
 
-		if (error)
-			throw new Error(error)
+    if (error)
+      throw new Error(error)
 
-		response.render('exercises/all', {
-			title: 'Exercises',
-			page: 'exercises',
-			exercises: exercises
-		})
-	})
+    response.render('exercises/all', {
+      title: 'Exercises',
+      page: 'exercises',
+      exercises: exercises
+    })
+  })
 }
 
 exercises.edit = function (request, response, next) {
 
-	var renderObject = {
-		title: 'Edit',
-		page: 'exerciseEdit',
-		schema: schema,
-		fieldsets: fieldsets
-	}
+  var renderObject = {
+    title: 'Edit',
+    page: 'exerciseEdit',
+    schema: schema,
+    fieldsets: fieldsets
+  }
 
-	if (request.method === 'POST' && request.session.user) {
+  if (request.method === 'POST' && request.session.user) {
 
-		addEmptyFields(request)
+    addEmptyFields(request)
 
-		renderObject.exercise = reformatFormContent(request.body)
+    renderObject.exercise = reformatFormContent(request.body)
 
-		response.render('exercises/edit', renderObject)
-	}
+    response.render('exercises/edit', renderObject)
+  }
 
-	else
-		exercisesApi.getById(
-			request.params.id,
-			function (error, exercise) {
+  else
+    exercisesApi.getById(
+      request.params.id,
+      function (error, exercise) {
 
-				if (error)
-					console.error(error)
+        if (error)
+          console.error(error)
 
-				else if (exercise) {
-					renderObject.exercise = exercise
-					response.render('exercises/edit', renderObject)
-				}
-				else
-					next()
-			}
-		)
+        else if (exercise) {
+          renderObject.exercise = exercise
+          response.render('exercises/edit', renderObject)
+        }
+        else
+          next()
+      }
+    )
 }
 
 exercises.history = function (request, response, next) {
 
-	exercisesApi.getHistoryById(
-		request.params.id,
-		function (error, history) {
+  exercisesApi.getHistoryById(
+    request.params.id,
+    function (error, history) {
 
-			if (error)
-				console.error(error)
+      if (error)
+        console.error(error)
 
-			if (history)
-				response.render('exercises/history', {
-					title: 'History',
-					page: 'exerciseHistory',
-					history: history,
-					exercise: {
-						id: request.params.id
-					}
-				})
-			else
-				next()
-		}
-	)
+      if (history)
+        response.render('exercises/history', {
+          title: 'History',
+          page: 'exerciseHistory',
+          history: history,
+          exercise: {
+            id: request.params.id
+          }
+        })
+      else
+        next()
+    }
+  )
 }
 
 exercises.update = function (request, response) {
 
-	var updatedExercise = reformatFormContent(request.body)
+  var updatedExercise = reformatFormContent(request.body)
 
-	exercisesApi.update(
-		updatedExercise,
-		request.session.user,
-		function (error, exercise) {
+  exercisesApi.update(
+    updatedExercise,
+    request.session.user,
+    function (error, exercise) {
 
-			if (error)
-				throw new Error(error)
+      if (error)
+        throw new Error(error)
 
-			else {
-				response.render('exercises/view', {
-					title: 'Update',
-					page: 'exerciseView',
-					exercise: exercise
-				})
-			}
-		}
-	)
+      else {
+        response.render('exercises/view', {
+          title: 'Update',
+          page: 'exerciseView',
+          exercise: exercise
+        })
+      }
+    }
+  )
 }
 
 
 module.exports = function (config) {
 
-	exercisesApi = require('../api/exercises')(config)
+  exercisesApi = require('../api/exercises')(config)
 
-	return exercises
+  return exercises
 }

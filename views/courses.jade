@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  .row
+    for course in courses
+      .col-sm-6
+        .panel.panel-default
+          .panel-body
+            h2= course.title
+            p.text-justify= course.summary
+            a.btn.btn-primary(href='courses/#{course.id}') Start the course
+
+    .col-sm-6
+      .panel.panel-default
+        .panel-body
+          h2 More Coming Soon
+          p.text-justify.
+            Stay tuned as more courses will come to Educatopia soon!<br>
+            Subscribe to the courses-newsletter:
+
+          .input-group
+            input.form-control#coursesNewsletter(
+            type='email', placeholder='Your email-address'
+            )
+            span.input-group-btn
+              button.btn.btn-default(type='button') Submit
