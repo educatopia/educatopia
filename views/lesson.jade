@@ -1,19 +1,19 @@
 extends layout
 
 block content
-	article
-		h1= title
-		p.lead= subtitle
-		p.text-muted
-			span= numberOfWords +  ' Words'
-			= ' - '
-			span= readingDuration +  ' Minutes'
-		p= summary
+  article
+    h1= title
+    p.lead= subtitle
+    p.text-muted
+      span= numberOfWords +  ' Words'
+      = ' - '
+      span= readingDuration +  ' Minutes'
+    p= summary
 
-		hr
+    hr
 
-		!= content
+    != content
 
 block scripts
-	script.
-		hljs.initHighlightingOnLoad()
+  script.
+    hljs.initHighlightingOnLoad()

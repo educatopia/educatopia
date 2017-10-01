@@ -1,26 +1,26 @@
 extends layout
 
 block content
-	.row
-		for lesson in lessons
-			.col-sm-6
-				.panel.panel-default
-					.panel-body
-						h2= lesson.title
-						p.text-justify= lesson.summary
-						a.btn.btn-primary(href='lessons/#{lesson.id}') Start the lesson
+  .row
+    for lesson in lessons
+      .col-sm-6
+        .panel.panel-default
+          .panel-body
+            h2= lesson.title
+            p.text-justify= lesson.summary
+            a.btn.btn-primary(href='lessons/#{lesson.id}') Start the lesson
 
-		.col-sm-6
-			.panel.panel-default
-				.panel-body
-					h2 More Coming Soon
-					p.text-justify.
-						Stay tuned as more lessons will come to Educatopia soon!<br>
-						Subscribe to the lessons-newsletter:
+    .col-sm-6
+      .panel.panel-default
+        .panel-body
+          h2 More Coming Soon
+          p.text-justify.
+            Stay tuned as more lessons will come to Educatopia soon!<br>
+            Subscribe to the lessons-newsletter:
 
-					.input-group
-						input.form-control#lessonsNewsletter(
-						type='email', placeholder='Your email-address'
-						)
-						span.input-group-btn
-							button.btn.btn-default(type='button') Submit
+          .input-group
+            input.form-control#lessonsNewsletter(
+            type='email', placeholder='Your email-address'
+            )
+            span.input-group-btn
+              button.btn.btn-default(type='button') Submit

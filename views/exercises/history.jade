@@ -1,17 +1,17 @@
 extends layout
 
 block thirdTab
-	table.table.table-striped.table-condensed
-		thead
-			tr
-				th Revision
-				th Created
-				th User
-		tbody
-			each exercise, index in history.reverse()
-				tr
-					td= history.length - index
-					td= exercise.createdAt.toISOString()
-					td
-						a(href='/' + exercise.createdBy)
-							=exercise.createdBy
+  table.table.table-striped.table-condensed
+    thead
+      tr
+        th Revision
+        th Created
+        th User
+    tbody
+      each exercise, index in history.reverse()
+        tr
+          td= history.length - index
+          td= exercise.createdAt.toISOString()
+          td
+            a(href='/' + exercise.createdBy)
+              =exercise.createdBy

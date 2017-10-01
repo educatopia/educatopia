@@ -2,6 +2,6 @@
 
 module.exports = function (request, response) {
 
-	request.session.destroy()
-	response.redirect('/')
+  request.session.destroy()
+  response.redirect('/')
 }

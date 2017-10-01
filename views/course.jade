@@ -1,19 +1,19 @@
 extends layout
 
 block content
-	h1= title
-	p= summary
+  h1= title
+  p= summary
 
-	hr
+  hr
 
-	for lesson in lessons
-		.media
-			if lesson.thumbnailUrl
-				.media-left
-					.media-object
-							img(src=lesson.thumbnailUrl, alt='Thumbnail for #{lesson.title}')
-			
-			.media-body
-				h3.media-heading: a(href='/lessons/#{lesson.id}')
-					= lesson.title
-				p= lesson.subtitle
+  for lesson in lessons
+    .media
+      if lesson.thumbnailUrl
+        .media-left
+          .media-object
+              img(src=lesson.thumbnailUrl, alt='Thumbnail for #{lesson.title}')
+      
+      .media-body
+        h3.media-heading: a(href='/lessons/#{lesson.id}')
+          = lesson.title
+        p= lesson.subtitle

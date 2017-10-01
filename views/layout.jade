@@ -1,53 +1,53 @@
 doctype html
 head
-	meta(charset='utf-8')
-	title
-		if settings.env === 'development'
-			= 'Dev '
-		= title ? title : 'Educatopia'
+  meta(charset='utf-8')
+  title
+    if settings.env === 'development'
+      = 'Dev '
+    = title ? title : 'Educatopia'
 
 
-	meta(name='viewport', content='width=device-width, initial-scale=1.0')
-	meta(name='description', content='')
-	meta(name='keywords', content='exercises, education')
-	meta(name='author', content='Adrian Sieber')
+  meta(name='viewport', content='width=device-width, initial-scale=1.0')
+  meta(name='description', content='')
+  meta(name='keywords', content='exercises, education')
+  meta(name='author', content='Adrian Sieber')
 
-	link(rel='stylesheet',
-		href='/modules/bootstrap/dist/css/bootstrap.min.css')
-	link(rel='stylesheet',
-		href='/modules/highlight.js/styles/tomorrow-night-eighties.css')
-	link(rel='stylesheet', href='/css/screen.css')
+  link(rel='stylesheet',
+    href='/modules/bootstrap/dist/css/bootstrap.min.css')
+  link(rel='stylesheet',
+    href='/modules/highlight.js/styles/tomorrow-night-eighties.css')
+  link(rel='stylesheet', href='/css/screen.css')
 
-	link(
-	href='http://fonts.googleapis.com/css?family=Josefin+Sans',
-	rel='stylesheet',
-	type='text/css')
+  link(
+  href='http://fonts.googleapis.com/css?family=Josefin+Sans',
+  rel='stylesheet',
+  type='text/css')
 
-	link(rel='apple-touch-icon-precomposed', sizes='144x144',
-	href='/img/apple-touch-icon-144-precomposed.png')
+  link(rel='apple-touch-icon-precomposed', sizes='144x144',
+  href='/img/apple-touch-icon-144-precomposed.png')
 
-	link(rel='apple-touch-icon-precomposed', sizes='114x114',
-	href='/img/apple-touch-icon-114-precomposed.png')
+  link(rel='apple-touch-icon-precomposed', sizes='114x114',
+  href='/img/apple-touch-icon-114-precomposed.png')
 
-	link(rel='apple-touch-icon-precomposed', sizes='72x72',
-	href='/img/apple-touch-icon-72-precomposed.png')
+  link(rel='apple-touch-icon-precomposed', sizes='72x72',
+  href='/img/apple-touch-icon-72-precomposed.png')
 
-	link(rel='apple-touch-icon-precomposed',
-	href='/img/apple-touch-icon-57-precomposed.png')
+  link(rel='apple-touch-icon-precomposed',
+  href='/img/apple-touch-icon-57-precomposed.png')
 
 
 body(id=page)
-	include includes/navbar
+  include includes/navbar
 
-	main#contentWrapper.container
-		block content
+  main#contentWrapper.container
+    block content
 
-	footer
-		p
-			a(href='http://adriansieber.com') By Adrian Sieber
-			span.muted •
-			a(href='https://github.com/adius/educatopia') Github
-			span.muted •
-			a(href='https://github.com/adius/educatopia/issues') Issues
+  footer
+    p
+      a(href='http://adriansieber.com') By Adrian Sieber
+      span.muted •
+      a(href='https://github.com/adius/educatopia') Github
+      span.muted •
+      a(href='https://github.com/adius/educatopia/issues') Issues
 
-	include includes/scripts
+  include includes/scripts
