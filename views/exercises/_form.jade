@@ -1,119 +1,119 @@
 if page === 'exerciseEdit'
-	- var actionUrl = '/exercises/' + exercise.id
-	- var addFieldUrl = actionUrl + '/edit?'
+  - var actionUrl = '/exercises/' + exercise.id
+  - var addFieldUrl = actionUrl + '/edit?'
 
 if page === 'exerciseCreate'
-	- var actionUrl = '/exercises/create'
-	- var addFieldUrl = '/exercises/create?'
+  - var actionUrl = '/exercises/create'
+  - var addFieldUrl = '/exercises/create?'
 
 
 mixin textarea(element, field, index)
-	- var id = field.slice(0, -1) + index
-	label.sr-only(for=id)
-		= field.slice(0, -1) + ' ' + index
-	textarea.form-control(id=id, name=field)&attributes(attrs ? attrs : {})
-		= element
+  - var id = field.slice(0, -1) + index
+  label.sr-only(for=id)
+    = field.slice(0, -1) + ' ' + index
+  textarea.form-control(id=id, name=field)&attributes(attrs ? attrs : {})
+    = element
 
 form.form-horizontal(
 role='form', action=actionUrl, method='POST')
 
-	if exercise && exercise.id
-		input.hidden(type='text', name='id', value=exercise.id)
+  if exercise && exercise.id
+    input.hidden(type='text', name='id', value=exercise.id)
 
-	each fieldset, index in fieldsets
-		if !fieldset
-			- continue
+  each fieldset, index in fieldsets
+    if !fieldset
+      - continue
 
-		fieldset
-			if fieldset.legend && (index !== 0 || page === 'exerciseCreate')
-					legend
-						= fieldset.legend.slice(0,1).toUpperCase() + fieldset.legend.slice(1)
+    fieldset
+      if fieldset.legend && (index !== 0 || page === 'exerciseCreate')
+          legend
+            = fieldset.legend.slice(0,1).toUpperCase() + fieldset.legend.slice(1)
 
-			each field in fieldset.fields
-				- var label = field.slice(0, 1).toUpperCase() + field.slice(1)
-				- var attrs = schema[field].editorAttrs
-				- var help = schema[field].help
-				- var subtype = schema[field].subtype
-				- var validators = schema[field].validators
+      each field in fieldset.fields
+        - var label = field.slice(0, 1).toUpperCase() + field.slice(1)
+        - var attrs = schema[field].editorAttrs
+        - var help = schema[field].help
+        - var subtype = schema[field].subtype
+        - var validators = schema[field].validators
 
-				- var fieldId = (subtype == 'textarea') ? field + 'Body' : field
+        - var fieldId = (subtype == 'textarea') ? field + 'Body' : field
 
 
-				.form-group(id=field)
-					label.col-sm-2.control-label(for=fieldId)
-						= label
-						if validators && validators.indexOf('required') !== -1
-							span= ' *'
+        .form-group(id=field)
+          label.col-sm-2.control-label(for=fieldId)
+            = label
+            if validators && validators.indexOf('required') !== -1
+              span= ' *'
 
-					case schema[field].type
-						when 'textarea'
-							.col-sm-10
-								textarea.form-control(id=field, name=field
-								)&attributes(attrs)
-									= exercise[field]
-								p.help-block.small= help
+          case schema[field].type
+            when 'textarea'
+              .col-sm-10
+                textarea.form-control(id=field, name=field
+                )&attributes(attrs)
+                  = exercise[field]
+                p.help-block.small= help
 
-						when 'number'
-							.col-sm-6
-								input.col-sm-2.form-control(
-								id=field, name=field, type='number', value=exercise[field]
-								)&attributes(attrs)
-								p.help-block.small= help
+            when 'number'
+              .col-sm-6
+                input.col-sm-2.form-control(
+                id=field, name=field, type='number', value=exercise[field]
+                )&attributes(attrs)
+                p.help-block.small= help
 
-						when 'list'
-							if subtype == 'textarea'
-									.col-sm-10(id=field + 'Body')
-										if exercise[field]
-											each element, index in exercise[field]
-												+textarea(element, field, index)
-										else
-											+textarea(element, field, 0)
+            when 'list'
+              if subtype == 'textarea'
+                  .col-sm-10(id=field + 'Body')
+                    if exercise[field]
+                      each element, index in exercise[field]
+                        +textarea(element, field, index)
+                    else
+                      +textarea(element, field, 0)
 
-										button.btn.btn-default.btn-xs(
-										type='submit',
-										formaction= addFieldUrl + field + '#' + field)
-											| Add another #{field.slice(0,-1)}
-										// TODO: Use POST body to send data
-										// (name & value field in submit button)
+                    button.btn.btn-default.btn-xs(
+                    type='submit',
+                    formaction= addFieldUrl + field + '#' + field)
+                      | Add another #{field.slice(0,-1)}
+                    // TODO: Use POST body to send data
+                    // (name & value field in submit button)
 
-							else
-								.col-sm-10(id=field)
-									input.form-control(
-									id=field + '0', name=field, type=subtype,
-									value=exercise[field] ? exercise[field].join(', '):''
-									)&attributes(attrs ? attrs : {})
-									p.help-block.small
-										= help
-										if schema[field].format
-											|  (#{schema[field].format})
+              else
+                .col-sm-10(id=field)
+                  input.form-control(
+                  id=field + '0', name=field, type=subtype,
+                  value=exercise[field] ? exercise[field].join(', '):''
+                  )&attributes(attrs ? attrs : {})
+                  p.help-block.small
+                    = help
+                    if schema[field].format
+                      |  (#{schema[field].format})
 
-						when 'select'
-								.col-sm-10
-									select.form-control(id=field, name=field
-									)&attributes(attrs ? attrs : {})
-										each option in [""].concat(schema[field].options)
-											option(selected=(exercise[field] === option))
-												= option
-									p.help-block.small= help
+            when 'select'
+                .col-sm-10
+                  select.form-control(id=field, name=field
+                  )&attributes(attrs ? attrs : {})
+                    each option in [""].concat(schema[field].options)
+                      option(selected=(exercise[field] === option))
+                        = option
+                  p.help-block.small= help
 
-						when 'date'
-							.col-sm-10
-								input.form-control(
-								id=field, name=field,
-								type='datetime',
-								value=exercise[field] ? exercise[field].toISOString() : ''
-								)&attributes(attrs ? attrs : {})
+            when 'date'
+              .col-sm-10
+                input.form-control(
+                id=field, name=field,
+                type='datetime',
+                value=exercise[field] ? exercise[field].toISOString() : ''
+                )&attributes(attrs ? attrs : {})
 
-								p.help-block.small= help
+                p.help-block.small= help
 
-						default
-							.col-sm-10
-								input.form-control(
-								id=field, name=field, type='text', value=exercise[field]
-								)&attributes(attrs ? attrs : {})
+            default
+              .col-sm-10
+                input.form-control(
+                id=field, name=field, type='text', value=exercise[field]
+                )&attributes(attrs ? attrs : {})
 
-								p.help-block.small= help
+                p.help-block.small= help
 
-	.form-group
-		.col-sm-offset-2.col-sm-10
-			button.btn.btn-primary(type='submit') Submit
+  .form-group
+    .col-sm-offset-2.col-sm-10
+      button.btn.btn-primary(type='submit') Submit

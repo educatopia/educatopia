@@ -1,31 +1,32 @@
 nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
-	.container-fluid
-		.navbar-header
+  .container-fluid
+    .navbar-header
 
-			a.navbar-brand(href='/')
-				img#logo(src='/img/favicon.png')
-				|  educatopia
+      a.navbar-brand(href='/')
+        img#logo(src='/img/favicon.png')
+        |  educatopia
 
-			ul.nav.navbar-nav.navbar-left
-				li: a(href='/exercises') Exercises
-				// li: a(href='/lessons') Lessons
+      ul.nav.navbar-nav.navbar-left
+        li: a(href='/courses') Courses
+        li: a(href='/lessons') Lessons
+        li: a(href='/exercises') Exercises
 
-		if session && session.user
-			ul.nav.navbar-nav.navbar-right
-				li
-					a(href='/' + session.user.username)
-						= session.user.username
-				li
-					a#newExercise(href='/exercises/create')
-						span.glyphicon.glyphicon-edit
-				li
-					a#logoutButton(href='/logout').
-						Logout
-		else
-			ul.nav.navbar-nav.navbar-right
-				li
-					a#loginButton(href='/login').
-						Login
-				li
-					a#signupButton(href='/signup').
-						Signup
+    if session && session.user
+      ul.nav.navbar-nav.navbar-right
+        li
+          a(href='/' + session.user.username)
+            = session.user.username
+        li
+          a#newExercise(href='/exercises/create')
+            span.glyphicon.glyphicon-edit
+        li
+          a#logoutButton(href='/logout').
+            Logout
+    else
+      ul.nav.navbar-nav.navbar-right
+        li
+          a#loginButton(href='/login').
+            Login
+        li
+          a#signupButton(href='/signup').
+            Signup

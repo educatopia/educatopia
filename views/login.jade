@@ -1,27 +1,27 @@
 extends layout
 
 block content
-	form(action='/login', method='post')
-		fieldset
-			legend Login
+  form(action='/login', method='post')
+    fieldset
+      legend Login
 
-			.form-group
-				label(for='username') Username
-				input#identifier.form-control(type='text', name='username')
+      .form-group
+        label(for='username') Username
+        input#identifier.form-control(type='text', name='username')
 
-			.form-group
-				label(for='password') Password
-				input#password.form-control(type='password', name='password')
+      .form-group
+        label(for='password') Password
+        input#password.form-control(type='password', name='password')
 
-			br
-			input.btn.btn-default(type='submit', value='Login')
+      br
+      input.btn.btn-default(type='submit', value='Login')
 
-	if error
-		br
-		p.alert.alert-danger
-			= error.message
+  if error
+    br
+    p.alert.alert-danger
+      = error.message
 
-	if message
-		br
-		p.alert.alert-success
-			= message
+  if message
+    br
+    p.alert.alert-success
+      = message

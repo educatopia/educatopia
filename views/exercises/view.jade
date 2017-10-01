@@ -1,139 +1,139 @@
 extends layout
 
 block firstTab
-	if exercise.flags && exercise.flags.indexOf("unapproved") != -1
-		.alert.alert-warning
-			strong Unapproved <!--space-->
-			| This exercise was not yet verified to be correct
-	if exercise.flags && exercise.flags.indexOf("incorrect") != -1
-		.alert.alert-danger
-			strong Attention! <!--space-->
-			| There are mistakes in this exercise! Please help to correct them!
+  if exercise.flags && exercise.flags.indexOf("unapproved") != -1
+    .alert.alert-warning
+      strong Unapproved <!--space-->
+      | This exercise was not yet verified to be correct
+  if exercise.flags && exercise.flags.indexOf("incorrect") != -1
+    .alert.alert-danger
+      strong Attention! <!--space-->
+      | There are mistakes in this exercise! Please help to correct them!
 
-	#task!= exercise.task
+  #task!= exercise.task
 
-	if exercise.hints
-		#hints.panel-group
-			each hint, index in exercise.hints
-				.panel.panel-default
-					.panel-heading(data-toggle='collapse', data-target='#hint-' + index+1)
-						span Hint #{index+1}
-					.panel-collapse.collapse(id='hint-' + index+1)
-						.panel-body!= hint
+  if exercise.hints
+    #hints.panel-group
+      each hint, index in exercise.hints
+        .panel.panel-default
+          .panel-heading(data-toggle='collapse', data-target='#hint-' + index+1)
+            span Hint #{index+1}
+          .panel-collapse.collapse(id='hint-' + index+1)
+            .panel-body!= hint
 
-		br
+    br
 
-	if exercise.approach
-		#approach.panel-group
-			.panel.panel-default
-				.panel-heading(data-toggle='collapse', data-target='#approachBody')
-					span.panel-title Approach
-				#approachBody.panel-collapse.collapse
-					.panel-body
-						!= exercise.approach
+  if exercise.approach
+    #approach.panel-group
+      .panel.panel-default
+        .panel-heading(data-toggle='collapse', data-target='#approachBody')
+          span.panel-title Approach
+        #approachBody.panel-collapse.collapse
+          .panel-body
+            != exercise.approach
 
-		br
+    br
 
-	if exercise.solutions && exercise.solutions.length > 0
-		#solution.panel-group
-			.panel.panel-primary
-				.panel-heading(data-toggle='collapse', data-target='#solution .list-group')
-					span.panel-title Solution
-						= (exercise.solutions.length === 1) ? '' : 's'
+  if exercise.solutions && exercise.solutions.length > 0
+    #solution.panel-group
+      .panel.panel-primary
+        .panel-heading(data-toggle='collapse', data-target='#solution .list-group')
+          span.panel-title Solution
+            = (exercise.solutions.length === 1) ? '' : 's'
 
-				if exercise.solutions && exercise.solutions.length > 0
-					ul.list-group.collapse
-						each solution in exercise.solutions
-							li.list-group-item!= solution
+        if exercise.solutions && exercise.solutions.length > 0
+          ul.list-group.collapse
+            each solution in exercise.solutions
+              li.list-group-item!= solution
 
-				else if exercise.solution
-					.alert.alert-success
-						!= exercise.solution
-				// TODO: remove because deprecated
+        else if exercise.solution
+          .alert.alert-success
+            != exercise.solution
+        // TODO: remove because deprecated
 
-	if !exercise.solutions && !exercise.approach
-		a(href=url + '/edit', class='btn btn-default btn-lg', role='button')
-			| Add a Solution
+  if !exercise.solutions && !exercise.approach
+    a(href=url + '/edit', class='btn btn-default btn-lg', role='button')
+      | Add a Solution
 
 
 block sidebar
-	#exerciseSidebar.col-lg-3
-		li.list-group-item URL:
-			input.form-control.input-sm(
-			type='url',
-			readonly=true,
-			value= settings.hostname + '/e/' + exercise.id
-			)
+  #exerciseSidebar.col-sm-3
+    li.list-group-item URL:
+      input.form-control.input-sm(
+      type='url',
+      readonly=true,
+      value= settings.hostname + '/e/' + exercise.id
+      )
 
-		li.list-group-item Language: <!--space-->
-			span.pull-right= exercise.language
+    li.list-group-item Language: <!--space-->
+      span.pull-right= exercise.language
 
-		li.list-group-item Subjects: <!--space-->
-			if exercise.subjects
-				each subject in exercise.subjects
-					span.label.label-default= subject
-					= ' '
-		li.list-group-item Type: <!--space-->
-			span.pull-right= exercise.type
+    li.list-group-item Subjects: <!--space-->
+      if exercise.subjects
+        each subject in exercise.subjects
+          span.label.label-default= subject
+          = ' '
+    li.list-group-item Type: <!--space-->
+      span.pull-right= exercise.type
 
-		li.list-group-item Duration: <!--space-->
-			if exercise.duration
-				span.pull-right= exercise.duration
-					| min
+    li.list-group-item Duration: <!--space-->
+      if exercise.duration
+        span.pull-right= exercise.duration
+          | min
 
-		li.list-group-item Credits: <!--space-->
-			span.badge.pull-right= exercise.credits
+    li.list-group-item Credits: <!--space-->
+      span.badge.pull-right= exercise.credits
 
-		li.list-group-item Difficulty: <!--space-->
-			if exercise.difficulty !== undefined
-				span.pull-right= exercise.difficulty
-				.progress
-					.progress-bar(style='width: #{exercise.difficulty * 100}%')
+    li.list-group-item Difficulty: <!--space-->
+      if exercise.difficulty !== undefined
+        span.pull-right= exercise.difficulty
+        .progress
+          .progress-bar(style='width: #{exercise.difficulty * 100}%')
 
-		li.list-group-item Tags: <!--space-->
-			if exercise.tags
-				each tag in exercise.tags
-					span.label.label-default= tag
-					= ' '
+    li.list-group-item Tags: <!--space-->
+      if exercise.tags
+        each tag in exercise.tags
+          span.label.label-default= tag
+          = ' '
 
-		li.list-group-item Note: <!--space-->
-			br
-			small.text-muted
-				= exercise.note
+    li.list-group-item Note: <!--space-->
+      br
+      small.text-muted
+        = exercise.note
 
-		li.list-group-item Created By: <!--space-->
-			if exercise.createdBy
-				a.pull-right(href='/' + exercise.createdBy)
-					= exercise.createdBy
+    li.list-group-item Created By: <!--space-->
+      if exercise.createdBy
+        a.pull-right(href='/' + exercise.createdBy)
+          = exercise.createdBy
 
-		li.list-group-item Created At: <!--space-->
-			- var createdAt = exercise.createdAt.toISOString().substr(0, 19).split('T').join(' ')
-			if exercise.createdAt
-				br
-				small.text-muted
-					= createdAt + ' UTC'
+    li.list-group-item Created At: <!--space-->
+      - var createdAt = exercise.createdAt.toISOString().substr(0, 19).split('T').join(' ')
+      if exercise.createdAt
+        br
+        small.text-muted
+          = createdAt + ' UTC'
 
-		li.list-group-item Last Modified: <!--space-->
-			- var updatedAt = exercise.updatedAt.toISOString().substr(0, 19).split('T').join(' ')
-			if exercise.updatedAt
-				br
-				small.text-muted
-					= updatedAt + ' UTC'
+    li.list-group-item Last Modified: <!--space-->
+      - var updatedAt = exercise.updatedAt.toISOString().substr(0, 19).split('T').join(' ')
+      if exercise.updatedAt
+        br
+        small.text-muted
+          = updatedAt + ' UTC'
 
 block scripts
-	script.
-		hljs.initHighlightingOnLoad()
+  script.
+    hljs.initHighlightingOnLoad()
 
-	script(type='text/x-mathjax-config').
-		MathJax.Hub.Config({
-			asciimath2jax: {
-				delimiters: [['´','´']]
-			}
-		})
+  script(type='text/x-mathjax-config').
+    MathJax.Hub.Config({
+      asciimath2jax: {
+        delimiters: [['´','´']]
+      }
+    })
 
-	if settings.env == 'development'
-		script(src='/modules/mathjax/MathJax.js?config=AM_HTMLorMML')
+  if settings.env == 'development'
+    script(src='/modules/mathjax/MathJax.js?config=AM_HTMLorMML')
 
-	else
-		script(src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.1/MathJax.js' +
-				'?config=AM_HTMLorMML')
+  else
+    script(src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.5.1/MathJax.js' +
+        '?config=AM_HTMLorMML')
