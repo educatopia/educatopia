@@ -8,7 +8,7 @@ copy package-lock.json package-lock.json
 run npm install
 
 # Sorted with increasing likelihood of change
-copy jakefile jakefile
+copy makefile makefile
 copy server.js server.js
 copy routes routes
 copy views views
