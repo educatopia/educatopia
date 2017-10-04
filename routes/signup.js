@@ -6,28 +6,27 @@ function signup (request, response) {
     request.session.destroy()
   }
 
-  if (request.method === 'POST') {
-    usersApi.signup(
-      request,
-      (error, data) => {
-        if (error) {
-          console.error(error)
-        }
-
-        else {
-          response.render('signup', {
-            page: 'signup',
-            data: data,
-          })
-        }
-      }
-    )
-  }
-  else {
+  if (request.method !== 'POST') {
     response.render('signup', {
       page: 'signup',
     })
+    return
   }
+
+  usersApi.signup(
+    request,
+    (error, data) => {
+      if (error) {
+        console.error(error)
+      }
+      else {
+        response.render('signup', {
+          page: 'signup',
+          data: data,
+        })
+      }
+    }
+  )
 }
 
 module.exports = function (config) {
