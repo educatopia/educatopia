@@ -1,5 +1,3 @@
-.DS_Store
-.idea
-node_modules
-*.swp
-.env
+/node_modules
+/secrets.env
+/hyper-compose.yaml
