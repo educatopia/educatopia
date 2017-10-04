@@ -4,7 +4,9 @@ nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
 
       a.navbar-brand(href='/')
         img#logo(src='/img/favicon.png')
-        |  educatopia
+        | educatopia
+        if settings.env === 'development'
+          = ' dev'
 
       ul.nav.navbar-nav.navbar-left
         li: a(href='/courses') Courses
