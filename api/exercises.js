@@ -3,7 +3,6 @@ const marked = require('marked')
 const clone = require('clone')
 const capitalizer = require('capitalizer')
 
-const BSON = mongo.BSONPure
 const exportObject = {}
 let exercisesCollection
 
@@ -13,57 +12,48 @@ marked.setOptions({
   sanitize: true,
 })
 
+
 function normalizeLineBreaks (string) {
   return string.replace(/\r\n/g, '\n')
 }
 
+
 // Delete empty fields, normalize line-breaks and fix data-types
 function normalize (obj) {
-  let key
+  const temp = {}
 
-  for (key in obj) {
-    if (obj.hasOwnProperty(key) &&
-        (
-          obj[key] === '' ||
-            obj[key] === 0 ||
-            obj[key] === null ||
-            obj[key] === undefined ||
-            (Array.isArray(obj[key]) &&
-                (obj[key].length === 0 || obj[key][0] === ''))
-        )
-    ) {
-      delete obj[key]
+  for (const [key, value] of Object.entries(obj)) {
+    const isEmptyArray = Array.isArray(value) &&
+      (value.length === 0 || value[0] === '')
+
+    if (!value || isEmptyArray) {
+      continue
     }
-
-    else if (typeof obj[key] === 'string') {
-      obj[key] = normalizeLineBreaks(obj[key])
+    else if (typeof value === 'string') {
+      temp[key] = normalizeLineBreaks(value)
     }
-
-    else if (Array.isArray(obj[key])) {
-      // jshint loopfunc: true
-      obj[key] = obj[key].map((element) => {
-        return typeof element === 'string'
+    else if (Array.isArray(value)) {
+      temp[key] = value.map(element =>
+        typeof element === 'string'
           ? normalizeLineBreaks(element)
           : element
-      })
+      )
     }
   }
 
-
   // Convert fields to arrays
-  if (typeof obj.solutions === 'string') {
-    obj.solutions = [obj.solutions]
+  if (typeof temp.solutions === 'string') {
+    temp.solutions = [obj.solutions]
+  }
+  if (typeof temp.hints === 'string') {
+    temp.hints = [temp.hints]
   }
 
-  if (typeof obj.hints === 'string') {
-    obj.hints = [obj.hints]
-  }
-
-  return obj
+  return temp
 }
 
-function exerciseToPrintFormat (exercise) {
 
+function exerciseToPrintFormat (exercise) {
   const temp = clone(exercise.current)
 
   temp.id = exercise._id
@@ -80,8 +70,8 @@ function exerciseToPrintFormat (exercise) {
   return temp
 }
 
-function renderMarkdown (exerciseData) {
 
+function renderMarkdown (exerciseData) {
   if (exerciseData.task) {
     exerciseData.task = marked(exerciseData.task)
   }
@@ -99,35 +89,31 @@ function renderMarkdown (exerciseData) {
 
 
 exportObject.getById = function (id, done) {
-
   try {
-    id = BSON.ObjectID(id) // eslint-disable-line new-cap
+    id = mongo.ObjectID(id) // eslint-disable-line new-cap
   }
   catch (error) {
     done({message: 'Invalid Id'})
     return
   }
 
-
   exercisesCollection.findOne(
     {_id: id},
     (error, exercise) => {
-
       if (error || !exercise) {
         done(error)
       }
-
       else {
         done(null, exerciseToPrintFormat(exercise))
       }
     }
   )
 }
+
 
 exportObject.getByIdRendered = function (id, done) {
-
   try {
-    id = BSON.ObjectID(id) // eslint-disable-line new-cap
+    id = mongo.ObjectID(id) // eslint-disable-line new-cap
   }
   catch (error) {
     done({message: 'Invalid Id'})
@@ -137,30 +123,27 @@ exportObject.getByIdRendered = function (id, done) {
   exercisesCollection.findOne(
     {_id: id},
     (error, exercise) => {
-
       if (error || !exercise) {
         done(error)
+        return
       }
 
-      else {
-
-        // TODO: Distinguish between different exercise data formats
-        if (exercise.history) {
-          exercise.current.createdBy = exercise.history[0].createdBy
-        }
-
-        renderMarkdown(exercise.current)
-
-        done(null, exerciseToPrintFormat(exercise))
+      // TODO: Distinguish between different exercise data formats
+      if (exercise.history) {
+        exercise.current.createdBy = exercise.history[0].createdBy
       }
+
+      renderMarkdown(exercise.current)
+
+      done(null, exerciseToPrintFormat(exercise))
     }
   )
 }
 
-exportObject.getHistoryById = function (id, done) {
 
+exportObject.getHistoryById = function (id, done) {
   try {
-    id = BSON.ObjectID(id) // eslint-disable-line new-cap
+    id = mongo.ObjectID(id) // eslint-disable-line new-cap
   }
   catch (error) {
     done({message: 'Invalid Id'})
@@ -168,11 +151,9 @@ exportObject.getHistoryById = function (id, done) {
   }
 
   exercisesCollection.findOne({_id: id}, (error, exercise) => {
-
     if (error) {
       done(error)
     }
-
     else {
       exercise.history = exercise.history || []
 
@@ -181,8 +162,8 @@ exportObject.getHistoryById = function (id, done) {
   })
 }
 
-exportObject.getAll = function (done) {
 
+exportObject.getAll = function (done) {
   exercisesCollection
     .find()
     .sort({_id: 1})
@@ -226,7 +207,6 @@ exportObject.getAll = function (done) {
 }
 
 exportObject.getByUser = function (username, done) {
-
   exercisesCollection
     .find({
       $or: [
@@ -251,41 +231,34 @@ exportObject.getByUser = function (username, done) {
     })
 }
 
-exportObject.add = function (exercise, user, done) {
 
-  const temp = {}
+exportObject.add = (exercise, user, done) => {
   const now = new Date()
+  const current = normalize(exercise)
+  current.createdAt = now
+  current.createdBy = user.username
 
-  temp.updatedAt = now
-
-  temp.current = normalize(exercise)
-  temp.current.createdAt = now
-  temp.current.createdBy = user.username
+  const temp = {
+    updatedAt: now,
+    current,
+  }
 
   exercisesCollection.insert(
     temp,
     {safe: true},
-    (error, result) => {
-
-      if (error) {
-        done(error)
-      }
-
-      else {
-        console.info('Successfully added an exercise')
-
-        done(null, result[0])
-      }
+    error => {
+      if (error) done(error)
+      else done(null, temp._id.toHexString())
     }
   )
 }
 
-exportObject.update = function (exerciseFromForm, user, done) {
 
+exportObject.update = function (exerciseFromForm, user, done) {
   const temp = {}
   const now = new Date()
 
-  temp._id = new BSON.ObjectID(exerciseFromForm.id)
+  temp._id = new mongo.ObjectID(exerciseFromForm.id)
 
   temp.current = clone(normalize(exerciseFromForm))
 
@@ -300,43 +273,38 @@ exportObject.update = function (exerciseFromForm, user, done) {
 
 
   exercisesCollection.findOne({_id: temp._id}, (error, item) => {
-
     if (error) {
       done('An error occurred while loading the exercise: ' + error)
+      return
     }
 
-    else {
+    temp.history = item.history || []
+    temp.history.push(item.current)
 
-      temp.history = item.history || []
-      temp.history.push(item.current)
-
-      exercisesCollection.update(
-        {_id: temp._id},
-        temp,
-        {safe: true},
-        (updateError, result) => {
-          if (updateError || result === 0) {
-            done(
-              `An error occurred while updating the exercise: ${updateError}`
-            )
-          }
-          else {
-            renderMarkdown(temp.current)
-
-            done(null, exerciseToPrintFormat(temp))
-          }
+    exercisesCollection.update(
+      {_id: temp._id},
+      temp,
+      {safe: true},
+      (updateError, result) => {
+        if (updateError || result === 0) {
+          done(`An error occurred while updating the exercise: ${updateError}`)
         }
-      )
-    }
+        else {
+          renderMarkdown(temp.current)
+
+          done(null, exerciseToPrintFormat(temp))
+        }
+      }
+    )
   })
 }
 
-exportObject.delete = function (id, done) {
 
+exportObject.delete = function (id, done) {
   console.info('Deleting exercise: ' + id)
 
   exercisesCollection.remove(
-    {_id: new BSON.ObjectID(id)},
+    {_id: new mongo.ObjectID(id)},
     {safe: true},
     (error, result) => {
       if (error) {

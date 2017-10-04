@@ -23,7 +23,6 @@ schema.language.options = langs
 
 
 function reformatFormContent (object) {
-
   let key
 
   for (key in schema) {
@@ -41,9 +40,9 @@ function reformatFormContent (object) {
   return object
 }
 
-function addEmptyFields (request) {
-  // Adds empty fields to render new empty input-fields in form
 
+// Adds empty fields to render new empty input-fields in form
+function addEmptyFields (request) {
   Object.keys(request.query)
     .forEach((key) => {
 
@@ -55,8 +54,8 @@ function addEmptyFields (request) {
     })
 }
 
-function validateExercise (exercise) {
 
+function validateExercise (exercise) {
   let fieldName
   let booleanSum = 0
 
@@ -82,56 +81,47 @@ function validateExercise (exercise) {
   return booleanSum === Object.keys(schema).length
 }
 
+
 function submit (request, response, renderObject) {
+  if (!request.session.user) {
+    response.redirect('/exercises')
+    return
+  }
 
-  let isValid
+  const isValid = validateExercise(request.body)
 
-  if (request.session.user) {
-
-    isValid = validateExercise(request.body)
-
-    if (isValid) {
-      exercisesApi.add(
-        reformatFormContent(request.body),
-        request.session.user,
-        (error, exercise) => {
-
-          if (error) {
-            console.error(error)
-          }
-
-          else {
-            response.redirect('/exercises/' + exercise._id)
-          }
+  if (isValid) {
+    exercisesApi.add(
+      reformatFormContent(request.body),
+      request.session.user,
+      (error, exerciseId) => {
+        if (error) {
+          console.error(error)
+          return
         }
-      )
-    }
-
-    else {
-      renderObject.message = 'Exercise is not valid! ' +
-                             'Please correct mistakes and try to submit again.'
-
-      renderObject.exercise = reformatFormContent(request.body)
-
-      response.render('exercises/create', renderObject)
-    }
+        response.redirect(`/exercises/${exerciseId}`)
+      }
+    )
   }
   else {
-    response.redirect('/exercises')
+    renderObject.message =
+      'Exercise is not valid! ' +
+      'Please correct mistakes and try to submit again.'
+
+    renderObject.exercise = reformatFormContent(request.body)
+
+    response.render('exercises/create', renderObject)
   }
 }
 
 
 exercisesModule.one = function (request, response, next) {
-
   exercisesApi.getByIdRendered(
     request.params.id,
     (error, exercise) => {
-
       if (error) {
         console.error(error)
       }
-
       else if (exercise) {
         response.render('exercises/view', {
           title: 'Exercise',
@@ -139,7 +129,6 @@ exercisesModule.one = function (request, response, next) {
           exercise: exercise,
         })
       }
-
       else {
         next()
       }
