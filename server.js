@@ -8,8 +8,7 @@ const errorHandler = require('errorhandler')
 const session = require('express-session')
 const favicon = require('serve-favicon')
 const bodyParser = require('body-parser')
-const mongodb = require('mongodb')
-const MongoClient = mongodb.MongoClient
+const {MongoClient} = require('mongodb')
 
 const app = express()
 
@@ -22,13 +21,18 @@ const db = {
     ? 'educatopia-dev'
     : 'educatopia',
 }
-let connectionString = `${db.host}:${db.port}/${db.name}`
+const connectionString = `mongodb://${db.host}:${db.port}/${db.name}`
 const knowledgeBasePath = path.resolve('node_modules/knowledge_base')
 
+function connectToDatabase () {
+  MongoClient.connect(connectionString, addRoutes)
+}
 
 function addRoutes (error, database) {
   if (error) {
     console.error(error)
+    // MongoDB server might not be running yet, therefore try again
+    setTimeout(connectToDatabase, 1000)
     return
   }
 
@@ -158,12 +162,7 @@ app.set('hostname', 'localhost:' + port)
 
 if (app.get('env') === 'production') {
   assert(process.env.SESSION_SECRET, 'Missing session secret')
-  app.set('hostname', process.env.OPENSHIFT_APP_DNS || 'educatopia.org')
+  app.set('hostname', 'educatopia.org')
 }
 
-if (db.password) {
-  connectionString =
-    `${db.username}:${db.password}@${db.host}:${db.port}/${db.name}`
-}
-
-MongoClient.connect('mongodb://' + connectionString, addRoutes)
+connectToDatabase()
