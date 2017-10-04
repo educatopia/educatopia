@@ -4,8 +4,7 @@ const nodemailer = require('nodemailer')
 const jade = require('jade')
 
 const mailUsername = process.env.MAIL_USERNAME
-const password = process.env.MAIL_PASSWORD
-const sendgrid = require('sendgrid')(mailUsername, password)
+const sendgrid = require('@sendgrid/mail')
 
 const exportObject = {}
 let userCollection
@@ -26,7 +25,7 @@ function sendMail (userData, app, done) {
     from: 'no-reply@educatopia.org',
     fromname: 'Educatopia',
     to: userData.email,
-    toname: userData.mailUsername,
+    toname: userData.username,
     subject: 'Verify your email-address for Educatopia',
     html: jade.renderFile(
       'views/mails/signup.jade',
@@ -36,23 +35,26 @@ function sendMail (userData, app, done) {
       }
     ),
   }
-  const mailCallback = function (error, response) {
+
+  function mailCallback (error, response) {
     if (error || !response) {
       console.error(error)
-
       done(error)
+      return
     }
-    else {
-      done(null, response)
-    }
+
+    console.info('Message sent: %s', response.messageId)
+    done(null, response)
   }
 
   if (app.get('env') === 'production') {
+    sendgrid.setApiKey(process.env.SENDGRID_API_KEY)
     sendgrid.send(mail, mailCallback)
   }
   else {
-    mail.transporter = nodemailer.createTransport()
-    mail.transporter.sendMail(mail, mailCallback)
+    nodemailer
+      .createTransport()
+      .sendMail(mail, mailCallback)
   }
 }
 
@@ -61,7 +63,6 @@ exportObject.getByUsername = function (username, done) {
   userCollection.findOne(
     {username: username},
     (error, user) => {
-
       if (error) {
         done('User could not be found.')
       }
@@ -100,8 +101,18 @@ exportObject.signup = function (request, done) {
     updatedAt: now,
   }
 
-  if (blackList.indexOf(userData.username) !== -1) {
+  if (!userData.username) {
+    done(null, {message: 'Username must be specified'})
+    return
+  }
+
+  if (blackList.includes(userData.username)) {
     done(null, {message: 'This username is not allowed.'})
+    return
+  }
+
+  if (!userData.email) {
+    done(null, {message: 'Email address must be specified'})
     return
   }
 
@@ -122,8 +133,10 @@ exportObject.signup = function (request, done) {
       (findError, user) => {
         if (findError) {
           done('User could not be found.')
+          return
         }
-        else if (user) {
+
+        if (user) {
           if (user.email === userData.email) {
             done(null, {
               httpCode: 422,
@@ -136,42 +149,32 @@ exportObject.signup = function (request, done) {
               message: 'Username is already taken',
             })
           }
+          return
         }
-        else {
-          userCollection.insert(
-            userData,
-            {safe: true},
-            (insertError) => {
-              if (insertError) {
-                done('User could not be inserted.')
-              }
-              else {
-                sendMail(
-                  userData,
-                  request.app,
-                  (sendError) => {
-                    if (sendError) {
 
-                      console.error(error)
-
-                      done(error, {
-                        message: 'Mail could ' +
-                                 'not be sent',
-                      })
-                    }
-                    else {
-                      done(null, {
-                        message: 'New user ' +
-                                 'was created ' +
-                                 'and mail was sent',
-                      })
-                    }
-                  }
-                )
-              }
+        userCollection.insert(
+          userData,
+          {safe: true},
+          (insertError) => {
+            if (insertError) {
+              done('User could not be inserted.')
+              return
             }
-          )
-        }
+
+            sendMail(
+              userData,
+              request.app,
+              (sendError) => {
+                if (sendError) {
+                  console.error(error)
+                  done(error, {message: 'Mail could not be sent'})
+                  return
+                }
+                done(null, {message: 'New user was created and mail was sent'})
+              }
+            )
+          }
+        )
       }
     )
   })
