@@ -1,69 +1,68 @@
-let usersApi
-let exercisesApi
-const users = {}
+const usersApi = require('../api/users')
+const exercisesApi = require('../api/exercises')
 
 
-users.confirm = function (request, response, next) {
-  usersApi.confirm(
-    request.params.confirmationCode,
-    (error, user) => {
+module.exports = config => {
+  const {getByUser} = exercisesApi(config)
+  const {confirm: apiConfirm, getByUsername} = usersApi(config)
 
-      if (error) {
-        console.error(error)
-      }
-
-      else if (user) {
-        response.render('login', {
-          page: 'login',
-          message: 'You are email-address has been confirmed. ' +
-                   'You can log in now!',
-        })
-      }
-
-      else {
-        next()
-      }
-    }
-  )
-}
-
-
-users.profile = function (request, response, next) {
-  usersApi.getByUsername(
-    request.params.username,
-    (error, user) => {
-      if (error) {
-        console.error(error)
-      }
-
-      else if (user) {
-        exercisesApi.getByUser(
-          request.params.username,
-          (loadError, exercises) => {
-            if (loadError) {
-              console.error(loadError)
-            }
-
-            response.render('users/profile', {
-              page: 'profile',
-              user: user,
-              exercises: exercises,
-            })
+  return {
+    confirm (request, response, next) {
+      apiConfirm(
+        request.params.confirmationCode,
+        (error, user) => {
+          if (error) {
+            console.error(error)
+            return
           }
-        )
-      }
-      else {
-        next()
-      }
-    }
-  )
-}
 
+          if (!user) {
+            next()
+            return
+          }
 
-module.exports = function (config) {
+          response.render('login', {
+            page: 'login',
+            message: 'You are email-address has been confirmed. ' +
+              'You can log in now!',
+            featureMap: config.featureMap,
+          })
+        }
+      )
+    },
 
-  exercisesApi = require('../api/exercises')(config)
-  usersApi = require('../api/users')(config)
+    profile (request, response, next) {
+      getByUsername(
+        request.params.username,
+        (error, user) => {
+          if (error) {
+            console.error(error)
+            return
+          }
 
-  return users
+          if (!user) {
+            next()
+            return
+          }
+
+          getByUser(
+            request.params.username,
+            (loadError, exercises) => {
+              if (loadError) {
+                console.error(loadError)
+                return
+              }
+
+              response.render('users/profile', {
+                page: 'profile',
+                user: user,
+                exercises: exercises,
+                featureMap: config.featureMap,
+              })
+            }
+          )
+        }
+      )
+    },
+  }
 }

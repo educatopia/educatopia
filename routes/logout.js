@@ -1,7 +1,6 @@
-'use strict'
-
-module.exports = function (request, response) {
-
-  request.session.destroy()
-  response.redirect('/')
+module.exports = () => {
+  return (request, response) => {
+    request.session.destroy()
+    response.redirect('/')
+  }
 }

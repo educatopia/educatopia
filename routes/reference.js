@@ -1,5 +1,8 @@
-module.exports = (request, response) => {
-  response.render('reference', {
-    page: 'reference',
-  })
+module.exports = config => {
+  return (request, response) => {
+    response.render('reference', {
+      page: 'reference',
+      featureMap: config.featureMap,
+    })
+  }
 }

@@ -13,20 +13,31 @@ const {MongoClient} = require('mongodb')
 const app = express()
 
 const devMode = app.get('env') === 'development'
-const port = 3000
-const db = {
-  host: 'mongo',
-  port: 27017,
-  name: devMode
-    ? 'educatopia-dev'
-    : 'educatopia',
+const config = {
+  devMode,
+  port: 3000,
+  db: {
+    host: 'mongo',
+    port: 27017,
+    name: devMode
+      ? 'educatopia-dev'
+      : 'educatopia',
+  },
+  knowledgeBasePath: path.resolve('node_modules/knowledge_base'),
+  featureMap: {
+    courses: false,
+    lessons: false,
+    exercises: true,
+  },
 }
+const {port, db, knowledgeBasePath} = config
 const connectionString = `mongodb://${db.host}:${db.port}/${db.name}`
-const knowledgeBasePath = path.resolve('node_modules/knowledge_base')
+
 
 function connectToDatabase () {
   MongoClient.connect(connectionString, addRoutes)
 }
+
 
 function addRoutes (error, database) {
   if (error) {
@@ -43,16 +54,15 @@ function addRoutes (error, database) {
 
   console.info(`Connected to database "${database.databaseName}"`)
 
-  const config = {
-    database: database,
-  }
-  const index = require('./routes/index')
+  config.database = database
+
+  const index = require('./routes/index')(config)
   const login = require('./routes/login')(config)
-  const logout = require('./routes/logout')
+  const logout = require('./routes/logout')(config)
   const signup = require('./routes/signup')(config)
   const exercises = require('./routes/exercises')(config)
-  const lessons = require('./routes/lessons')
-  const courses = require('./routes/courses') // (config)
+  const lessons = require('./routes/lessons')(config)
+  const courses = require('./routes/courses')(config)
   const users = require('./routes/users')(config)
 
 
@@ -102,20 +112,24 @@ function addRoutes (error, database) {
   app.get('/tracks', courses.all)
 
 
-  app.get('/courses', courses.all)
-  app.get('/courses/:slug', courses.getById)
-  app.use(
-    '/courses',
-    express.static(path.join(knowledgeBasePath, 'courses'))
-  )
+  if (config.featureMap.courses) {
+    app.get('/courses', courses.all)
+    app.get('/courses/:slug', courses.getById)
+    app.use(
+      '/courses',
+      express.static(path.join(knowledgeBasePath, 'courses'))
+    )
+  }
 
 
-  app.get('/lessons', lessons.all)
-  app.get('/lessons/:slug', lessons.getById)
-  app.use(
-    '/lessons',
-    express.static(path.join(knowledgeBasePath, 'lessons'))
-  )
+  if (config.featureMap.lessons) {
+    app.get('/lessons', lessons.all)
+    app.get('/lessons/:slug', lessons.getById)
+    app.use(
+      '/lessons',
+      express.static(path.join(knowledgeBasePath, 'lessons'))
+    )
+  }
 
   app.get('/exercises', exercises.all)
 

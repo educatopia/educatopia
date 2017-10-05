@@ -1,18 +1,20 @@
-let exercisesApi
 const fs = require('fs')
 const path = require('path')
+
 const yaml = require('js-yaml')
 const langs = require('langs')
 
-const exercisesModule = {}
-
-const schemaPath = path
-  .resolve(__dirname, '../public/shared/exerciseSchema.yaml')
+const exercisesApi = require('../api/exercises')
+const sharedPath = path.resolve(__dirname, '../public/shared')
+const schemaPath = path.join(sharedPath, 'exerciseSchema.yaml')
 const schema = yaml.safeLoad(fs.readFileSync(schemaPath, 'utf8'))
 
-const fieldsetsPath = path
-  .resolve(__dirname, '../public/shared/exerciseFieldsets.yaml')
+const fieldsetsPath = path.join(sharedPath, 'exerciseFieldsets.yaml')
 const fieldsets = yaml.safeLoad(fs.readFileSync(fieldsetsPath, 'utf8'))
+
+const config = {}
+const exercisesModule = {}
+let api
 
 
 schema.language.options = langs
@@ -91,7 +93,7 @@ function submit (request, response, renderObject) {
   const isValid = validateExercise(request.body)
 
   if (isValid) {
-    exercisesApi.add(
+    api.add(
       reformatFormContent(request.body),
       request.session.user,
       (error, exerciseId) => {
@@ -115,49 +117,51 @@ function submit (request, response, renderObject) {
 }
 
 
-exercisesModule.one = function (request, response, next) {
-  exercisesApi.getByIdRendered(
+exercisesModule.one = (request, response, next) => {
+  api.getByIdRendered(
     request.params.id,
     (error, exercise) => {
       if (error) {
         console.error(error)
+        return
       }
-      else if (exercise) {
-        response.render('exercises/view', {
-          title: 'Exercise',
-          page: 'exerciseView',
-          exercise: exercise,
-        })
-      }
-      else {
+
+      if (!exercise) {
         next()
+        return
       }
+
+      response.render('exercises/view', {
+        title: 'Exercise',
+        page: 'exerciseView',
+        exercise: exercise,
+        featureMap: config.featureMap,
+      })
     }
   )
 }
 
-exercisesModule.shortcut = function (request, response) {
 
+exercisesModule.shortcut = (request, response) => {
   response.redirect('/exercises/' + request.params.id)
 }
 
-exercisesModule.create = function (request, response) {
 
+exercisesModule.create = (request, response) => {
   const renderObject = {
     page: 'exerciseCreate',
     schema: schema,
     fieldsets: fieldsets,
     exercise: {},
+    featureMap: config.featureMap,
   }
 
-
   if (request.method === 'POST' && request.session.user) {
-
     if (Object.keys(request.query).length) {
-
       addEmptyFields(request)
 
       renderObject.exercise = reformatFormContent(request.body)
+      renderObject.featureMap = config.featureMap
 
       response.render('exercises/create', renderObject)
     }
@@ -172,9 +176,9 @@ exercisesModule.create = function (request, response) {
   }
 }
 
-exercisesModule.all = function (request, response) {
 
-  exercisesApi.getAll((error, exercises) => {
+exercisesModule.all = (request, response) => {
+  api.getAll((error, exercises) => {
     if (error) {
       throw new Error(error)
     }
@@ -183,37 +187,36 @@ exercisesModule.all = function (request, response) {
       title: 'Exercises',
       page: 'exercises',
       exercises: exercises,
+      featureMap: config.featureMap,
     })
   })
 }
 
-exercisesModule.edit = function (request, response, next) {
 
+exercisesModule.edit = (request, response, next) => {
   const renderObject = {
     title: 'Edit',
     page: 'exerciseEdit',
     schema: schema,
     fieldsets: fieldsets,
+    featureMap: config.featureMap,
   }
 
   if (request.method === 'POST' && request.session.user) {
-
     addEmptyFields(request)
 
     renderObject.exercise = reformatFormContent(request.body)
+    renderObject.featureMap = config.featureMap
 
     response.render('exercises/edit', renderObject)
   }
-
   else {
-    exercisesApi.getById(
+    api.getById(
       request.params.id,
       (error, exercise) => {
-
         if (error) {
           console.error(error)
         }
-
         else if (exercise) {
           renderObject.exercise = exercise
           response.render('exercises/edit', renderObject)
@@ -226,12 +229,11 @@ exercisesModule.edit = function (request, response, next) {
   }
 }
 
-exercisesModule.history = function (request, response, next) {
 
-  exercisesApi.getHistoryById(
+exercisesModule.history = (request, response, next) => {
+  api.getHistoryById(
     request.params.id,
     (error, history) => {
-
       if (error) {
         console.error(error)
       }
@@ -244,6 +246,7 @@ exercisesModule.history = function (request, response, next) {
           exercise: {
             id: request.params.id,
           },
+          featureMap: config.featureMap,
         })
       }
       else {
@@ -253,15 +256,14 @@ exercisesModule.history = function (request, response, next) {
   )
 }
 
-exercisesModule.update = function (request, response) {
 
+exercisesModule.update = (request, response) => {
   const updatedExercise = reformatFormContent(request.body)
 
-  exercisesApi.update(
+  api.update(
     updatedExercise,
     request.session.user,
     (error, exercise) => {
-
       if (error) {
         throw new Error(error)
       }
@@ -271,6 +273,7 @@ exercisesModule.update = function (request, response) {
           title: 'Update',
           page: 'exerciseView',
           exercise: exercise,
+          featureMap: config.featureMap,
         })
       }
     }
@@ -278,7 +281,8 @@ exercisesModule.update = function (request, response) {
 }
 
 
-module.exports = config => {
-  exercisesApi = require('../api/exercises')(config)
+module.exports = theConfig => {
+  Object.assign(config, theConfig)
+  api = exercisesApi(config)
   return exercisesModule
 }
