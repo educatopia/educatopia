@@ -11,15 +11,12 @@ function login (request, response) {
             'Following error occurred during login: ' +
             error.message
           )
-
-          response.render('login', {
-            page: 'login',
-            error: error,
           })
         }
         else {
           request.session.user = user
           response.redirect('/' + user.username)
+          response.render(page, {page, error, featureMap})
         }
       }
     )

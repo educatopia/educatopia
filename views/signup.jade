@@ -20,7 +20,12 @@ block content
       br
       input.btn.btn-default(type='submit', value='Create Account')
 
-  if data && data.message
+  if error
     br
-    p.alert.alert-info
-      = data.message
+    p.alert.alert-danger
+      = error.message
+
+  if message
+    br
+    p.alert.alert-success
+      = message

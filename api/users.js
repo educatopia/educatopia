@@ -64,7 +64,7 @@ exportObject.getByUsername = function (username, done) {
     {username: username},
     (error, user) => {
       if (error) {
-        done('User could not be found.')
+        done(new Error('User could not be found.'))
       }
       else {
         done(null, user)
@@ -74,7 +74,7 @@ exportObject.getByUsername = function (username, done) {
 }
 
 
-exportObject.signup = function (request, done) {
+exportObject.signup = (request, done) => {
   const now = new Date()
   const blackList = [
     'about',
@@ -102,24 +102,22 @@ exportObject.signup = function (request, done) {
   }
 
   if (!userData.username) {
-    done(null, {message: 'Username must be specified'})
+    done(new Error('Username must be specified'))
     return
   }
 
   if (blackList.includes(userData.username)) {
-    done(null, {message: 'This username is not allowed.'})
+    done(new Error('This username is not allowed.'))
     return
   }
 
   if (!userData.email) {
-    done(null, {message: 'Email address must be specified'})
+    done(new Error('Email address must be specified'))
     return
   }
 
   bcrypt.hash(request.body.password, 16, (error, hash) => {
-    if (error) {
-      throw new Error(error)
-    }
+    if (error) done(error)
 
     userData.password = hash
 
@@ -132,22 +130,16 @@ exportObject.signup = function (request, done) {
       },
       (findError, user) => {
         if (findError) {
-          done('User could not be found.')
+          done(new Error('User could not be found.'))
           return
         }
 
         if (user) {
           if (user.email === userData.email) {
-            done(null, {
-              httpCode: 422,
-              message: 'Email-address is already taken',
-            })
+            done(new Error('Email-address is already taken'))
           }
           else {
-            done(null, {
-              httpCode: 422,
-              message: 'Username is already taken',
-            })
+            done(new Error('Username is already taken'))
           }
           return
         }
@@ -157,7 +149,7 @@ exportObject.signup = function (request, done) {
           {safe: true},
           (insertError) => {
             if (insertError) {
-              done('User could not be inserted.')
+              done(new Error('User could not be inserted.'))
               return
             }
 
@@ -167,10 +159,10 @@ exportObject.signup = function (request, done) {
               (sendError) => {
                 if (sendError) {
                   console.error(error)
-                  done(error, {message: 'Mail could not be sent'})
+                  done(new Error('Mail could not be sent'))
                   return
                 }
-                done(null, {message: 'New user was created and mail was sent'})
+                done(null, 'New user was created and mail was sent')
               }
             )
           }
@@ -186,29 +178,29 @@ exportObject.confirm = function (confirmationCode, done) {
     {confirmationCode: confirmationCode},
     (error, user) => {
       if (error || !user) {
-        done('User for confirmation could not be found.')
+        done(error)
+        return
       }
-      else {
-        delete user.confirmationCode
 
-        userCollection.update(
-          {_id: user._id},
-          user,
-          {safe: true},
-          (updateError, result) => {
-            if (updateError || result === 0) {
-              done(
-                'Following error occurred ' +
-                'while updating user ' +
-                mailUsername + ': ' + updateError
-              )
-            }
-            else {
-              done(null, user)
-            }
+      delete user.confirmationCode
+
+      userCollection.update(
+        {_id: user._id},
+        user,
+        {safe: true},
+        (updateError, result) => {
+          if (updateError || result === 0) {
+            done(new Error(
+              'Following error occurred ' +
+              'while updating user ' +
+              mailUsername + ': ' + updateError
+            ))
           }
-        )
-      }
+          else {
+            done(null, user)
+          }
+        }
+      )
     }
   )
 }
@@ -252,9 +244,7 @@ exportObject.login = function (username, loginPassword, done) {
 }
 
 
-module.exports = function (config) {
-
+module.exports = config => {
   userCollection = config.database.collection('users')
-
   return exportObject
 }

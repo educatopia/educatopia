@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 Error
+
+  if status === 404
+    p.
+      The website you were looking for does either not exist
+      or is not available at the moment!
+
+  if status === 500
+    p.
+      An internal server error occured.
+      Please try something else or try again later.
