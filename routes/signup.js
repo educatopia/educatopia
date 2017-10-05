@@ -1,36 +1,32 @@
-let usersApi
+const usersApi = require('../api/users')
+const page = 'signup'
 
-function signup (request, response) {
-  if (request.session.user) {
-    delete response.locals.session
-    request.session.destroy()
-  }
+module.exports = config => {
+  const {signup} = usersApi(config)
+  const {featureMap} = config
 
-  if (request.method !== 'POST') {
-    response.render('signup', {
-      page: 'signup',
-    })
-    return
-  }
-
-  usersApi.signup(
-    request,
-    (error, data) => {
-      if (error) {
-        console.error(error)
-      }
-      else {
-        response.render('signup', {
-          page: 'signup',
-          data: data,
-        })
-      }
+  return (request, response) => {
+    if (request.session.user) {
+      delete response.locals.session
+      request.session.destroy()
     }
-  )
-}
 
-module.exports = function (config) {
-  usersApi = require('../api/users')(config)
+    if (request.method !== 'POST') {
+      response.render(page, {page, featureMap})
+      return
+    }
 
-  return signup
+    signup(
+      request,
+      (error, message) => {
+        if (error) {
+          console.error(error)
+          response.render(page, {page, error, featureMap})
+          return
+        }
+
+        response.render(page, {page, message, featureMap})
+      }
+    )
+  }
 }

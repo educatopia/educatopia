@@ -1,47 +1,28 @@
 const coursesApi = require('../api/courses.js')
 
-const coursesModule = {}
 
+module.exports = config => {
+  return {
+    async all (request, response) {
+      const courses = await coursesApi.getAll()
+      const renderObject = {
+        title: 'Courses',
+        page: 'courses',
+        courses: courses || [],
+        featureMap: config.featureMap,
+      }
 
-coursesModule.all = function (request, response, next) {
-  coursesApi
-    .getAll()
-    .then(courses => {
-      response.render(
-        'courses',
-        {
-          title: 'Courses',
-          page: 'courses',
-          courses: courses || [],
-        }
-      )
-    })
-    .catch(error => {
-      next(error)
-    })
-}
+      response.render('courses', renderObject)
+    },
 
-
-coursesModule.getById = function (request, response) {
-  const slug = request.params.slug
-
-  coursesApi
-    .getById(slug)
-    .then(descriptionObject => {
-
+    async getById (request, response) {
+      const slug = request.params.slug
+      const descriptionObject = await coursesApi.getById(slug)
       descriptionObject.page = 'course'
-      descriptionObject.thumbnailUrl = '/courses/' +
-        slug + '/images/thumbnail.png'
+      descriptionObject.thumbnailUrl = `/courses/${slug}/images/thumbnail.png`
+      descriptionObject.featureMap = config.featureMap
 
-      response.render(
-        'course',
-        descriptionObject
-      )
-    })
-    .catch((error) => {
-      throw error
-    })
+      response.render('course', descriptionObject)
+    },
+  }
 }
-
-
-module.exports = coursesModule

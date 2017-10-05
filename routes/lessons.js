@@ -1,47 +1,30 @@
 const lessonsApi = require('../api/lessons.js')
-const lessonsModule = {}
 
 
-lessonsModule.all = function (request, response, next) {
-  lessonsApi
-    .getAll()
-    .then(allLessons => {
-      allLessons = allLessons.filter((element) => {
-        return element
-      })
+module.exports = config => {
+  return {
+    async all (request, response) {
+      const allLessons = (await lessonsApi.getAll())
+        .filter(Boolean)
+      const renderConfig = {
+        title: 'lessons',
+        page: 'lessons',
+        lessons: allLessons || [],
+        featureMap: config.featureMap,
+      }
 
-      response.render(
-        'lessons',
-        {
-          title: 'lessons',
-          page: 'lessons',
-          lessons: allLessons || [],
-        }
-      )
-    })
-    .catch((error) => {
-      next(error)
-    })
-}
+      response.render('lessons', renderConfig)
+    },
 
+    async getById (request, response) {
+      const slug = request.params.slug
 
-lessonsModule.getById = function (request, response) {
-  const slug = request.params.slug
-
-  lessonsApi
-    .getById(slug)
-    .then((descriptionObject) => {
-
+      const descriptionObject = await lessonsApi.getById(slug)
       descriptionObject.page = 'lesson'
-      descriptionObject.thumbnailUrl = '/lessons/' +
-        slug + '/images/thumbnail.png'
+      descriptionObject.thumbnailUrl = `/lessons/${slug}/images/thumbnail.png`
+      descriptionObject.featureMap = config.featureMap
 
-      response.render(
-        'lesson',
-        descriptionObject
-      )
-    })
+      response.render('lesson', descriptionObject)
+    },
+  }
 }
-
-
-module.exports = lessonsModule
