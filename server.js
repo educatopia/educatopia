@@ -143,14 +143,34 @@ function addRoutes (error, database) {
 
   app.get('/:username', users.profile)
 
+  // Render 404 page if nothing else matched
+  app.use((request, response) => {
+    response.status(404)
+    response.render('error', {
+      status: 404,
+      featureMap: config.featureMap,
+    })
+  })
 
-  if (app.get('env') === 'development') {
+  // Log errors
+  app.use((localError, request, response, next) => {
+    console.error(localError)
+    next(localError)
+  })
+
+  // Catch all errors
+  if (devMode) {
     app.use(errorHandler())
   }
-
-  app.use((request, response) => {
-    response.render('404')
-  })
+  else {
+    // eslint-disable-next-line no-unused-vars
+    app.use((localError, request, response, next) => {
+      response.render('error', {
+        status: 500,
+        featureMap: config.featureMap,
+      })
+    })
+  }
 
   app.listen(port, () => {
     console.info(`Listening on http://localhost:${port}`)
