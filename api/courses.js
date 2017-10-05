@@ -1,6 +1,6 @@
 const path = require('path')
 const marked = require('marked')
-const fsp = require('fs-promise')
+const fsp = require('fs-extra')
 const yaml = require('js-yaml')
 
 const exportObject = {}
