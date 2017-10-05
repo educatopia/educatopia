@@ -1,3 +1,12 @@
+test: lint
+
+
+.PHONY: lint
+# Lint all JavaScript files with ESLint
+lint:
+	eslint --max-warnings 0 .
+
+
 .PHONY: docker-build
 # Build docker image "adius/educatopia"
 docker-build:
