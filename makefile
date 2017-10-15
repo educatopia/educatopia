@@ -23,7 +23,7 @@ docker-push:
 # Deploy docker composition to hyper.sh
 hyper-deploy:
 	hyper compose pull --file=hyper-compose.yaml
-	hyper compose up --file=hyper-compose.yaml
+	hyper compose up --file=hyper-compose.yaml --detach
 
 
 .PHONY: hyper-clean

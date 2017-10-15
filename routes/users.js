@@ -13,11 +13,12 @@ module.exports = config => {
         (error, user) => {
           if (error) {
             console.error(error)
+            next(error)
             return
           }
 
           if (!user) {
-            next()
+            next(new Error('User does not exist'))
             return
           }
 
