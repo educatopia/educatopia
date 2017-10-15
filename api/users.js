@@ -173,7 +173,7 @@ exportObject.signup = (request, done) => {
 }
 
 
-exportObject.confirm = function (confirmationCode, done) {
+exportObject.confirm = (confirmationCode, done) => {
   userCollection.findOne(
     {confirmationCode: confirmationCode},
     (error, user) => {
