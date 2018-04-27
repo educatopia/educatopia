@@ -50,7 +50,7 @@ Check out the [makefile] for all build steps.
 ### Coding Tutorials
 
 - [Code Analogies] - Learn JavaScript & CSS using memorable analogies.
-- [Code Avengers] - Learn to code websites, apps, games and more.
+- [CodeAvengers] - Learn to code websites, apps, games and more.
 - [Code.org] - Curriculum for K-12 computer science.
 - [Codecademy] - Online coding courses.
 - [CodeFights] - Practice and improve your coding skills.
