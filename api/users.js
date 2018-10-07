@@ -70,7 +70,7 @@ exportObject.getByUsername = function (username, done) {
       }
       else {
         if (user && user.email) {
-          user.gravatar = gravatar.url(user.email)
+          user.gravatar = gravatar.url(user.email, { size: 210 })
         }
         else {
           user.gravatar = '/img/placeholderProfilePicture.png'
