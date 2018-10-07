@@ -6,6 +6,8 @@ const jade = require('jade')
 const mailUsername = process.env.MAIL_USERNAME
 const sendgrid = require('@sendgrid/mail')
 
+const gravatar = require('gravatar')
+
 const exportObject = {}
 let userCollection
 
@@ -67,6 +69,13 @@ exportObject.getByUsername = function (username, done) {
         done(new Error('User could not be found.'))
       }
       else {
+        if (user && user.email) {
+          user.gravatar = gravatar.url(user.email)
+        }
+        else {
+          user.gravatar = '/img/placeholderProfilePicture.png'
+        }
+
         done(null, user)
       }
     }
