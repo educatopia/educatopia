@@ -17,7 +17,7 @@ const config = {
   devMode,
   port: 3000,
   db: {
-    host: 'mongo',
+    host: 'educatopia-mongo-service',
     port: 27017,
     name: devMode
       ? 'educatopia-dev'

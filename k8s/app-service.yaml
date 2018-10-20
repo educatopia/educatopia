@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: educatopia-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: educatopia
+    spec:
+      containers:
+        - env:
+            - name: NODE_ENV
+              value: production
+          image: gcr.io/deploy-219812/educatopia
+          name: educatopia-container
+          ports:
+            - containerPort: 3000
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: educatopia-service
+  labels:
+    app: educatopia
+spec:
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    app: educatopia
+  type: NodePort

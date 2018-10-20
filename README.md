@@ -12,6 +12,13 @@ Check out the [makefile] for all build steps.
 [makefile]: ./makefile
 
 
+### Setup Kubernetes Cluster
+
+```sh
+gcloud compute disks create --size=20GB --zone=$ZONE mongo-disk
+```
+
+
 ### Load Backup
 
 1. Install curl in MongoDB container:
