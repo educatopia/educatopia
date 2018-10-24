@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: educatopia-mongo-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: educatopia-mongo
+    spec:
+      containers:
+        - image: mongo
+          name: educatopia-mongo-container
+          ports:
+            - name: mongo-port
+              containerPort: 27017
+              hostPort: 27017
+          volumeMounts:
+            - name: educatopia-mongo-volume
+              mountPath: /data/db
+      restartPolicy: Always
+      volumes:
+        - name: educatopia-mongo-volume
+          gcePersistentDisk:
+            pdName: educatopia-mongo
+            fsType: ext4

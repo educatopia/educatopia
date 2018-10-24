@@ -19,28 +19,34 @@ gcloud compute disks create --size=20GB --zone=$ZONE mongo-disk
 ```
 
 
-### Load Backup
+### Create and Load Backup
 
+1. Create backup with `mongodump`
+1. Gzip directory: `tar -czf dump.tgz dump`
+1. Encrypt file: `openssl des3 < dump.tgz > dump.bin`
+1. Upload to transfer.sh:
+    `curl --upload-file ./dump.bin https://transfer.sh/dump.bin `
 1. Install curl in MongoDB container:
     ```sh
-    apt-get update && \
-    apt-get install curl
+    apt update && \
+    apt install curl
     ```
-1. Load backup into Dropbox
 1. Download backup into MongoDB container
     ```sh
     curl \
         --location \
         --remote-name \
-        https://www.dropbox.com/s/0iklx9xn4vwy1oz/dump.tgz?dl=1
+        https://transfer.sh/<id>/dump.bin
     ```
+1. Decrypt file: `openssl des3 -d < dump.bin > dump.tgz`
 1. Unpack database directory: `tar -xzf dump.tgz`
 1. Load backup
     ```sh
     mongorestore \
         --db educatopia \
-        ./dump
+        ./dump/educatopia
     ```
+1. Delete files `rm -rf dump.bin dump.tgz dump`
 
 
 ## Related
