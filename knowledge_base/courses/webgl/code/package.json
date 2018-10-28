@@ -1,0 +1,17 @@
+{
+  "name": "webgl",
+  "version": "0.1.0",
+  "description": "WebGL Guide",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "webgl"
+  ],
+  "author": "Adrian Sieber",
+  "license": "MIT",
+  "dependencies": {
+    "gl-matrix": "^2.1.0"
+  }
+}

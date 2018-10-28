@@ -1,0 +1,17 @@
+<!doctype html>
+<title>WebGL Introduction</title>
+
+<h1>WebGL Introduction</h1>
+
+<canvas id=webgl-canvas width=560px height=315px></canvas>
+
+<script>
+	var canvas = document.getElementById('webgl-canvas')
+	var webgl = canvas.getContext('webgl')
+
+	// Set the clear color to opaque black
+	webgl.clearColor(0, 0, 0, 1)
+
+	// Clear the color buffer
+	webgl.clear(webgl.COLOR_BUFFER_BIT)
+</script>

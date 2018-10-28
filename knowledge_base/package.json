@@ -1,0 +1,11 @@
+{
+  "name": "knowledge_base",
+  "version": "0.1.0",
+  "description": "Knowledge base for Educatopia",
+  "main": "README.md",
+  "keywords": [
+    "educatopia"
+  ],
+  "author": "Adrian Sieber",
+  "license": "MIT"
+}

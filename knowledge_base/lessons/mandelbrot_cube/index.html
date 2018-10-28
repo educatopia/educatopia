@@ -1,0 +1,573 @@
+<html>
+
+<head>
+<title>Learning WebGL &mdash; Mandelbrot shader on a spinning cube</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
+<script type="text/javascript" src="webgl-utils.js"></script>
+
+
+<script id="color-shader-fs" type="x-shader/x-fragment">
+  precision mediump float;
+
+  varying vec4 vColor;
+
+  void main(void) {
+    gl_FragColor = vColor;
+  }
+</script>
+
+
+<script id="color-shader-vs" type="x-shader/x-vertex">
+  attribute vec3 aVertexPosition;
+  attribute vec4 aColor;
+
+  uniform mat4 uMVMatrix;
+  uniform mat4 uPMatrix;
+
+  varying vec4 vColor;
+
+
+  void main(void) {
+    gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+    vColor = aColor;
+  }
+</script>
+
+
+
+<script id="mandelbrot-shader-fs" type="x-shader/x-fragment">
+  precision mediump float;
+
+  varying vec2 vPlotPosition;
+  varying vec4 vColor;
+
+  void main(void) {
+    float cx = vPlotPosition.x;
+    float cy = vPlotPosition.y;
+
+    float hue;
+    float saturation;
+    float value;
+    float hueRound;
+    int hueIndex;
+    float f;
+    float p;
+    float q;
+    float t;
+
+
+    float x = 0.0;
+    float y = 0.0;
+    float tempX = 0.0;
+    int i = 0;
+    int runaway = 0;
+    for (int i=0; i < 100; i++) {
+      tempX = x * x - y * y + float(cx);
+      y = 2.0 * x * y + float(cy);
+      x = tempX;
+      if (runaway == 0 && x * x + y * y > 100.0) {
+        runaway = i;
+      }
+    }
+
+    if (runaway != 0) {
+      hue = float(runaway) / 200.0;
+      saturation = 0.6;
+      value = 1.0;
+
+      hueRound = hue * 6.0;
+      hueIndex = int(mod(float(int(hueRound)), 6.0));
+      f = fract(hueRound);
+      p = value * (1.0 - saturation);
+      q = value * (1.0 - f * saturation);
+      t = value * (1.0 - (1.0 - f) * saturation);
+
+      if (hueIndex == 0)
+        gl_FragColor = vec4(value, t, p, 1.0);
+      else if (hueIndex == 1)
+        gl_FragColor = vec4(q, value, p, 1.0);
+      else if (hueIndex == 2)
+        gl_FragColor = vec4(p, value, t, 1.0);
+      else if (hueIndex == 3)
+        gl_FragColor = vec4(p, q, value, 1.0);
+      else if (hueIndex == 4)
+        gl_FragColor = vec4(t, p, value, 1.0);
+      else if (hueIndex == 5)
+        gl_FragColor = vec4(value, p, q, 1.0);
+
+    } else {
+      gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    }
+  }
+</script>
+
+<script id="mandelbrot-shader-vs" type="x-shader/x-vertex">
+  attribute vec3 aVertexPosition;
+  attribute vec2 aPlotPosition;
+
+  uniform mat4 uMVMatrix;
+  uniform mat4 uPMatrix;
+
+  varying vec2 vPlotPosition;
+
+
+  void main(void) {
+    gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+    vPlotPosition = aPlotPosition;
+  }
+</script>
+
+
+<script type="text/javascript">
+
+  var gl;
+  function initGL(canvas) {
+    try {
+      gl = canvas.getContext("experimental-webgl");
+      gl.viewportWidth = canvas.width;
+      gl.viewportHeight = canvas.height;
+    } catch(e) {
+    }
+    if (!gl) {
+      alert("Could not initialise WebGL, sorry :-(");
+    }
+  }
+
+
+  function getShader(gl, id) {
+    var shaderScript = document.getElementById(id);
+    if (!shaderScript) {
+      return null;
+    }
+
+    var str = "";
+    var k = shaderScript.firstChild;
+    while (k) {
+      if (k.nodeType == 3) {
+        str += k.textContent;
+      }
+      k = k.nextSibling;
+    }
+
+    var shader;
+    if (shaderScript.type == "x-shader/x-fragment") {
+      shader = gl.createShader(gl.FRAGMENT_SHADER);
+    } else if (shaderScript.type == "x-shader/x-vertex") {
+      shader = gl.createShader(gl.VERTEX_SHADER);
+    } else {
+      return null;
+    }
+
+    gl.shaderSource(shader, str);
+    gl.compileShader(shader);
+
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      alert(gl.getShaderInfoLog(shader));
+      return null;
+    }
+
+    return shader;
+  }
+
+
+  function initProgram(fragmentShaderName, vertexShaderName) {
+    var fragmentShader = getShader(gl, fragmentShaderName);
+    var vertexShader = getShader(gl, vertexShaderName);
+
+    var program = gl.createProgram();
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      alert("Could not initialise color shaders");
+    }
+
+    program.vertexPositionAttribute = gl.getAttribLocation(program, "aVertexPosition");
+    gl.enableVertexAttribArray(program.vertexPositionAttribute);
+
+    program.pMatrixUniform = gl.getUniformLocation(program, "uPMatrix");
+    program.mvMatrixUniform = gl.getUniformLocation(program, "uMVMatrix");
+
+    return program;
+  }
+
+
+  var colorProgram;
+  var mandelbrotProgram;
+  function initPrograms() {
+    colorProgram = initProgram("color-shader-fs", "color-shader-vs");
+    colorProgram.vertexColorAttribute = gl.getAttribLocation(colorProgram, "aColor");
+    gl.enableVertexAttribArray(colorProgram.vertexColorAttribute);
+
+    mandelbrotProgram = initProgram("mandelbrot-shader-fs", "mandelbrot-shader-vs");
+    mandelbrotProgram.vertexPlotPositionAttribute = gl.getAttribLocation(mandelbrotProgram, "aPlotPosition");
+    gl.enableVertexAttribArray(mandelbrotProgram.vertexPlotPositionAttribute);
+  }
+
+
+  var currentProgram;
+  function setCurrentProgram(program) {
+    currentProgram = program;
+    gl.useProgram(program);
+  }
+
+
+  var mvMatrix = mat4.create();
+  var mvMatrixStack = [];
+  var pMatrix = mat4.create();
+
+  function mvPushMatrix() {
+    var copy = mat4.create();
+    mat4.set(mvMatrix, copy);
+    mvMatrixStack.push(copy);
+  }
+
+  function mvPopMatrix() {
+    if (mvMatrixStack.length == 0) {
+      throw "Invalid popMatrix!";
+    }
+    mvMatrix = mvMatrixStack.pop();
+  }
+
+
+  function setMatrixUniforms() {
+    gl.uniformMatrix4fv(currentProgram.pMatrixUniform, false, pMatrix);
+    gl.uniformMatrix4fv(currentProgram.mvMatrixUniform, false, mvMatrix);
+  }
+
+
+  function degToRad(degrees) {
+    return degrees * Math.PI / 180;
+  }
+
+
+  var cubes = Array();
+  function MandelbrotCube(xPos, yPos, zPos, xVel, yVel, zVel, xRot, yRot, zRot) {
+    this.xPos = xPos;
+    this.yPos = yPos;
+    this.zPos = zPos;
+
+    this.xVel = xVel;
+    this.yVel = yVel;
+    this.zVel = zVel;
+
+    this.xRot = xRot;
+    this.yRot = yRot;
+    this.zRot = zRot;
+
+    this.zooms = [1, 1, 1, 1, 1, 1];
+    this.zoomRates = [1.1, 1.2, 1.3, 0.9, 0.8, 0.7];
+
+    this.centerOffsetsX = [0, 0, 0, 0, 0, 0];
+    this.centerOffsetsY = [0, 0, 0, 0, 0, 0];
+    this.zoomCenterX = 0.28693186889504513;
+    this.zoomCenterY = 0.014286693904085048;
+  }
+
+
+  MandelbrotCube.prototype.animate = function(elapsed) {
+    this.xRot += (20 * elapsed) / 1000.0;
+    this.yRot += (90 * elapsed) / 1000.0;
+    this.zRot += (0 * elapsed) / 1000.0;
+    this.xPos += this.xVel;
+    this.yPos += this.yVel;
+    this.zPos += this.zVel;
+    if (this.xPos >= 4 || this.xPos <= -4) {
+      this.xVel = -this.xVel;
+    }
+    if (this.yPos >= 4 || this.yPos <= -4) {
+      this.yVel = -this.yVel;
+    }
+    if (this.zPos >= -9 || this.zPos <= -24) {
+      this.zVel = -this.zVel;
+    }
+
+    for (var i in this.zooms) {
+      if (this.zooms[i] < 1 || this.zooms[i] > 10000) {
+        this.zoomRates[i] = 1 / this.zoomRates[i];
+      }
+      this.zooms[i] = this.zooms[i] * this.zoomRates[i];
+
+      if (this.zoomRates[i] > 1) {
+        if (this.centerOffsetsX[i] != this.zoomCenterX) {
+          this.centerOffsetsX[i] += (this.zoomCenterX - this.centerOffsetsX[i]) / 2;
+        }
+        if (this.centerOffsetsY[i] != this.zoomCenterY) {
+          this.centerOffsetsY[i] += (this.zoomCenterY - this.centerOffsetsY[i]) / 2;
+        }
+      } else {
+        if (this.centerOffsetsX[i] != 0) {
+          this.centerOffsetsX[i] -= (this.zoomCenterX - this.centerOffsetsX[i]) / 2;
+        }
+        if (this.centerOffsetsY[i] != 0) {
+          this.centerOffsetsY[i] -= (this.zoomCenterY - this.centerOffsetsY[i]) / 2;
+        }
+      }
+    }
+  }
+
+
+  MandelbrotCube.prototype.draw = function() {
+    setCurrentProgram(mandelbrotProgram);
+
+    mat4.identity(mvMatrix);
+
+    mat4.translate(mvMatrix, [this.xPos, this.yPos, this.zPos]);
+
+    mat4.rotate(mvMatrix, degToRad(this.xRot), [1, 0, 0]);
+    mat4.rotate(mvMatrix, degToRad(this.yRot), [0, 1, 0]);
+    mat4.rotate(mvMatrix, degToRad(this.zRot), [0, 0, 1]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+    gl.vertexAttribPointer(mandelbrotProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    var positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    var positions = [];
+    for (var i = 0; i < 6; i++) {
+      positions.push(-2.2 / this.zooms[i] + this.centerOffsetsX[i], -1.2 / this.zooms[i] + this.centerOffsetsY[i]);;
+      positions.push( 0.7 / this.zooms[i] + this.centerOffsetsX[i], -1.2 / this.zooms[i] + this.centerOffsetsY[i]);
+      positions.push( 0.7 / this.zooms[i] + this.centerOffsetsX[i],  1.2 / this.zooms[i] + this.centerOffsetsY[i])
+      positions.push(-2.2 / this.zooms[i] + this.centerOffsetsX[i],  1.2 / this.zooms[i] + this.centerOffsetsY[i])
+    }
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+    gl.vertexAttribPointer(mandelbrotProgram.vertexPlotPositionAttribute, 2, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+    setMatrixUniforms();
+    gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+
+    gl.deleteBuffer(positionBuffer);
+  }
+
+
+  var boundingBoxVertexPositionBuffer;
+  var boundingBoxVertexColorBuffer;
+  var boundingBoxVertexIndexBuffer;
+  var cubeVertexPositionBuffer;
+  var cubeVertexIndexBuffer;
+  function initBuffers() {
+    boundingBoxVertexPositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, boundingBoxVertexPositionBuffer);
+    var vertices = [
+      -5, -5, -10,
+      -5, -5, -25,
+       5, -5, -25,
+       5, -5, -10,
+
+      -5, -5, -10,
+      -5, -5, -25,
+      -5,  5, -25,
+      -5,  5, -10,
+
+      -5, -5, -25,
+      -5,  5, -25,
+       5,  5, -25,
+       5, -5, -25,
+
+       5, -5, -10,
+       5, -5, -25,
+       5,  5, -25,
+       5,  5, -10,
+
+      -5,  5, -10,
+      -5,  5, -25,
+       5,  5, -25,
+       5,  5, -10,
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    boundingBoxVertexPositionBuffer.itemSize = 3;
+    boundingBoxVertexPositionBuffer.numItems = 20;
+
+    boundingBoxVertexColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, boundingBoxVertexColorBuffer);
+    var colors = [
+      0.9, 0.9, 0.9, 1,
+      0.9, 0.9, 0.9, 1,
+      0.9, 0.9, 0.9, 1,
+      0.9, 0.9, 0.9, 1,
+
+      0.5, 0.5, 0.5, 1,
+      0.5, 0.5, 0.5, 1,
+      0.5, 0.5, 0.5, 1,
+      0.5, 0.5, 0.5, 1,
+
+      0.8, 0.8, 0.8, 1,
+      0.8, 0.8, 0.8, 1,
+      0.8, 0.8, 0.8, 1,
+      0.8, 0.8, 0.8, 1,
+
+      0.5, 0.5, 0.5, 1,
+      0.5, 0.5, 0.5, 1,
+      0.5, 0.5, 0.5, 1,
+      0.5, 0.5, 0.5, 1,
+
+      0.3, 0.3, 0.3, 1,
+      0.3, 0.3, 0.3, 1,
+      0.3, 0.3, 0.3, 1,
+      0.3, 0.3, 0.3, 1,
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+    boundingBoxVertexColorBuffer.itemSize = 4;
+    boundingBoxVertexColorBuffer.numItems = 20;
+
+    boundingBoxVertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, boundingBoxVertexIndexBuffer);
+    var vertexIndices = [
+      0, 1, 2,      0, 2, 3,
+      4, 5, 6,      4, 6, 7,
+      8, 9, 10,     8, 10, 11,
+      12, 13, 14,   12, 14, 15,
+      16, 17, 18,   16, 18, 19
+    ];
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(vertexIndices), gl.STATIC_DRAW);
+    boundingBoxVertexIndexBuffer.itemSize = 1;
+    boundingBoxVertexIndexBuffer.numItems = 30;
+
+    cubeVertexPositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+    var vertexPositions = [
+      // Front face
+      -1.0, -1.0,  1.0,
+       1.0, -1.0,  1.0,
+       1.0,  1.0,  1.0,
+      -1.0,  1.0,  1.0,
+
+      // Back face
+      -1.0, -1.0, -1.0,
+      -1.0,  1.0, -1.0,
+       1.0,  1.0, -1.0,
+       1.0, -1.0, -1.0,
+
+      // Top face
+      -1.0,  1.0, -1.0,
+      -1.0,  1.0,  1.0,
+       1.0,  1.0,  1.0,
+       1.0,  1.0, -1.0,
+
+      // Bottom face
+      -1.0, -1.0, -1.0,
+       1.0, -1.0, -1.0,
+       1.0, -1.0,  1.0,
+      -1.0, -1.0,  1.0,
+
+      // Right face
+       1.0, -1.0, -1.0,
+       1.0,  1.0, -1.0,
+       1.0,  1.0,  1.0,
+       1.0, -1.0,  1.0,
+
+      // Left face
+      -1.0, -1.0, -1.0,
+      -1.0, -1.0,  1.0,
+      -1.0,  1.0,  1.0,
+      -1.0,  1.0, -1.0,
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPositions), gl.STATIC_DRAW);
+    cubeVertexPositionBuffer.itemSize = 3;
+    cubeVertexPositionBuffer.numItems = 24;
+
+    cubeVertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+    var vertexIndices = [
+      0, 1, 2,      0, 2, 3,    // Front face
+      4, 5, 6,      4, 6, 7,    // Back face
+      8, 9, 10,     8, 10, 11,  // Top face
+      12, 13, 14,   12, 14, 15, // Bottom face
+      16, 17, 18,   16, 18, 19, // Right face
+      20, 21, 22,   20, 22, 23  // Left face
+    ]
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(vertexIndices), gl.STATIC_DRAW);
+    cubeVertexIndexBuffer.itemSize = 1;
+    cubeVertexIndexBuffer.numItems = 36;
+  }
+
+
+  function drawScene() {
+    gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+
+    for (var i in cubes) {
+      cubes[i].draw();
+    }
+
+    setCurrentProgram(colorProgram);
+    mat4.identity(mvMatrix);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, boundingBoxVertexPositionBuffer);
+    gl.vertexAttribPointer(colorProgram.vertexPositionAttribute, boundingBoxVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, boundingBoxVertexColorBuffer);
+    gl.vertexAttribPointer(colorProgram.vertexColorAttribute, boundingBoxVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, boundingBoxVertexIndexBuffer);
+    setMatrixUniforms();
+    gl.drawElements(gl.TRIANGLES, boundingBoxVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+  }
+
+
+  var lastTime = 0;
+  function animate() {
+    var timeNow = new Date().getTime();
+    if (lastTime != 0) {
+      var elapsed = timeNow - lastTime;
+      for (var i in cubes) {
+        cubes[i].animate(elapsed);
+      }
+    }
+    lastTime = timeNow;
+  }
+
+
+  function tick() {
+    requestAnimFrame(tick);
+    drawScene();
+    animate();
+  }
+
+
+  function webGLStart() {
+    var canvas = document.getElementById("example02-canvas");
+    initGL(canvas);
+    initPrograms();
+    initBuffers();
+
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.enable(gl.DEPTH_TEST);
+
+    for (var i=0; i < 10; i++) {
+      cubes.push(
+        new MandelbrotCube(
+          0, 0, -12,
+          0.2 * Math.random() - 0.1, 0.2 * Math.random() - 0.1, 0.2 * Math.random() - 0.1,
+          360 * Math.random(), 360 * Math.random(), 360 * Math.random()
+        )
+      );
+    }
+
+    tick();
+  }
+
+
+
+</script>
+
+
+</head>
+
+
+<body onload="webGLStart();">
+  <a href="http://learningwebgl.com/blog/?p=669">&lt;&lt; Back to the blog</a><br />
+
+  <canvas id="example02-canvas" style="border: none;" width="500" height="500"></canvas>
+
+  <br/>
+  <a href="http://learningwebgl.com/blog/?p=669">&lt;&lt; Back to the blog</a><br />
+</body>
+
+</html>

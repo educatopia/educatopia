@@ -1,0 +1,37 @@
+id: webgl
+title: WebGL
+summary: |
+  A complete introduction to WebGL.
+  Learn everything you need to know to create
+  beautiful 3D scenes with WebGL.
+  Get started with your first rendered triangle
+  and finish with a full fledged 3D Model.
+
+lessons:
+  - webgl_introduction
+  - render_a_triangle
+  - lesson00
+  - lesson01
+  - lesson02
+  - lesson03
+  - lesson04
+  - lesson05
+  - lesson06
+  - lesson07
+  - lesson08
+  - lesson09
+  - lesson10
+  - lesson11
+  - lesson12
+  - lesson13
+  - lesson14
+  - lesson15
+  - lesson16
+  - mandelbrot_cube
+  - mandelbrot_zooming
+  - particle_explosions
+
+references:
+  - https://www.khronos.org/webgl/wiki/Tutorial
+  - http://webglfundamentals.org
+  - https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API

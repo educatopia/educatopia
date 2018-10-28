@@ -1,0 +1,103 @@
+<!doctype html>
+<title>WebGL Triangle</title>
+
+<h1>WebGL Triangle</h1>
+
+<canvas id=webgl-canvas width=560px height=315px></canvas>
+
+<script>
+	var canvas = document.getElementById('webgl-canvas'),
+		gl = canvas.getContext('webgl'),
+		vertices = [
+			 1, 0, 0,
+			 0, 1, 0,
+			-1, 0, 0
+		],
+		triangleVertexSize = 3,
+		numberOfTriangleVertices = 3,
+		// Transformation from view coordinates to viewport coordinates
+		perspectiveMatrix = new Float32Array([
+			1.3579951524734497, 0, 					 0, 					 0,
+			0, 					2.4142136573791504,  0, 					 0,
+			0, 					0, 					-1.0020020008087158, 	-1,
+			0, 					0, 					-0.20020020008087158, 	 0
+		]),
+		modelViewMatrix = new Float32Array([
+			1, 0,  0, 0,
+			0, 1,  0, 0,
+			0, 0,  1, 0,
+			0, 0, -5, 1
+		]),
+		fragmentShader,
+		vertexShader,
+		triangleVertexBuffer,
+		shaderProgram
+
+	// Setup shaders
+	shaderProgram = gl.createProgram()
+
+	fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
+	gl.shaderSource(
+		fragmentShader,
+		'void main (void) { \
+			gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); \
+		}'
+	)
+	gl.compileShader(fragmentShader)
+	gl.attachShader(shaderProgram, fragmentShader)
+
+	vertexShader = gl.createShader(gl.VERTEX_SHADER)
+	gl.shaderSource(
+		vertexShader,
+		'attribute vec3 aVertexPosition; \
+		uniform mat4 uMVMatrix; \
+		uniform mat4 uPMatrix; \
+		 \
+		void main (void) { \
+			gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0); \
+		}'
+	)
+	gl.compileShader(vertexShader)
+	gl.attachShader(shaderProgram, vertexShader)
+
+	gl.linkProgram(shaderProgram)
+	gl.useProgram(shaderProgram)
+
+	// Initialize Buffers
+	triangleVertexBuffer = gl.createBuffer()
+	gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexBuffer)
+	gl.bufferData(
+		gl.ARRAY_BUFFER,
+		new Float32Array(vertices),
+		gl.STATIC_DRAW
+	)
+
+	vertexAttribute = gl.getAttribLocation(shaderProgram, 'aVertexPosition')
+	gl.enableVertexAttribArray(vertexAttribute)
+	gl.vertexAttribPointer(
+		vertexAttribute,
+		triangleVertexSize,
+		gl.FLOAT,
+		false,
+		0,
+		0
+	)
+
+	// Draw the scene
+	gl.clearColor(0, 0, 0, 1)
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+
+
+	pMatrixUniform = gl.getUniformLocation(shaderProgram, 'uPMatrix')
+	mvMatrixUniform = gl.getUniformLocation(shaderProgram, 'uMVMatrix')
+
+	gl.uniformMatrix4fv(pMatrixUniform, false, perspectiveMatrix)
+	gl.uniformMatrix4fv(mvMatrixUniform, false, modelViewMatrix)
+
+
+	gl.drawArrays(
+		gl.TRIANGLES,
+		0,
+		numberOfTriangleVertices
+	)
+</script>
