@@ -1,54 +1,61 @@
 extends ../layout
 
 block content
-  .table-responsive
-    table#exercisesTable.table.table-striped.table-bordered.table-condensed
-      thead
-        tr
-          th Nr
-          th Subject
-          th Type
-          th Task
-          th Difficulty
-          th Credits
-          th Tags
-          th Flags
-          th Note
+  if exercises.length === 0
+    .page-header: h1.
+      There are no exercises available yet.
+      #[br]
+      #[small Please sign up and create the first ones!]
 
-      tbody
-        each exercise, index in exercises
+  else
+    .table-responsive
+      table#exercisesTable.table.table-striped.table-bordered.table-condensed
+        thead
           tr
-            td= index + 1
-            td= exercise.subjects
-            td= exercise.type
-            td.small
-              - var task = exercise.task
-              a(
-              href= exercise.url,
-              title= task ? task : ''
-              )
-                =(task) ? task.substr(0, 80) + '…' : ''
-            td
-              if exercise.difficulty
-                span.text-muted.small= exercise.difficulty
-                .progress
-                  .progress-bar(style='width: #{exercise.difficulty * 100}%')
+            th Nr
+            th Subject
+            th Type
+            th Task
+            th Difficulty
+            th Credits
+            th Tags
+            th Flags
+            th Note
 
-            td
-              if exercise.credits
-                span.badge
-                  = exercise.credits
-
-            td
-              if exercise.tags
-                span.label.label-default(
-                title=exercise.tags.join(', ')
+        tbody
+          each exercise, index in exercises
+            tr
+              td= index + 1
+              td= exercise.subjects
+              td= exercise.type
+              td.small
+                - var task = exercise.task
+                a(
+                href= exercise.url,
+                title= task ? task : ''
                 )
-                  = exercise.tags.length
+                  =(task) ? task.substr(0, 80) + '…' : ''
+              td
+                if exercise.difficulty
+                  span.text-muted.small= exercise.difficulty
+                  .progress
+                    .progress-bar(style='width: #{exercise.difficulty * 100}%')
 
-            td.text-center
-              if !exercise.solutions && !exercise.approach
-                span.text-danger ✗
+              td
+                if exercise.credits
+                  span.badge
+                    = exercise.credits
 
-            td.small.text-muted
-              = (exercise.note) ? exercise.note : ''
+              td
+                if exercise.tags
+                  span.label.label-default(
+                  title=exercise.tags.join(', ')
+                  )
+                    = exercise.tags.length
+
+              td.text-center
+                if !exercise.solutions && !exercise.approach
+                  span.text-danger ✗
+
+              td.small.text-muted
+                = (exercise.note) ? exercise.note : ''
