@@ -11,7 +11,7 @@
     "atob": "^2.0.3",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.1",
     "capitalizer": "^0.2.0",
     "clone": "^2.1.1",
     "commonmark": "^0.28.1",
