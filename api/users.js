@@ -1,7 +1,7 @@
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
 const nodemailer = require('nodemailer')
-const jade = require('jade')
+const pug = require('pug')
 
 const mailUsername = process.env.MAIL_USERNAME
 const sendgrid = require('@sendgrid/mail')
@@ -27,8 +27,8 @@ function sendMail (userData, app, done) {
     to: userData.email,
     toname: userData.username,
     subject: 'Verify your email-address for Educatopia',
-    html: jade.renderFile(
-      'views/mails/signup.jade',
+    html: pug.renderFile(
+      'views/mails/signup.pug',
       {
         userData: userData,
         settings: app.settings,
