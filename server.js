@@ -17,7 +17,7 @@ const config = {
   devMode,
   port: 3000,
   db: {
-    host: 'educatopia-mongo-service',
+    host: process.env.MONGODB_HOST || 'localhost',
     port: 27017,
     name: devMode
       ? 'educatopia-dev'
@@ -194,7 +194,7 @@ function addRoutes (error, database) {
 
 app.set('hostname', 'localhost:' + port)
 
-if (app.get('env') === 'production') {
+if (!devMode) {
   assert(process.env.SESSION_SECRET, 'Missing session secret')
   app.set('hostname', 'educatopia.org')
 }
