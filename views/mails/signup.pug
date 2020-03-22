@@ -84,7 +84,7 @@ div
                   style='font-family: "Helvetica Neue",Calibri,Helvetica,Arial, sans-serif; font-size: 16px; line-height: 24px; color: #cccccc; margin: 0 0 10px; text-align: center'
                   )
                     a(
-                    href='http://' + settings.hostname +'/confirm/' + userData.confirmationCode,
+                    href=`http://${hostname}/confirm/${userData.confirmationCode}`,
                     style='font-family: "Helvetica Neue", Calibri, Helvetica, Arial,sans-serif; background-color: rgb(67,152,186); color: white; display: inline-block; padding: 0 32px; margin: 0; border-radius: 2px; font-size: 16px; line-height: 40px; text-decoration: none',
                     target='_blank'
                     ) Finish signing up
@@ -126,10 +126,10 @@ div
                   ) You can also copy and paste the following link into your browser's address bar:
                     br
                     a(
-                    href='http://' + settings.hostname + '/confirm/' + userData.confirmationCode,
+                    href=`http://${hostname}/confirm/${userData.confirmationCode}`,
                     style='font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size: 10px; font-weight: normal; color: rgb(67,152,186); text-decoration: none',
                     target='_blank'
-                    ) http://#{settings.hostname}/confirm/#{userData.confirmationCode}
+                    ) http://#{hostname}/confirm/#{userData.confirmationCode}
                   p(
                   style='font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-weight: normal; font-size: 10px; color:#cccccc'
                   )

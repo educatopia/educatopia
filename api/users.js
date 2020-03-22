@@ -2,6 +2,7 @@ const crypto = require('crypto')
 const bcrypt = require('bcrypt')
 const nodemailer = require('nodemailer')
 const pug = require('pug')
+const {stripIndent} = require('common-tags')
 
 const mailUsername = process.env.MAIL_USERNAME
 const sendgrid = require('@sendgrid/mail')
@@ -20,18 +21,24 @@ function randomBase62String (length) {
 }
 
 
-function sendMail (userData, app, done) {
+function sendMail (userData, request, done) {
+  const isProduction = request.app.get('env') === 'production'
   const mail = {
     from: 'no-reply@educatopia.org',
     fromname: 'Educatopia',
     to: userData.email,
     toname: userData.username,
     subject: 'Verify your email-address for Educatopia',
+    text: stripIndent`
+      Welcome to Educatopia!
+      Finish the sign up process by opening following link:
+      http://${request.hostname}/confirm/${userData.confirmationCode}
+    `,
     html: pug.renderFile(
       'views/mails/signup.pug',
       {
-        userData: userData,
-        settings: app.settings,
+        userData,
+        hostname: request.hostname,
       }
     ),
   }
@@ -43,17 +50,26 @@ function sendMail (userData, app, done) {
       return
     }
 
-    console.info('Message sent: %s', response.messageId)
+    if (isProduction) {
+      console.info('Message sent: %s', response.messageId)
+    }
+    else {
+      console.info(JSON.parse(response.message))
+    }
+
     done(null, response)
   }
 
-  if (app.get('env') === 'production') {
+
+  if (isProduction) {
     sendgrid.setApiKey(process.env.SENDGRID_API_KEY)
     sendgrid.send(mail, mailCallback)
   }
   else {
     nodemailer
-      .createTransport()
+      .createTransport({
+        jsonTransport: true,
+      })
       .sendMail(mail, mailCallback)
   }
 }
@@ -78,6 +94,7 @@ exportObject.signup = (request, done) => {
   const now = new Date()
   const blackList = [
     'about',
+    'admin',
     'api',
     'confirm',
     'exercise',
@@ -153,18 +170,14 @@ exportObject.signup = (request, done) => {
               return
             }
 
-            sendMail(
-              userData,
-              request.app,
-              (sendError) => {
-                if (sendError) {
-                  console.error(error)
-                  done(new Error('Mail could not be sent'))
-                  return
-                }
-                done(null, 'New user was created and mail was sent')
+            sendMail(userData, request, (sendError) => {
+              if (sendError) {
+                console.error(error)
+                done(new Error('Mail could not be sent'))
+                return
               }
-            )
+              done(null, 'New user was created and mail was sent')
+            })
           }
         )
       }
