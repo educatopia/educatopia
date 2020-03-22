@@ -22,7 +22,7 @@ function randomBase62String (length) {
 
 
 function sendMail (userData, request, done) {
-  const isProduction = request.app.get('env') === 'production'
+  const isProduction = request.app.get('env') !== 'development'
   const mail = {
     from: 'no-reply@educatopia.org',
     fromname: 'Educatopia',

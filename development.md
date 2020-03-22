@@ -10,10 +10,6 @@
 ### Deployment
 
 ```sh
-git clone https://github.com/educatopia/educatopia
-```
-
-```sh
 apt update
 ```
 
@@ -23,10 +19,16 @@ Install and start MongoDB 3:
 apt install mongodb
 ```
 
-Install Node.js 8 and its package manager npm 3:
+Install Node.js 12 and its package manager npm:
 
 ```sh
-apt install npm
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+apt-get install -y nodejs
+```
+
+```sh
+git clone https://github.com/educatopia/educatopia
+cd educatopia
 ```
 
 Install all dependencies:

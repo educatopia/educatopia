@@ -9,7 +9,6 @@ let exercisesCollection
 
 marked.setOptions({
   breaks: true,
-  sanitize: true,
 })
 
 

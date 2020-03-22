@@ -14,7 +14,6 @@ const lessonsPath = path.join(knowledgeBasePath, 'lessons')
 
 marked.setOptions({
   breaks: false,
-  sanitize: true,
 })
 
 

@@ -75,7 +75,6 @@ hljs, Login, window, document, alert
     tables: true,
     breaks: true,
     pedantic: false,
-    sanitize: true,
     smartLists: true,
     smartypants: false,
     langPrefix: 'lang-',
