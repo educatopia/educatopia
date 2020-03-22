@@ -29,6 +29,9 @@ const config = {
     lessons: false,
     exercises: true,
   },
+  featuredExercises: (process.env.EDUCATOPIA_FEATURED_EXERCISES || '')
+    .split(',')
+    .filter(Boolean),
 }
 const {port, db, knowledgeBasePath} = config
 const connectionString = `mongodb://${db.host}:${db.port}/${db.name}`

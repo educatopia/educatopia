@@ -2,9 +2,34 @@ extends layout
 
 block content
   #banner
-      strong.title Free exercises for everyone
-      p.subtitle.
-        Explore thousands of exercises from scientific topics like math, <br>
-        electronics, computer science, biology, physics and chemistry.
+    strong.title Free exercises for everyone
+    p.subtitle.
+      Explore hundreds of exercises and their solutions
+        in topics like math, <br>
+      electronics, computer science, biology, physics, and chemistry.
 
-      a.btn.btn-primary.btn-lg(href='/exercises') Start Browsing
+    a.btn.btn-primary.btn-lg(href='/exercises') Start Browsing
+
+  .center(style='max-width: 960px; margin: 5rem auto 0 auto;')
+    .row
+      for exercise, index in featuredExercises
+        .col-xs-6.col-sm-6
+          .panel.panel-info
+            .panel-heading
+              h3.panel-title
+                = 'Exercise by '
+                a(href=`/${exercise.createdBy}`)
+                  = exercise.createdBy
+                if exercise.subjects
+                  = ' in '
+                  = exercise.subjects.join(' and ')
+
+            .panel-body
+              = exercise.task
+              br
+              a.btn.btn-default.pull-right(
+                href=`/exercises/${exercise.id}` type='button').
+                Go to Exercise
+
+        if index % 2 == 1
+          .clearfix

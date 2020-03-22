@@ -1,5 +1,9 @@
+html {
+  height: 100%;
+}
+
 body {
-    padding-top: 70px;
+  height: 100%;
 }
 
 a {
@@ -14,6 +18,7 @@ code {
 .navbar {
     background-color: white;
     border-bottom: 1px solid rgb(220,220,220);
+    margin-bottom: 0;
 }
 
 .navbar a {
@@ -23,8 +28,6 @@ code {
 .navbar-brand {
     font-family: 'Josefin Sans', sans-serif;
     font-size: 2em;
-    padding-top: 10px;
-    padding-bottom: 10px;
     line-height: 100%;
 }
 
@@ -50,7 +53,9 @@ s {
 footer {
     background-color: #f5f5f5;
     padding: 20px 0;
-    border-top: 1px solid #E5E5E5;
+    border: 1px solid #E5E5E5;
+    border-left: none;
+    border-right: none;
     text-align: center;
     margin-top: 40px;
 }
@@ -59,36 +64,62 @@ footer a {
     margin: 0 10px;
 }
 
-#home {
-    padding: 50px 0 0 0;
+#contentWrapper {
+  padding-top: 2em;
 }
 
 #home #contentWrapper {
     width: 100%;
     padding: 0;
-    background-image: url('/img/galaxy.jpg');
-    background-size: 100% 100%;
 }
 
 #banner {
-    padding: 4em 0;
-    text-align: center;
+  padding: 4em 0;
+  text-align: center;
+  position: relative;
+}
+/* Semi transparent Image */
+#banner:before {
+  content: ' ';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image: url('/img/galaxy.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.5;
+}
+/* Black background */
+#banner:after {
+  content: ' ';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  z-index: -2;
+  background-size: 100% 100%;
 }
 
 #banner .title {
     display: block;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 100;
-    letter-spacing: 3px;
+    font-weight: 500;
     color: white;
-    font-size: 3.8em;
+    font-size: 4.2em;
     margin-bottom: 0.4em;
 }
 
 #banner .subtitle {
     color: rgb(200, 200, 200);
-    font-weight: 200;
-    font-size: 1.4em;
+    font-weight: 300;
+    font-size: 1.8em;
     margin-bottom: 2em;
 }
 
