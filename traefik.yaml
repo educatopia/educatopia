@@ -1,0 +1,18 @@
+entryPoints:
+  web:
+    address: ':80'
+  web-secure:
+    address: ':443'
+
+log:
+  level: DEBUG
+  filePath: traefik.log
+  format: json
+
+accessLog:
+  filePath: traefik_access.log
+  format: json
+
+providers:
+  file:
+    filename: traefik_routing.yaml

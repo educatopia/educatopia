@@ -1,0 +1,12 @@
+http:
+  routers:
+    to-educatopia:
+      entryPoints: [web, web-secure]
+      rule: "Host(`v2202003116344111470.powersrv.de`)"
+      service: educatopia
+
+  services:
+    educatopia:
+      loadBalancer:
+        servers:
+          - url: 'http://127.0.0.1:3000/'
