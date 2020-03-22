@@ -14,6 +14,9 @@ spec:
             - name: NODE_ENV
               value: production
 
+            - name: MONGODB_HOST
+              value: educatopia-mongo-service
+
             - name: SESSION_SECRET
               valueFrom:
                 secretKeyRef:
