@@ -178,11 +178,12 @@ Wait a few minutes until TLS certificates are obtained and
 then the website should be reachable at <https://educatopia.org>.
 
 When everything works as expected, it's time to switch to production mode.
-Run `systemctl edit educatopia`, set `NODE_ENV=production` and add
-other environment variables necessary for production.
+Run `systemctl edit educatopia`
+and update the environment variables for production:
 
 ```txt
 [Service]
+Environment=NODE_ENV=production
 Environment=EDUCATOPIA_FEATURED_EXERCISES=<todo>
 Environment=SESSION_SECRET=<todo>
 Environment=SENDGRID_API_KEY=<todo>
