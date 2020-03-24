@@ -1,11 +1,35 @@
 http:
   routers:
-    to-educatopia:
-      entryPoints: [web, web-secure]
-      rule: "Host(`v2202003116344111470.powersrv.de`)"
+    toEducatopiaSecure:
+      entryPoints: [web]
+      rule: >
+        Host(`v2202003116344111470.powersrv.de`)
+        || Host(`beta.educatopia.org`)
+      middlewares: [redirectToHttps]
+      # Will never be called as the middleware already redirects
+      service: noop
+
+    toEducatopia:
+      entryPoints: [web-secure]
+      rule: >
+        Host(`v2202003116344111470.powersrv.de`)
+        || Host(`beta.educatopia.org`)
       service: educatopia
+      # Makes this router only listen to https requests
+      tls:
+        certResolver: educatopiaResolver
+
+  middlewares:
+    redirectToHttps:
+      redirectScheme:
+        scheme: https
+        permanent: true
 
   services:
+    noop:
+      loadBalancer:
+        servers:
+          - url: 'http://localhost'
     educatopia:
       loadBalancer:
         servers:

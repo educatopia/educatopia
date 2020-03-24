@@ -4,6 +4,16 @@ entryPoints:
   web-secure:
     address: ':443'
 
+certificatesResolvers:
+  educatopiaResolver:
+    acme:
+      caServer: https://acme-v02.api.letsencrypt.org/directory
+      # caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      email: letsencrypt@ad-si.com
+      storage: acme.json
+      httpChallenge:
+        entryPoint: web
+
 log:
   level: DEBUG
   filePath: traefik.log
@@ -15,4 +25,4 @@ accessLog:
 
 providers:
   file:
-    filename: traefik_routing.yaml
+    filename: /root/educatopia/traefik_routing.yaml
