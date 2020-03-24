@@ -2,23 +2,23 @@ const mongo = require('mongodb')
 
 module.exports = config => {
   return (request, response) => {
-    const exercisesQuery = {
-      $or: config.featuredExercises
-        .map(exId => ({ _id: mongo.ObjectId(exId) })),
-    }
+    const ids = config.featuredExercises
+      .map(exId => mongo.ObjectId(exId))
 
     config.database
       .collection('exercises')
-      .find(exercisesQuery)
+      .find({ _id: { $in: ids } })
       .toArray((error, exercises) => {
+        const exercisesSorted = ids
+          .map(id => exercises.find(e => e._id.equals(id)))
+
         response.render('index', {
           page: 'home',
           featureMap: config.featureMap,
-          featuredExercises: exercises
-            ? exercises.map(e => Object.assign({id: e._id}, e.current))
+          featuredExercises: exercisesSorted
+            ? exercisesSorted.map(e => Object.assign({id: e._id}, e.current))
             : [],
         })
       })
   }
 }
-
