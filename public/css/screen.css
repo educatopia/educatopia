@@ -28,7 +28,6 @@ code {
 .navbar-brand {
     font-family: 'Josefin Sans', sans-serif;
     font-size: 2em;
-    line-height: 100%;
 }
 
 #logo {
@@ -36,6 +35,8 @@ code {
     width: 24px;
     height: 24px;
     margin-right: 0.3em;
+    position: relative;
+    bottom: 0.1em;
 }
 
 s {
