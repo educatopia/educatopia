@@ -7,46 +7,7 @@ Modelling, Computer Science, Biology, Chemistry, Physics, …
 
 ## Development
 
-Check out the [makefile] for all build steps.
-
-[makefile]: ./makefile
-
-
-### Setup Kubernetes Cluster
-
-```sh
-gcloud compute disks create --size=20GB --zone=$ZONE mongo-disk
-```
-
-
-### Create and Load Backup
-
-1. Create backup with `mongodump`
-1. Gzip directory: `tar -czf dump.tgz dump`
-1. Encrypt file: `openssl des3 < dump.tgz > dump.bin`
-1. Upload to transfer.sh:
-    `curl --upload-file ./dump.bin https://transfer.sh/dump.bin `
-1. Install curl in MongoDB container:
-    ```sh
-    apt update && \
-    apt install curl
-    ```
-1. Download backup into MongoDB container
-    ```sh
-    curl \
-        --location \
-        --remote-name \
-        https://transfer.sh/<id>/dump.bin
-    ```
-1. Decrypt file: `openssl des3 -d < dump.bin > dump.tgz`
-1. Unpack database directory: `tar -xzf dump.tgz`
-1. Load backup
-    ```sh
-    mongorestore \
-        --db educatopia \
-        ./dump/educatopia
-    ```
-1. Delete files `rm -rf dump.bin dump.tgz dump`
+Check out the detailed instructions in [development.md](./development.md).
 
 
 ## Related
@@ -146,5 +107,3 @@ gcloud compute disks create --size=20GB --zone=$ZONE mongo-disk
 [abi-mathe.de]: http://abi-mathe.de
 [abi-physik.de]: http://abi-physik.de
 [serlo.org]: http://serlo.org
-
-
