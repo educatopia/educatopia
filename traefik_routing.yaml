@@ -3,7 +3,7 @@ http:
     toEducatopiaSecure:
       entryPoints: [web]
       rule: >
-        Host(`v2202003116344111470.powersrv.de`)
+        Host(`educatopia.org`)
         || Host(`beta.educatopia.org`)
       middlewares: [redirectToHttps]
       # Will never be called as the middleware already redirects
@@ -12,7 +12,7 @@ http:
     toEducatopia:
       entryPoints: [web-secure]
       rule: >
-        Host(`v2202003116344111470.powersrv.de`)
+        Host(`educatopia.org`)
         || Host(`beta.educatopia.org`)
       service: educatopia
       # Makes this router only listen to https requests
