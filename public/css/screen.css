@@ -135,6 +135,10 @@ footer a {
 
 /* Exercise Formular */
 
+.form-explanation {
+  font-size: 1.1em;
+}
+
 #exerciseModal .modal-body {
     max-height: 500px;
 }

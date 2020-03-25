@@ -14,6 +14,35 @@ mixin textarea(element, field, index)
   textarea.form-control(id=id, name=field)&attributes(attrs ? attrs : {})
     = element
 
+.row
+  .col-md-7.col-md-offset-2
+    p.form-explanation
+      = 'All text areas in the following form support '
+      a(href='https://commonmark.org') Markdown
+      = ' to format the text. '
+      = 'Check out the '
+      a(href='https://commonmark.org/help/').
+        60 seconds tutorial on the official homepage
+      = '. '
+      = 'Furthermore, they support '
+      a(href='http://asciimath.org') AsciiMath
+      = ' to beautifuly layout math formulas. '
+      = 'You can find several simple examples on '
+      a(href='https://www.intmath.com/help/send-math-email-syntax.php#examples')
+        | this website
+      = '. '
+
+    p.form-explanation
+      | Math must be enclosed in acute accents ( ´ )
+      | and code snippets in grave accents ( ` ).
+      | See also:
+      | <a href='https://en.wikipedia.org/wiki/Acute_accent#Technical_notes'>
+      |    How to type acute accents</a>
+      | and
+      | <a href='https://en.wikipedia.org/wiki/Grave_accent#Technical_notes'>
+      |    how to type grave accents</a>.
+
+
 form.form-horizontal(
 role='form', action=actionUrl, method='POST')
 
