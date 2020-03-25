@@ -108,6 +108,11 @@ footer a {
   background-size: 100% 100%;
 }
 
+#banner br {
+  /* Disable line breaks for mobile view */
+  display: none;
+}
+
 #banner .title {
     display: block;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -120,12 +125,12 @@ footer a {
 #banner .subtitle {
     color: rgb(200, 200, 200);
     font-weight: 300;
-    font-size: 1.8em;
-    margin-bottom: 2em;
+    font-size: 1.6em;
+    margin-bottom: 1em;
 }
 
 #banner .btn {
-    margin-bottom: 1em;
+  margin: 1em 0.5em;
 }
 
 /* Exercise Formular */
@@ -174,6 +179,10 @@ pre code {
 
 .alert:empty {
     display: none;
+}
+
+.alert .btn {
+  margin: 1em 1em 0 0;
 }
 
 .nav-tabs {
@@ -257,6 +266,9 @@ pre code {
 @media (min-width: 768px) {
     #lesson p {
         max-width: 70%;
+    }
+    #banner br {
+      display: initial;
     }
 }
 

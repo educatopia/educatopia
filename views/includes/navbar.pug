@@ -19,11 +19,12 @@ nav.navbar.navbar-default(role="navigation")
     if session && session.user
       ul.nav.navbar-nav.navbar-right
         li
-          a(href='/' + session.user.username)
-            = session.user.username
-        li
           a#newExercise(href='/exercises/create')
             span.glyphicon.glyphicon-edit
+            span  New Exercise
+        li
+          a(href='/' + session.user.username)
+            = session.user.username
         li
           a#logoutButton(href='/logout').
             Logout
@@ -34,4 +35,4 @@ nav.navbar.navbar-default(role="navigation")
             Login
         li
           a#signupButton(href='/signup').
-            Signup
+            Sign Up

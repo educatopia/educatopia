@@ -10,5 +10,8 @@ block content
     include _form
 
   else
-    p.alert.alert-warning.
-      You need to be logged in to create exercises!
+    p.alert.alert-warning
+      | You need to be logged in to create exercises!
+      br
+      a.btn.btn-default.btn-md(href='/login') Login
+      a.btn.btn-default.btn-md(href='/signup') Sign Up
