@@ -64,6 +64,12 @@ apt update
 apt upgrade
 ```
 
+Set timezone of server to UTC:
+
+```sh
+timedatectl set-timezone UTC
+```
+
 Configure and enable firewall:
 
 ```sh
