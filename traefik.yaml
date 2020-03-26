@@ -15,13 +15,34 @@ certificatesResolvers:
         entryPoint: web
 
 log:
-  level: DEBUG
+  level: WARN
   filePath: traefik.log
-  format: json
 
 accessLog:
+  # Lines to keep in memory before writing to log file
+  bufferingSize: 32
   filePath: traefik_access.log
   format: json
+  fields:
+    defaultMode: drop
+    names:
+      StartUTC: keep
+      Duration: keep
+      ClientAddr: keep
+      RequestMethod: keep
+      RequestProtocol: keep
+      RequestAddr: keep
+      RequestPath: keep
+      RequestContentSize: keep
+      DownstreamStatus: keep
+      DownstreamContentSize: keep
+      RetryAttempts: keep
+
+    headers:
+      defaultMode: drop
+      names:
+        Referer: keep
+        User-Agent: keep
 
 providers:
   file:
