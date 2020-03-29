@@ -96,6 +96,23 @@ Check out the detailed instructions in [development.md](./development.md).
 [Quickcode]: http://www.quickcode.co
 
 
+### Subreddits
+
+Complete overview in /r/education:
+https://www.reddit.com/r/education/comments/b5bbjr/welcome_to_reducation_please_read_before_posting/
+
+Most important ones:
+
+- https://www.reddit.com/r/Teachers - 140 k
+- https://www.reddit.com/r/education - 100 k
+- https://www.reddit.com/r/teaching - 60 k
+- https://www.reddit.com/r/highereducation - 30 k
+- https://www.reddit.com/r/teachingresources - 20 k
+- https://www.reddit.com/r/edtech - 10 k
+- https://www.reddit.com/r/Teacher - 6 k
+- https://www.reddit.com/r/Homeschooling - 2 k
+
+
 ### German
 
 - [abi-chemie.de] - Learning portal with focus on college level chemistry.
