@@ -35,6 +35,15 @@ Check out the [makefile] for all build steps.
 1. Delete files `rm -rf dump.bin dump.tgz dump`
 
 
+## Local
+
+Start MongoDB server:
+
+```sh
+docker run --rm -p 27017:27017 mongo:3
+```
+
+
 ## Kubernetes Cluster
 
 ### Deployment

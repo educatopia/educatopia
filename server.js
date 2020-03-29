@@ -42,13 +42,15 @@ function connectToDatabase () {
 }
 
 
-function addRoutes (error, database) {
+function addRoutes (error, client) {
   if (error) {
     console.error(error)
     // MongoDB server might not be running yet, therefore try again
     setTimeout(connectToDatabase, 1000)
     return
   }
+
+  const database = client.db(config.db.name)
 
   if (!database) {
     console.error(`Could not connect to database "${db.name}"`)
