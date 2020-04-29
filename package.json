@@ -23,7 +23,7 @@
     "express-session": "^1.17.0",
     "fs-extra": "^9.0.0",
     "highlight.js": "^9.18.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "js-yaml": "^3.13.1",
     "langs": "^2.0.0",
     "marked": "^0.8.2",
