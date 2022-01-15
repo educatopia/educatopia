@@ -26,7 +26,7 @@
     "jquery": "^3.5.0",
     "js-yaml": "^3.13.1",
     "langs": "^2.0.0",
-    "marked": "^0.8.2",
+    "marked": "^4.0.10",
     "mongodb": "^3.0.11",
     "morgan": "^1.10.0",
     "nodemailer": "^6.4.6",
