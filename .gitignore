@@ -1,3 +1,6 @@
-/node_modules
+/.aider*
 /*.log
 /acme.json
+/coder*
+/node_modules
+*.sqlite

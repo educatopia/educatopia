@@ -44,26 +44,15 @@ docker run --rm -p 27017:27017 mongo:3
 ```
 
 
-## Kubernetes Cluster
-
-### Deployment
-
-Create disk for database storage:
-
-```sh
-gcloud compute disks create --size=20GB --zone=$ZONE mongo-disk
-```
-
-
 ## V-Server
 
 ### Setup
 
-- OS: Ubuntu 18.04
-- Database: MongoDB
-- Backend: Express server running on Node.js
+- OS: Ubuntu 24.04
+- Database: SQLite
+- Backend: Express server running on Bun.js
 - Orchestration: PM2
-- Edge Router: Traefik
+- Edge Router: Caddy
 
 
 ### Deployment
@@ -90,17 +79,10 @@ ufw allow https
 ufw enable
 ```
 
-Install and start MongoDB 3:
+Install Bun:
 
 ```sh
-apt install mongodb
-```
-
-Install Node.js 12 and its package manager npm:
-
-```sh
-curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-apt-get install -y nodejs
+curl -fsSL https://bun.sh/install | bash
 ```
 
 ```sh
@@ -111,7 +93,7 @@ cd educatopia
 Install all dependencies:
 
 ```sh
-npm install --production
+bun install --production
 ```
 
 For process management we use Ubuntu's default `systemd`.
@@ -128,7 +110,7 @@ After=mongodb.service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/node /root/educatopia/server.js
+ExecStart=/home/root/.bun/bin/bun /root/educatopia/server.js
 WorkingDirectory=/root/educatopia
 Restart=always
 RestartSec=5
@@ -160,34 +142,7 @@ Now create a CNAME redirection to the v-server host for each domain
 (e.g. v2202003116344111398.powersrv.de),
 as the HTTP challenge is used for verifying the TLS certificates.
 
-Create a `/etc/systemd/system/traefik.service` file
-for the edge router "Traefik" to redirect incoming requests.
-
-```txt
-[Unit]
-Description=Traefik Edge Router
-Documentation=https://docs.traefik.io
-After=educatopia.service
-
-[Service]
-Type=notify
-ExecStart=/usr/local/bin/traefik --configfile=/root/educatopia/traefik.yaml
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Then make sure to update the `filename` in `traefik.yaml`
-to the correct absolute path.
-
-Start it:
-
-```sh
-systemctl enable traefik.service
-systemctl start traefik.service
-systemctl status traefik.service
-```
+Install and set up Caddy.
 
 Wait a few minutes until TLS certificates are obtained and
 then the website should be reachable at <https://educatopia.org>.

@@ -1,10 +1,30 @@
-test: lint
+.PHONY: help
+help: makefile
+	@tail -n +4 makefile | grep ".PHONY"
+
+
+node_modules: package.json
+	if test ! -d $@; then bun install; fi
+
+
+.PHONY: type-check
+type-check: node_modules
+	bunx tsc
 
 
 .PHONY: lint
 # Lint all JavaScript files with ESLint
-lint:
+lint: node_modules
 	eslint --max-warnings 0 .
+
+
+.PHONY: test
+test: type-check lint
+
+
+.PHONY: start
+start: node_modules
+	bun run server.ts
 
 
 .PHONY: docker-build
