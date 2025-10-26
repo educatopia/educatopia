@@ -1,0 +1,25 @@
+version: "3"
+
+networks:
+  http_network:
+    external: true
+
+services:
+  educatopia:
+    build: .
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - EDUCATOPIA_FEATURED_EXERCISES=1871,1895,1910,1911
+      - SESSION_SECRET=TODO_replace_with_a_secure_random_string
+      - SENDGRID_API_KEY=TODO_replace_with_your_sendgrid_api_key
+    volumes:
+      - ./educatopia.sqlite:/usr/src/app/educatopia.sqlite:rw
+    networks:
+      - http_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.educatopia.rule=Host(`educatopia.org`, `www.educatopia.org`)"
+      - "traefik.http.routers.educatopia.entrypoints=websecure"
+      - "traefik.http.routers.educatopia.tls.certresolver=myresolver"
+      - "traefik.http.services.educatopia.loadbalancer.server.port=3470"
