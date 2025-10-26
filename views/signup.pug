@@ -11,7 +11,7 @@ block content
 
       .form-group
         label(for='email') Email
-        input#email.form-control(type='text', name='email')
+        input#email.form-control(type='email', name='email', required, pattern='[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')
 
       .form-group
         label(for='password') Password

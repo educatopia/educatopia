@@ -15,11 +15,12 @@ type-check: node_modules
 .PHONY: lint
 # Lint all JavaScript files with ESLint
 lint: node_modules
-	eslint --max-warnings 0 .
+	bunx eslint --max-warnings 0 .
 
 
 .PHONY: test
 test: type-check lint
+	bun test api/ routes/ public/
 
 
 .PHONY: start
@@ -34,6 +35,15 @@ docker-build:
 		--tag adius/educatopia \
 		--tag gcr.io/deploy-219812/educatopia \
 		.
+
+
+.PHONY: docker-start
+docker-start: docker-build
+	docker run \
+		--rm \
+		--name educatopia \
+		-p 3470:3470 \
+		adius/educatopia
 
 
 .PHONY: docker-push

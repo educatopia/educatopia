@@ -8,9 +8,9 @@ block thirdTab
         th Created
         th User
     tbody
-      each exercise, index in history.reverse()
+      each exercise, index in history
         tr
-          td= history.length - index
+          td= index + 1
           td= exercise.createdAt.toISOString()
           td
             a(href='/' + exercise.createdBy)

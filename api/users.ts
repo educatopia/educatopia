@@ -5,8 +5,9 @@ import pug from "pug"
 import { stripIndent } from "common-tags"
 import type { Database } from "bun:sqlite"
 import sendgrid from "@sendgrid/mail"
+import type { User, AppRequest, AuthCallback, UserData, UserWithConfirmation, MailResponse } from "./types"
 
-const mailUsername = process.env.MAIL_USERNAME
+const _mailUsername = process.env.MAIL_USERNAME
 
 function randomBase62String(length: number) {
   return crypto
@@ -17,14 +18,19 @@ function randomBase62String(length: number) {
     .slice(0, length)
 }
 
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  return emailRegex.test(email)
+}
+
 function sendMail(
   userData: {
     username: string
     email: string
     confirmationCode: string
   },
-  request: Request,
-  done: (error: Error, response?: unknown) => void,
+  request: AppRequest,
+  done: (_error: Error | null, _response?: unknown) => void,
 ) {
   const isProduction = request.app.get("env") !== "development"
   const mail = {
@@ -44,7 +50,7 @@ function sendMail(
     }),
   }
 
-  function mailCallback(error, response) {
+  function mailCallback(error: Error | null, response?: unknown) {
     if (error || !response) {
       console.error(error)
       done(error)
@@ -52,17 +58,20 @@ function sendMail(
     }
 
     if (isProduction) {
-      console.info("Message sent: %s", response.messageId)
+      console.info("Message sent: %s", (response as MailResponse)?.messageId)
     } else {
-      console.info(JSON.parse(response.message))
+      console.info(JSON.parse((response as MailResponse)?.message || '{}'))
     }
 
     done(null, response)
   }
 
   if (isProduction) {
-    sendgrid.setApiKey(process.env.SENDGRID_API_KEY)
-    sendgrid.send(mail, mailCallback)
+    sendgrid.setApiKey(process.env.SENDGRID_API_KEY!)
+    sendgrid.send(mail).then(
+      (response) => mailCallback(null, response),
+      (error) => mailCallback(error, null)
+    )
   } else {
     nodemailer
       .createTransport({
@@ -75,20 +84,18 @@ function sendMail(
 export function getUserByUsername(
   db: Database,
   username: string,
-  done: (error: Error | null, user?: unknown) => void,
+  done: (_error: Error | null, _user?: User) => void,
 ) {
-  done(
-    null,
-    db
-      .query("SELECT * FROM users WHERE username == :username")
-      .get({ username }),
-  )
+  const result = db
+    .query("SELECT * FROM users WHERE username == :username")
+    .get({ username })
+  done(null, result as User | undefined)
 }
 
 export function signup(
   db: Database,
-  request: Request,
-  done: (error: Error, response?: unknown) => void,
+  request: AppRequest,
+  done: (_error: Error | null, _response?: unknown) => void,
 ) {
   const now = new Date()
   const blackList = [
@@ -109,8 +116,9 @@ export function signup(
     "user",
     "users",
   ]
-  const userData = {
+  const userData: UserData = {
     username: request.body.username,
+    name: request.body.name,
     email: request.body.email,
     confirmationCode: randomBase62String(33),
     createdAt: now,
@@ -122,6 +130,7 @@ export function signup(
     return
   }
 
+
   if (blackList.includes(userData.username)) {
     done(new Error("This username is not allowed."))
     return
@@ -129,6 +138,11 @@ export function signup(
 
   if (!userData.email) {
     done(new Error("Email address must be specified"))
+    return
+  }
+
+  if (!isValidEmail(userData.email)) {
+    done(new Error("Please enter a valid email address"))
     return
   }
 
@@ -152,78 +166,82 @@ export function signup(
         return
       }
 
-      userCollection.insert(userData, { safe: true }, (insertError) => {
-        if (insertError) {
-          done(new Error("User could not be inserted."))
+      try {
+        db.query(`
+          INSERT INTO users (username, name, password, email, confirmationCode, createdAt)
+          VALUES (?, ?, ?, ?, ?, ?)
+        `).run(userData.username, userData.name || null, userData.password!, userData.email, userData.confirmationCode, userData.createdAt.toISOString())
+      } catch (insertError) {
+        // Only log in non-test environments
+        if (process.env.NODE_ENV !== 'test' && !process.env.BUN_TEST) {
+          console.error("Database insertion error:", insertError)
+        }
+        done(new Error(`User could not be inserted: ${insertError}`))
+        return
+      }
+
+      sendMail(userData, request, (sendError) => {
+        if (sendError) {
+          console.error(error)
+          done(new Error("Mail could not be sent"))
           return
         }
-
-        sendMail(userData, request, (sendError) => {
-          if (sendError) {
-            console.error(error)
-            done(new Error("Mail could not be sent"))
-            return
-          }
-          done(null, "New user was created and mail was sent")
-        })
+        done(null, "New user was created and mail was sent")
       })
     })
   })
 }
 
-export function confirm(confirmationCode, done) {
-  getUserByUsername(
-    db,
-    { confirmationCode: confirmationCode },
-    (error, user) => {
-      if (error || !user) {
-        done(error)
-        return
-      }
+export function confirm(db: Database, confirmationCode: string, done: AuthCallback) {
+  const result = db
+    .query("SELECT * FROM users WHERE confirmationCode = ?")
+    .get(confirmationCode)
 
-      delete user.confirmationCode
+  const user = result as UserWithConfirmation | undefined
 
-      userCollection.update(
-        { _id: user._id },
-        user,
-        { safe: true },
-        (updateError, result) => {
-          if (updateError || result === 0) {
-            done(
-              new Error(
-                `Following error occurred
-								while updating user ${mailUsername}: ${updateError}`,
-              ),
-            )
-          } else {
-            done(null, user)
-          }
-        },
-      )
-    },
-  )
+  if (!user) {
+    done(new Error("Invalid confirmation code"))
+    return
+  }
+
+  try {
+    db.query("UPDATE users SET confirmationCode = NULL WHERE confirmationCode = ?")
+      .run(confirmationCode)
+
+    // Remove confirmationCode from user object
+    const updatedUser: User = { ...user }
+    delete (updatedUser as UserWithConfirmation).confirmationCode
+
+    done(null, updatedUser)
+  } catch (updateError) {
+    done(new Error(`Following error occurred while updating user: ${updateError}`))
+  }
 }
 
-export function login(username, loginPassword, done) {
-  getUserByUsername(db, { username: username }, (error, user) => {
+export function login(db: Database, username: string, loginPassword: string, done: AuthCallback) {
+  getUserByUsername(db, username, (error, user) => {
     if (error) {
-      console.error("Error occured during lookup of user.")
+      if (process.env.NODE_ENV !== 'test' && !process.env.BUN_TEST) {
+        console.error("Error occured during lookup of user.")
+      }
       done(error)
     } else if (!user) {
-      console.info("User to login does not exist.")
-      done({ message: "User does not exist!" })
-    } else if (user.confirmationCode) {
-      done({ message: "Email-address must first be verified!" })
+      if (process.env.NODE_ENV !== 'test' && !process.env.BUN_TEST) {
+        console.info("User to login does not exist.")
+      }
+      done(new Error("User does not exist!"))
+    } else if ((user as UserWithConfirmation).confirmationCode) {
+      done(new Error("Email-address must first be verified!"))
     } else {
-      bcrypt.compare(loginPassword, user.password, (compareError, result) => {
+      bcrypt.compare(loginPassword, user.password || '', (compareError, result) => {
         if (compareError) {
-          throw new Error(compareError)
+          throw compareError
         }
 
         if (result) {
           done(null, user)
         } else {
-          done({ message: "Wrong password or username!" })
+          done(new Error("Wrong password or username!"))
         }
       })
     }

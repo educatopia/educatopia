@@ -1,11 +1,12 @@
+import type { NextFunction } from "express"
 import { confirm, getUserByUsername } from "../api/users"
 import { getByUser } from "../api/exercises"
-import type { Config } from "../api/types"
+import type { Config, RouteRequest, RouteResponse, User } from "../api/types"
 
 export default function (config: Config) {
   return {
-    confirm(request, response, next) {
-      confirm(request.params.confirmationCode, (error, user) => {
+    confirm(request: RouteRequest, response: RouteResponse, next: NextFunction) {
+      confirm(config.database, request.params.confirmationCode, (error: Error | null, user?: User) => {
         if (error) {
           console.error(error)
           next(error)
@@ -27,11 +28,11 @@ export default function (config: Config) {
       })
     },
 
-    profile(request, response, next) {
+    profile(request: RouteRequest, response: RouteResponse, next: NextFunction) {
       getUserByUsername(
         config.database,
         request.params.username,
-        (error, user) => {
+        (error: Error | null, user?: User) => {
           if (error) {
             console.error(error)
             return
@@ -42,18 +43,12 @@ export default function (config: Config) {
             return
           }
 
-          getByUser(request.params.username, (loadError, exercises) => {
-            if (loadError) {
-              console.error(loadError)
-              return
-            }
-
-            response.render("users/profile", {
-              page: "profile",
-              user: user,
-              exercises: exercises,
-              featureMap: config.featureMap,
-            })
+          const exercises = getByUser(user.username);
+          response.render("users/profile", {
+            page: "profile",
+            user: user,
+            exercises: exercises,
+            featureMap: config.featureMap,
           })
         },
       )

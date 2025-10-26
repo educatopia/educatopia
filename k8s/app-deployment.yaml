@@ -32,5 +32,5 @@ spec:
           image: gcr.io/deploy-219812/educatopia:latest
           name: educatopia-container
           ports:
-            - containerPort: 3000
+            - containerPort: 3470
       restartPolicy: Always

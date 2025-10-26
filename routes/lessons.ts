@@ -1,10 +1,10 @@
 import * as lessonsApi from "../api/lessons.js"
-import type { Config } from "../api/types.js"
+import type { Config, RouteRequest, RouteResponse, LessonDescription } from "../api/types.js"
 
 export default function (config: Config) {
   return {
-    async all(request, response) {
-      const allLessons = (await lessonsApi.getAll()).filter(Boolean)
+    async all(request: RouteRequest, response: RouteResponse) {
+      const allLessons = (await lessonsApi.getAll() || []).filter(Boolean)
       const renderConfig = {
         title: "lessons",
         page: "lessons",
@@ -15,15 +15,24 @@ export default function (config: Config) {
       response.render("lessons", renderConfig)
     },
 
-    async getById(request, response) {
+    async getById(request: RouteRequest, response: RouteResponse) {
       const slug = request.params.slug
 
-      const descriptionObject = await lessonsApi.getById(slug)
-      descriptionObject.page = "lesson"
-      descriptionObject.thumbnailUrl = `/lessons/${slug}/images/thumbnail.png`
-      descriptionObject.featureMap = config.featureMap
+      const descriptionObject: LessonDescription | undefined = await lessonsApi.getById(slug)
 
-      response.render("lesson", descriptionObject)
+      if (!descriptionObject) {
+        response.status(404).send("Lesson not found")
+        return
+      }
+
+      const renderObject = {
+        ...descriptionObject,
+        page: "lesson",
+        thumbnailUrl: `/lessons/${slug}/images/thumbnail.png`,
+        featureMap: config.featureMap,
+      }
+
+      response.render("lesson", renderObject)
     },
   }
 }

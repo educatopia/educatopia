@@ -1,20 +1,22 @@
-from node:8
+FROM oven/bun:latest
 
-run mkdir -p /usr/src/app
-workdir /usr/src/app
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-copy package.json package.json
-copy package-lock.json package-lock.json
-run npm install
+COPY package.json package.json
+COPY bun.lock bun.lock
+RUN bun install
 
 # Sorted with increasing likelihood of change
-copy makefile makefile
-copy server.js server.js
-copy routes routes
-copy views views
-copy api api
-copy public public
+COPY makefile makefile
+COPY server.ts server.ts
+COPY routes routes
+COPY views views
+COPY api api
+COPY public public
 
-expose 3000
+TODO: Initialize the database via migrations
 
-cmd npm start
+EXPOSE 3470
+
+CMD ["bun", "run", "server.ts"]

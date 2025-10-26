@@ -1,23 +1,32 @@
-const api = {};
-let exercises = {};
-let users = {};
+import type { ApiModules } from "../api/types"
+import * as exercisesModule from "../api/exercises"
+import * as usersModule from "../api/users"
 
-api.exercises = {
-	getById: exercises.getById,
-	getHistoryById: exercises.getHistoryById,
-	getAll: exercises.getAll,
-	add: exercises.add,
-	update: exercises.update,
-	delete: exercises.delete,
-};
+const api: Partial<ApiModules> = {};
+let exercises: typeof exercisesModule;
+let users: typeof usersModule;
 
-api.users = {
-	signup: users.signup,
-};
+export default function () {
+	exercises = exercisesModule;
+	users = usersModule;
 
-export default function (config: Config) {
-	exercises = require("../api/exercises")(config);
-	users = require("../api/users")(config);
+	api.exercises = {
+		getById: exercises.getById,
+		getBySlug: exercises.getBySlug,
+		getByIdRendered: exercises.getByIdRendered,
+		getBySlugRendered: exercises.getBySlugRendered,
+		getHistoryById: exercises.getHistoryById,
+		getAll: exercises.getAll,
+		add: exercises.add,
+		update: exercises.update,
+		deleteExercise: exercises.deleteExercise,
+	};
+
+	api.users = {
+		signup: users.signup,
+		confirm: users.confirm,
+		login: users.login,
+	};
 
 	return api;
 }

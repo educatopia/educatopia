@@ -1,5 +1,5 @@
 if page === 'exerciseEdit'
-  - var actionUrl = '/exercises/' + exercise.id
+  - var actionUrl = '/exercises/' + exercise.slug
   - var addFieldUrl = actionUrl + '/edit?'
 
 if page === 'exerciseCreate'
@@ -109,7 +109,7 @@ role='form', action=actionUrl, method='POST')
                 .col-sm-10(id=field)
                   input.form-control(
                   id=field + '0', name=field, type=subtype,
-                  value=exercise[field] ? exercise[field].join(', '):''
+                  value=exercise[field] ? (Array.isArray(exercise[field]) ? exercise[field].join(', ') : exercise[field]) : ''
                   )&attributes(attrs ? attrs : {})
                   p.help-block.small
                     = help

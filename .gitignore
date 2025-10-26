@@ -1,7 +1,8 @@
 .direnv
+*.sqlite
 /.aider*
 /*.log
 /acme.json
 /coder*
+/knowledge_base/code*
 /node_modules
-*.sqlite

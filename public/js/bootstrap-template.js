@@ -5,7 +5,6 @@
  * 'data-*' attributes control where elements are placed
  */
 
-/* eslint-disable no-multi-str */
 /* global _ */
 /* global Backbone */
 

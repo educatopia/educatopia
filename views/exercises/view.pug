@@ -52,7 +52,7 @@ block firstTab
         // TODO: remove because deprecated
 
   if !exercise.solutions && !exercise.approach
-    a(href=url + '/edit', class='btn btn-default btn-lg', role='button')
+    a(href='/exercises/' + exercise.slug + '/edit', class='btn btn-default btn-lg', role='button')
       | Add a Solution
 
 
@@ -62,7 +62,7 @@ block sidebar
       input.form-control.input-sm(
       type='url',
       readonly=true,
-      value= settings.hostname + '/e/' + exercise.id
+      value= settings.hostname + '/e/' + exercise.slug
       )
 
     li.list-group-item Language: <!--space-->
@@ -107,15 +107,15 @@ block sidebar
           = exercise.createdBy
 
     li.list-group-item Created At: <!--space-->
-      - var createdAt = exercise.createdAt.toISOString().substr(0, 19).split('T').join(' ')
-      if exercise.createdAt
+      if exercise.originalCreatedAt
+        - var createdAt = exercise.originalCreatedAt.toISOString().substr(0, 19).split('T').join(' ')
         br
         small.text-muted
           = createdAt + ' UTC'
 
     li.list-group-item Last Modified: <!--space-->
-      - var updatedAt = exercise.updatedAt.toISOString().substr(0, 19).split('T').join(' ')
       if exercise.updatedAt
+        - var updatedAt = exercise.updatedAt.toISOString().substr(0, 19).split('T').join(' ')
         br
         small.text-muted
           = updatedAt + ' UTC'

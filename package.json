@@ -7,7 +7,7 @@
     "@sendgrid/mail": "^6.5.5",
     "@types/langs": "^2.0.5",
     "atob": "^2.1.2",
-    "bcrypt": "^5.0.0",
+    "bcrypt": "^6.0.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^3.4.1",
     "capitalizer": "^0.2.0",
@@ -17,10 +17,12 @@
     "compression": "^1.7.4",
     "errorhandler": "^1.5.1",
     "es6-promise": "^4.2.8",
+    "eslint": "^9.35.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "fs-extra": "^9.0.0",
     "highlight.js": "^9.18.1",
+    "jiti": "^2.5.1",
     "jquery": "^3.5.0",
     "js-yaml": "^3.13.1",
     "langs": "^2.0.0",
@@ -34,6 +36,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
+    "@eslint/js": "^9.35.0",
     "@types/bcrypt": "^5.0.2",
     "@types/bun": "^1.1.8",
     "@types/clone": "^2.1.4",
@@ -44,6 +47,8 @@
     "@types/js-yaml": "^4.0.9",
     "@types/nodemailer": "^6.4.15",
     "@types/pug": "^2.0.10",
-    "mathjax": "^3.0.1"
+    "globals": "^16.4.0",
+    "mathjax": "^3.0.1",
+    "typescript-eslint": "^8.44.0"
   }
 }

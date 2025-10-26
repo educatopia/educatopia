@@ -1,4 +1,4 @@
-import type { Response } from "express"
+import type { Request, Response } from "express"
 import type { Config, Exercise } from "../api/types"
 
 export default function (config: Config) {
@@ -17,14 +17,14 @@ export default function (config: Config) {
     response.render("index", {
       page: "home",
       featureMap: config.featureMap,
-      featuredExercises: exercisesSorted.map((e) => ({
+      featuredExercises: exercisesSorted.map((e) => e ? ({
         id: e.id,
         task: e.task,
-        subjects: JSON.parse(e.subjects),
+        subjects: typeof e.subjects === 'string' ? JSON.parse(e.subjects) : e.subjects,
         type: e.type,
         difficulty: e.difficulty,
         duration: e.duration,
-      })),
+      }) : null).filter(Boolean),
     })
   }
 }

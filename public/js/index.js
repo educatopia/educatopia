@@ -1,11 +1,10 @@
 /*
 global Backbone, MathJax, marked,
-$, _, shaven, shared,
-hljs, Login, window, document, alert
+_, shaven, shared,
+hljs, Login
 */
-/* eslint-disable prefer-const */
 
-!(function (window, document) {
+!(function () {
 
   // jshint maxstatements: 35
 
@@ -104,7 +103,7 @@ hljs, Login, window, document, alert
    '//raw.github.com/powmedia/backbone-forms/v0.10.0
      /distribution/templates/bootstrap.js',
    '//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js',
-   '//raw.github.com/adius/shaven/master/src/dominate.js'
+   '//raw.github.com/ad-si/shaven/master/src/dominate.js'
    ]
 
 
@@ -361,7 +360,7 @@ hljs, Login, window, document, alert
       }
 
       MathJax.Hub
-        .Queue(['Typeset', MathJax.Hub, this.el]) // eslint-disable-line new-cap
+        .Queue(['Typeset', MathJax.Hub, this.el])
 
       return this
     },
@@ -507,7 +506,6 @@ hljs, Login, window, document, alert
 
       // TODO: Listen to change event and redraw
 
-      const _this = this
       let url
 
       if (this.model.id) {
@@ -516,7 +514,7 @@ hljs, Login, window, document, alert
         $.getJSON(
           url,
           (data) => {
-            _this.$el.html(_this.template({exercises: data}))
+            this.$el.html(this.template({exercises: data}))
           }
         )
       }
@@ -559,7 +557,7 @@ hljs, Login, window, document, alert
           .slideDown('fast')
 
         MathJax.Hub
-          .Queue(['Typeset', MathJax.Hub, el[0]]) // eslint-disable-line new-cap
+          .Queue(['Typeset', MathJax.Hub, el[0]])
 
         counter++
         this.model.set('displayedHints', counter)
@@ -751,7 +749,6 @@ hljs, Login, window, document, alert
         })
 
         MathJax.Hub
-          // eslint-disable-next-line new-cap
           .Queue(['Typeset', MathJax.Hub, cont.list])
       },
     },
@@ -1059,12 +1056,10 @@ hljs, Login, window, document, alert
 
     taskDetails: function (id) {
       if (this.tasksList.length === 0) {
-        const self = this
-
         this.tasksList.fetch({
           success: function () {
-            self.taskDetails(id)
-          },
+            this.taskDetails(id)
+          }.bind(this),
         })
       }
       else {

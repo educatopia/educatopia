@@ -14,7 +14,7 @@ import index from "./routes/index"
 import login from "./routes/login"
 import logout from "./routes/logout"
 import signup from "./routes/signup"
-import * as exercises from "./routes/exercises"
+import exercises from "./routes/exercises"
 import lessons from "./routes/lessons"
 import courses from "./routes/courses"
 import users from "./routes/users"
@@ -25,7 +25,7 @@ const database = new Database("educatopia.sqlite", { strict: true })
 const devMode = app.get("env") === "development"
 const conf = {
   devMode,
-  port: 3000,
+  port: 3470,
   database,
   knowledgeBasePath: path.resolve("node_modules/knowledge_base"),
   featureMap: {
@@ -97,17 +97,19 @@ if (conf.featureMap.lessons) {
   app.use("/lessons", express.static(path.join(knowledgeBasePath, "lessons")))
 }
 
-app.get("/exercises", exercises.all)
+const exercisesRoutes = exercises(conf)
 
-app.route("/exercises/create").get(exercises.create).post(exercises.create)
+app.get("/exercises", exercisesRoutes.all)
 
-app.route("/exercises/:id").get(exercises.one).post(exercises.update)
+app.route("/exercises/create").get(exercisesRoutes.create).post(exercisesRoutes.create)
 
-app.get("/e/:id", exercises.shortcut)
+app.route("/exercises/:id").get(exercisesRoutes.one).post(exercisesRoutes.update)
 
-app.route("/exercises/:id/edit").get(exercises.edit).post(exercises.edit)
+app.get("/e/:id", exercisesRoutes.shortcut)
 
-app.get("/exercises/:id/history", exercises.history)
+app.route("/exercises/:id/edit").get(exercisesRoutes.edit).post(exercisesRoutes.edit)
+
+app.get("/exercises/:id/history", exercisesRoutes.history)
 
 app.get("/confirm/:confirmationCode", users(conf).confirm)
 
@@ -132,8 +134,7 @@ app.use((localError, request, response, next) => {
 if (devMode) {
   app.use(errorHandler())
 } else {
-  // eslint-disable-next-line no-unused-vars
-  app.use((localError, request, response, next) => {
+  app.use((localError, request, response) => {
     response.render("error", {
       status: 500,
       featureMap: conf.featureMap,

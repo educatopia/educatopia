@@ -2,6 +2,7 @@ import path from "node:path"
 import { marked } from "marked"
 import fsp from "fs-extra"
 import yaml from "js-yaml"
+import type { Lesson, CourseYaml } from "./types"
 
 const knowledgeBasePath = path.resolve(
   __dirname,
