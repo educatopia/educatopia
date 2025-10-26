@@ -79,7 +79,7 @@ app.get("/", index(conf))
 
 app.route("/login").get(login(conf)).post(login(conf))
 
-app.get("/logout", logout)
+app.get("/logout", logout())
 
 app.route("/signup").get(signup(conf)).post(signup(conf))
 
