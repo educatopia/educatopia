@@ -34,10 +34,14 @@ function sendMail(
 ) {
   const isProduction = request.app.get("env") !== "development"
   const mail = {
-    from: "no-reply@educatopia.org",
-    fromname: "Educatopia",
-    to: userData.email,
-    toname: userData.username,
+    from: {
+      email: "info@educatopia.org",
+      name: "Educatopia",
+    },
+    to: {
+      email: userData.email,
+      name: userData.username,
+    },
     subject: "Verify your email-address for Educatopia",
     text: stripIndent`
       Welcome to Educatopia!

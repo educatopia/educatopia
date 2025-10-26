@@ -15,8 +15,6 @@ COPY views views
 COPY api api
 COPY public public
 
-TODO: Initialize the database via migrations
-
 EXPOSE 3470
 
 CMD ["bun", "run", "server.ts"]
