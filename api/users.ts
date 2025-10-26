@@ -33,15 +33,8 @@ function sendMail(
   done: (_error: Error | null, _response?: unknown) => void,
 ) {
   const isProduction = request.app.get("env") !== "development"
-  const mail = {
-    from: {
-      email: "info@educatopia.org",
-      name: "Educatopia",
-    },
-    to: {
-      email: userData.email,
-      name: userData.username,
-    },
+
+  const mailContent = {
     subject: "Verify your email-address for Educatopia",
     text: stripIndent`
       Welcome to Educatopia!
@@ -70,18 +63,42 @@ function sendMail(
     done(null, response)
   }
 
+  const fromName = "Educatopia"
+  const fromEmail = "info@educatopia.org"
+
   if (isProduction) {
     sendgrid.setApiKey(process.env.SENDGRID_API_KEY!)
-    sendgrid.send(mail).then(
+    sendgrid.send({
+      from: {
+        email: fromEmail,
+        name: fromName,
+      },
+      to: {
+        email: userData.email,
+        name: userData.username,
+      },
+      ...mailContent,
+    }).then(
       (response) => mailCallback(null, response),
       (error) => mailCallback(error, null)
     )
-  } else {
+  }
+  else {
     nodemailer
       .createTransport({
         jsonTransport: true,
       })
-      .sendMail(mail, mailCallback)
+      .sendMail({
+        from: {
+          address: fromEmail,
+          name: fromName,
+        },
+        to: {
+          address: userData.email,
+          name: userData.username,
+        },
+        ...mailContent,
+      }, mailCallback)
   }
 }
 
