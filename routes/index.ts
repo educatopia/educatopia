@@ -7,11 +7,11 @@ export default function (config: Config) {
 
     const placeholders = ids.map(() => "?").join(",")
     const query = `SELECT * FROM exercises WHERE id IN (${placeholders})`
-    const exercises = config.database.query(query).all() as Exercise[]
+    const exercises = config.database.query(query).all(...ids) as Exercise[]
 
     // Order the exercises by the order of the ids
     const exercisesSorted = ids.map((id: string) =>
-      exercises.find((exercise: Exercise) => exercise.id === id),
+      exercises.find((exercise: Exercise) => String(exercise.id) === id),
     )
 
     response.render("index", {
@@ -24,6 +24,8 @@ export default function (config: Config) {
         type: e.type,
         difficulty: e.difficulty,
         duration: e.duration,
+        createdBy: e.createdBy,
+        slug: e.slug,
       }) : null).filter(Boolean),
     })
   }
