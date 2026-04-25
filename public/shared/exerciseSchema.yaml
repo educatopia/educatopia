@@ -49,6 +49,8 @@ type:
     - Draw
     - Choose
     - Transform
+    - Create
+    - Code
   help: What is the main task of the exercise?
   #validators:
   #  - required
