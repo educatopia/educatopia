@@ -3,6 +3,7 @@
   "description": "Free education for everyone",
   "version": "0.2.0",
   "private": true,
+  "license": "AGPL-3.0-or-later",
   "dependencies": {
     "@sendgrid/mail": "^8.1.6",
     "@types/langs": "^2.0.5",
