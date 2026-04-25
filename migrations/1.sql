@@ -11,7 +11,7 @@ CREATE TABLE users_new (
   password TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE COLLATE NOCASE,
   confirmationCode TEXT,
-  createdUtc now()
+  createdUtc TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ'))
 );
 
 INSERT INTO users_new (id, username, password, email, confirmationCode, createdUtc)
