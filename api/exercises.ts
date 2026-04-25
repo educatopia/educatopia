@@ -15,6 +15,16 @@ function generateSlug(): string {
   return timestamp + random
 }
 
+// Lowercase fenced code-block language tags so highlight.js
+// (which keys registered languages by lowercase name) can match them.
+marked.use({
+  walkTokens(token) {
+    if (token.type === "code" && typeof token.lang === "string") {
+      token.lang = token.lang.toLowerCase()
+    }
+  },
+})
+
 // TODO
 // marked.setOptions({
 //   breaks: true,
