@@ -291,3 +291,7 @@ pre code {
         width: 750px;
     }
 }
+
+.table-group-divider {
+    border-top-color: rgb(189, 189, 189);
+}

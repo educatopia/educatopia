@@ -7,11 +7,12 @@ block thirdTab
         th Revision
         th Created
         th User
-    tbody
+    tbody.table-group-divider
       each exercise, index in history
         tr
           td= index + 1
-          td= exercise.createdAt.toISOString()
+          - var iso = exercise.createdAt.toISOString()
+          td(title=iso, style='cursor: help')= iso.slice(0, 16).replace('T', ' ')
           td
             a(href='/' + exercise.createdBy)
               =exercise.createdBy

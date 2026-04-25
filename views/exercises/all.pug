@@ -26,8 +26,8 @@ block content
           each exercise, index in exercises
             tr
               td= index + 1
-              td= exercise.subjects
-              td= exercise.type
+              td.small= exercise.subjects
+              td.small= exercise.type
               td.small
                 - var task = exercise.task
                 a(
