@@ -26,6 +26,9 @@ type RenderObject = {
   title?: string
   exercises?: Exercise[]
   history?: Exercise[]
+  filter?: { tag?: string; subject?: string }
+  allSubjects?: string[]
+  allTags?: string[]
 }
 
 const sharedPath = path.resolve(__dirname, "../public/shared")
@@ -194,7 +197,10 @@ export function create(request: RouteRequest, response: RouteResponse) {
 
 export function all(request: RouteRequest, response: RouteResponse) {
   try {
-    const exercises = api.getAll()
+    const tag = typeof request.query.tag === "string" ? request.query.tag : undefined
+    const subject = typeof request.query.subject === "string" ? request.query.subject : undefined
+
+    const exercises = api.getAll({ tag, subject })
     if (!exercises) {
       throw new Error("Failed to get exercises")
     }
@@ -203,6 +209,9 @@ export function all(request: RouteRequest, response: RouteResponse) {
       title: "Exercises",
       page: "exercises",
       exercises: exercises,
+      filter: { tag, subject },
+      allSubjects: api.getAllSubjects(),
+      allTags: api.getAllTags(),
       featureMap: config.featureMap,
     })
   } catch (error) {
@@ -317,6 +326,8 @@ export default function(cfg: Config) {
     getBySlugRendered: exercisesApi.getBySlugRendered,
     getHistoryById: exercisesApi.getHistoryById,
     getAll: exercisesApi.getAll,
+    getAllSubjects: exercisesApi.getAllSubjects,
+    getAllTags: exercisesApi.getAllTags,
     add: exercisesApi.add,
     update: exercisesApi.update,
     deleteExercise: exercisesApi.deleteExercise,

@@ -158,24 +158,85 @@ export function getHistoryById(id: string) {
   return allVersions.map(exerciseToPrintFormat)
 }
 
-export function getAll() {
+export type ExerciseFilter = {
+  tag?: string
+  subject?: string
+}
+
+export function getAll(filter: ExerciseFilter = {}) {
   const exercises = db
     .query("SELECT * FROM exercises ORDER BY id ASC")
     .all() as Exercise[]
 
-  return exercises.map((exercise) => {
-    const temp = exerciseToPrintFormat(exercise as Exercise)
-    temp.url = `/exercises/${temp.slug}`
-    if (temp.subjects != null) {
-      temp.subjects = capitalizer(temp.subjects)
-      if (Array.isArray(temp.subjects)) {
-        temp.subjects = temp.subjects.join(", ")
+  const normalizedTag = filter.tag?.toLowerCase()
+  const normalizedSubject = filter.subject?.toLowerCase()
+
+  return exercises
+    .map((exercise) => {
+      const temp = exerciseToPrintFormat(exercise as Exercise)
+      temp.url = `/exercises/${temp.slug}`
+      if (temp.subjects != null) {
+        const capitalized = capitalizer(temp.subjects)
+        temp.subjects = Array.isArray(capitalized) ? capitalized : [capitalized]
+      } else {
+        temp.subjects = []
       }
-    } else {
-      temp.subjects = ""
+      if (!Array.isArray(temp.tags)) {
+        temp.tags = []
+      }
+      return temp
+    })
+    .filter((exercise) => {
+      if (normalizedTag) {
+        const tags = (exercise.tags as string[]).map((t) => t.toLowerCase())
+        if (!tags.includes(normalizedTag)) return false
+      }
+      if (normalizedSubject) {
+        const subjects = (exercise.subjects as string[]).map((s) => s.toLowerCase())
+        if (!subjects.includes(normalizedSubject)) return false
+      }
+      return true
+    })
+}
+
+function collectDistinct(column: "subjects" | "tags") {
+  const rows = db
+    .query(`SELECT ${column} FROM exercises`)
+    .all() as { subjects?: string; tags?: string }[]
+
+  const set = new Map<string, string>()
+  for (const row of rows) {
+    const raw = row[column]
+    if (!raw) continue
+    let parsed: unknown
+    try {
+      parsed = JSON.parse(raw)
+    } catch {
+      continue
     }
-    return temp
-  })
+    const items = Array.isArray(parsed) ? parsed : [parsed]
+    for (const item of items) {
+      if (typeof item !== "string") continue
+      const trimmed = item.trim()
+      if (!trimmed) continue
+      const key = trimmed.toLowerCase()
+      if (!set.has(key)) set.set(key, trimmed)
+    }
+  }
+
+  return Array.from(set.values()).sort((a, b) =>
+    a.localeCompare(b, undefined, { sensitivity: "base" }),
+  )
+}
+
+export function getAllSubjects() {
+  return collectDistinct("subjects").map(
+    (subject) => capitalizer(subject) as string,
+  )
+}
+
+export function getAllTags() {
+  return collectDistinct("tags")
 }
 
 export function getByUser(username: string) {

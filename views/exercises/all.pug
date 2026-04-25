@@ -1,11 +1,49 @@
 extends ../layout
 
 block content
+  form.row.g-2.align-items-end.mb-3(action='/exercises', method='get')
+    .col-sm-4
+      label.form-label.small.mb-1(for='filterSubject') Subject
+      input#filterSubject.form-control.form-control-sm(
+        type='text',
+        name='subject',
+        list='subjectOptions',
+        autocomplete='off',
+        value=(filter && filter.subject) ? filter.subject : '',
+        placeholder='e.g. Math'
+      )
+      datalist#subjectOptions
+        if allSubjects
+          each subject in allSubjects
+            option(value=subject)
+    .col-sm-4
+      label.form-label.small.mb-1(for='filterTag') Tag
+      input#filterTag.form-control.form-control-sm(
+        type='text',
+        name='tag',
+        list='tagOptions',
+        autocomplete='off',
+        value=(filter && filter.tag) ? filter.tag : '',
+        placeholder='e.g. proof'
+      )
+      datalist#tagOptions
+        if allTags
+          each tag in allTags
+            option(value=tag)
+    .col-sm-4.d-flex.gap-2
+      button.btn.btn-sm.btn-primary(type='submit') Filter
+      if filter && (filter.tag || filter.subject)
+        a.btn.btn-sm.btn-outline-secondary(href='/exercises') Clear
+
   if exercises.length === 0
-    h1.pb-2.mb-4.border-bottom.
-      There are no exercises available yet.
-      #[br]
-      #[small Please sign up and create the first ones!]
+    if filter && (filter.tag || filter.subject)
+      h1.pb-2.mb-4.border-bottom.
+        No exercises match the selected filter.
+    else
+      h1.pb-2.mb-4.border-bottom.
+        There are no exercises available yet.
+        #[br]
+        #[small Please sign up and create the first ones!]
 
   else
     .table-responsive
@@ -13,7 +51,7 @@ block content
         thead
           tr
             th Nr
-            th Subject
+            th Subjects
             th Type
             th Task
             th Difficulty
@@ -26,7 +64,12 @@ block content
           each exercise, index in exercises
             tr
               td= index + 1
-              td.small= exercise.subjects
+              td.small
+                if exercise.subjects && exercise.subjects.length
+                  each subject, subjectIndex in exercise.subjects
+                    a.badge.text-bg-secondary.text-decoration-none.me-1(
+                      href='/exercises?subject=' + encodeURIComponent(subject)
+                    )= subject
               td.small= exercise.type
               td.small
                 - var task = exercise.task
@@ -47,11 +90,11 @@ block content
                     = exercise.credits
 
               td
-                if exercise.tags
-                  span.badge.text-bg-secondary(
-                  title=exercise.tags.join(', ')
-                  )
-                    = exercise.tags.length
+                if exercise.tags && exercise.tags.length
+                  each tag in exercise.tags
+                    a.badge.text-bg-secondary.text-decoration-none.me-1(
+                      href='/exercises?tag=' + encodeURIComponent(tag)
+                    )= tag
 
               td.text-center
                 if !exercise.solutions && !exercise.approach

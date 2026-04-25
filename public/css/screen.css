@@ -295,3 +295,8 @@ pre code {
 .table-group-divider {
     border-top-color: rgb(189, 189, 189);
 }
+
+.form-control::placeholder {
+    color: #b8b8b8;
+    opacity: 1;
+}

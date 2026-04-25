@@ -17,6 +17,8 @@ export default function () {
 		getBySlugRendered: exercises.getBySlugRendered,
 		getHistoryById: exercises.getHistoryById,
 		getAll: exercises.getAll,
+		getAllSubjects: exercises.getAllSubjects,
+		getAllTags: exercises.getAllTags,
 		add: exercises.add,
 		update: exercises.update,
 		deleteExercise: exercises.deleteExercise,

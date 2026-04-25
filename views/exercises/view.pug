@@ -77,7 +77,9 @@ block sidebar
       li.list-group-item Subjects: <!--space-->
         if exercise.subjects
           each subject in exercise.subjects
-            span.badge.text-bg-secondary= subject
+            a.badge.text-bg-secondary.text-decoration-none(
+              href='/exercises?subject=' + encodeURIComponent(subject)
+            )= subject
             = ' '
 
       li.list-group-item Type: <!--space-->
@@ -100,7 +102,9 @@ block sidebar
       li.list-group-item Tags: <!--space-->
         if exercise.tags
           each tag in exercise.tags
-            span.badge.text-bg-secondary= tag
+            a.badge.text-bg-secondary.text-decoration-none(
+              href='/exercises?tag=' + encodeURIComponent(tag)
+            )= tag
             = ' '
 
       li.list-group-item Note: <!--space-->
