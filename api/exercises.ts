@@ -93,6 +93,12 @@ async function renderMarkdown(exercise: Exercise) {
     exercise.approach = marked.parse(exercise.approach) as string
   }
 
+  if (exercise.hints) {
+    exercise.hints = Array.isArray(exercise.hints)
+      ? exercise.hints.map((hint) => marked.parse(hint) as string)
+      : exercise.hints
+  }
+
   if (exercise.solutions) {
     exercise.solutions = Array.isArray(exercise.solutions)
       ? exercise.solutions.map((solution) => marked.parse(solution) as string)
