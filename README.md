@@ -121,8 +121,10 @@ Most important ones:
 - [abi-mathe.de] - Learning portal with focus on college level math.
 - [abi-physik.de] - Learning portal with focus on college level physics.
 - [serlo.org] - The free learning platform.
+- [WirLernenOnline] - Open educational resources search engine for schools.
 
 [abi-chemie.de]: http://abi-chemie.de
 [abi-mathe.de]: http://abi-mathe.de
 [abi-physik.de]: http://abi-physik.de
 [serlo.org]: http://serlo.org
+[WirLernenOnline]: https://wirlernenonline.de
