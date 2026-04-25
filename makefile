@@ -18,6 +18,11 @@ lint: node_modules
 	bunx eslint --max-warnings 0 .
 
 
+.PHONY: format  # Auto-fix lint issues with ESLint
+format: node_modules
+	bunx eslint --fix .
+
+
 .PHONY: test
 test: type-check lint
 	bun test api/ routes/ public/
