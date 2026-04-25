@@ -7,13 +7,12 @@ block content
   hr
 
   for lesson in lessons
-    .media
+    .d-flex.mb-3
       if lesson.thumbnailUrl
-        .media-left
-          .media-object
-              img(src=lesson.thumbnailUrl, alt='Thumbnail for #{lesson.title}')
-      
-      .media-body
-        h3.media-heading: a(href='/lessons/#{lesson.id}')
+        .flex-shrink-0.me-3
+          img(src=lesson.thumbnailUrl, alt='Thumbnail for #{lesson.title}')
+
+      .flex-grow-1
+        h3.mt-0: a(href='/lessons/#{lesson.id}')
           = lesson.title
         p= lesson.subtitle

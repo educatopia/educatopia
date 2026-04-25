@@ -1,38 +1,39 @@
-nav.navbar.navbar-default(role="navigation")
+nav.navbar.navbar-expand-md.bg-white(role="navigation")
   .container-fluid
-    .navbar-header
 
-      a.navbar-brand(href='/')
-        img#logo(src='/img/favicon.png')
-        | educatopia
-        if settings.env === 'development'
-          = ' dev'
+    a.navbar-brand(href='/')
+      img#logo(src='/img/favicon.png', height='24', alt='')
+      | educatopia
+      if settings.env === 'development'
+        = ' dev'
 
-      ul.nav.navbar-nav.navbar-left
+    button.navbar-toggler(type='button',
+      data-bs-toggle='collapse', data-bs-target='#mainNav',
+      aria-controls='mainNav', aria-expanded='false',
+      aria-label='Toggle navigation')
+      span.navbar-toggler-icon
+
+    #mainNav.collapse.navbar-collapse
+      ul.navbar-nav.me-auto
         if featureMap.courses
-          li: a(href='/courses') Courses
+          li.nav-item: a.nav-link(href='/courses') Courses
         if featureMap.lessons
-          li: a(href='/lessons') Lessons
+          li.nav-item: a.nav-link(href='/lessons') Lessons
         if featureMap.exercises
-          li: a(href='/exercises') Exercises
+          li.nav-item: a.nav-link(href='/exercises') Exercises
 
-    if session && session.user
-      ul.nav.navbar-nav.navbar-right
-        li
-          a#newExercise(href='/exercises/create')
-            span.glyphicon.glyphicon-edit
-            span  New Exercise
-        li
-          a(href='/' + session.user.username)
-            = session.user.username
-        li
-          a#logoutButton(href='/logout').
-            Logout
-    else
-      ul.nav.navbar-nav.navbar-right
-        li
-          a#loginButton(href='/login').
-            Login
-        li
-          a#signupButton(href='/signup').
-            Sign Up
+      if session && session.user
+        ul.navbar-nav.ms-auto
+          li.nav-item
+            a#newExercise.nav-link(href='/exercises/create') + New Exercise
+          li.nav-item
+            a.nav-link(href='/' + session.user.username)
+              = session.user.username
+          li.nav-item
+            a#logoutButton.nav-link(href='/logout') Logout
+      else
+        ul.navbar-nav.ms-auto
+          li.nav-item
+            a#loginButton.nav-link(href='/login') Login
+          li.nav-item
+            a#signupButton.nav-link(href='/signup') Sign Up

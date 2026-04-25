@@ -2,14 +2,14 @@ extends ../layout
 
 block content
   if exercises.length === 0
-    .page-header: h1.
+    h1.pb-2.mb-4.border-bottom.
       There are no exercises available yet.
       #[br]
       #[small Please sign up and create the first ones!]
 
   else
     .table-responsive
-      table#exercisesTable.table.table-striped.table-bordered.table-condensed
+      table#exercisesTable.table.table-striped.table-bordered.table-sm
         thead
           tr
             th Nr
@@ -39,16 +39,16 @@ block content
                 if exercise.difficulty
                   span.text-muted.small= exercise.difficulty
                   .progress
-                    .progress-bar(style='width: #{exercise.difficulty * 100}%')
+                    .progress-bar.bg-secondary(style=`width: ${exercise.difficulty * 100}%`)
 
               td
                 if exercise.credits
-                  span.badge
+                  span.badge.rounded-pill.text-bg-secondary
                     = exercise.credits
 
               td
                 if exercise.tags
-                  span.label.label-default(
+                  span.badge.text-bg-secondary(
                   title=exercise.tags.join(', ')
                   )
                     = exercise.tags.length

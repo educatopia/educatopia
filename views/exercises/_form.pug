@@ -15,7 +15,7 @@ mixin textarea(element, field, index)
     = element
 
 .row
-  .col-md-7.col-md-offset-2
+  .col-md-7.offset-md-2
     p.form-explanation
       = 'All text areas in the following form support '
       a(href='https://commonmark.org') Markdown
@@ -43,11 +43,10 @@ mixin textarea(element, field, index)
       |    how to type grave accents</a>.
 
 
-form.form-horizontal(
-role='form', action=actionUrl, method='POST')
+form(role='form', action=actionUrl, method='POST')
 
   if exercise && exercise.id
-    input.hidden(type='text', name='id', value=exercise.id)
+    input(type='hidden', name='id', value=exercise.id)
 
   each fieldset, index in fieldsets
     if !fieldset
@@ -68,8 +67,8 @@ role='form', action=actionUrl, method='POST')
         - var fieldId = (subtype == 'textarea') ? field + 'Body' : field
 
 
-        .form-group(id=field)
-          label.col-sm-2.control-label(for=fieldId)
+        .row.mb-3(id=field)
+          label.col-sm-2.col-form-label(for=fieldId)
             = label
             if validators && validators.indexOf('required') !== -1
               span= ' *'
@@ -80,14 +79,14 @@ role='form', action=actionUrl, method='POST')
                 textarea.form-control(id=field, name=field
                 )&attributes(attrs)
                   = exercise[field]
-                p.help-block.small= help
+                .form-text.small= help
 
             when 'number'
               .col-sm-6
-                input.col-sm-2.form-control(
+                input.form-control(
                 id=field, name=field, type='number', value=exercise[field]
                 )&attributes(attrs)
-                p.help-block.small= help
+                .form-text.small= help
 
             when 'list'
               if subtype == 'textarea'
@@ -98,7 +97,7 @@ role='form', action=actionUrl, method='POST')
                     else
                       +textarea(element, field, 0)
 
-                    button.btn.btn-default.btn-xs(
+                    button.btn.btn-secondary.btn-sm(
                     type='submit',
                     formaction= addFieldUrl + field + '#' + field)
                       | Add another #{field.slice(0,-1)}
@@ -111,19 +110,19 @@ role='form', action=actionUrl, method='POST')
                   id=field + '0', name=field, type=subtype,
                   value=exercise[field] ? (Array.isArray(exercise[field]) ? exercise[field].join(', ') : exercise[field]) : ''
                   )&attributes(attrs ? attrs : {})
-                  p.help-block.small
+                  .form-text.small
                     = help
                     if schema[field].format
                       |  (#{schema[field].format})
 
             when 'select'
                 .col-sm-10
-                  select.form-control(id=field, name=field
+                  select.form-select(id=field, name=field
                   )&attributes(attrs ? attrs : {})
                     each option in [""].concat(schema[field].options)
                       option(selected=(exercise[field] === option))
                         = option
-                  p.help-block.small= help
+                  .form-text.small= help
 
             when 'date'
               .col-sm-10
@@ -133,7 +132,7 @@ role='form', action=actionUrl, method='POST')
                 value=exercise[field] ? exercise[field].toISOString() : ''
                 )&attributes(attrs ? attrs : {})
 
-                p.help-block.small= help
+                .form-text.small= help
 
             default
               .col-sm-10
@@ -141,8 +140,8 @@ role='form', action=actionUrl, method='POST')
                 id=field, name=field, type='text', value=exercise[field]
                 )&attributes(attrs ? attrs : {})
 
-                p.help-block.small= help
+                .form-text.small= help
 
-  .form-group
-    .col-sm-offset-2.col-sm-10
+  .row.mb-3
+    .col-sm-10.offset-sm-2
       button.btn.btn-primary(type='submit') Submit

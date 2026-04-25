@@ -13,36 +13,41 @@ block firstTab
   #task!= exercise.task
 
   if exercise.hints
-    #hints.panel-group
+    #hints
       each hint, index in exercise.hints
-        .panel.panel-default
-          .panel-heading(data-toggle='collapse', data-target='#hint-' + index+1)
+        .card.mb-2
+          .card-header(role='button',
+            data-bs-toggle='collapse',
+            data-bs-target='#hint-' + (index+1))
             span Hint #{index+1}
-          .panel-collapse.collapse(id='hint-' + index+1)
-            .panel-body!= hint
+          .collapse(id='hint-' + (index+1))
+            .card-body!= hint
 
     br
 
   if exercise.approach
-    #approach.panel-group
-      .panel.panel-default
-        .panel-heading(data-toggle='collapse', data-target='#approachBody')
-          span.panel-title Approach
-        #approachBody.panel-collapse.collapse
-          .panel-body
+    #approach
+      .card.mb-2
+        .card-header(role='button',
+          data-bs-toggle='collapse', data-bs-target='#approachBody')
+          span.card-title Approach
+        #approachBody.collapse
+          .card-body
             != exercise.approach
 
     br
 
   if exercise.solutions && exercise.solutions.length > 0
-    #solution.panel-group
-      .panel.panel-primary
-        .panel-heading(data-toggle='collapse', data-target='#solution .list-group')
-          span.panel-title Solution
+    #solution
+      .card.border-primary
+        .card-header.bg-primary.text-white(role='button',
+          data-bs-toggle='collapse',
+          data-bs-target='#solution .list-group')
+          span.card-title Solution
             = (exercise.solutions.length === 1) ? '' : 's'
 
         if exercise.solutions && exercise.solutions.length > 0
-          ul.list-group.collapse
+          ul.list-group.list-group-flush.collapse
             each solution in exercise.solutions
               li.list-group-item!= solution
 
@@ -52,73 +57,75 @@ block firstTab
         // TODO: remove because deprecated
 
   if !exercise.solutions && !exercise.approach
-    a(href='/exercises/' + exercise.slug + '/edit', class='btn btn-default btn-lg', role='button')
+    a(href='/exercises/' + exercise.slug + '/edit', class='btn btn-secondary btn-lg', role='button')
       | Add a Solution
 
 
 block sidebar
   #exerciseSidebar.col-sm-3
-    li.list-group-item URL:
-      input.form-control.input-sm(
-      type='url',
-      readonly=true,
-      value= settings.hostname + '/e/' + exercise.slug
-      )
+    ul.list-group
+      li.list-group-item URL:
+        input.form-control.form-control-sm(
+        type='url',
+        readonly=true,
+        value= settings.hostname + '/e/' + exercise.slug
+        )
 
-    li.list-group-item Language: <!--space-->
-      span.pull-right= exercise.language
+      li.list-group-item Language: <!--space-->
+        span.float-end= exercise.language
 
-    li.list-group-item Subjects: <!--space-->
-      if exercise.subjects
-        each subject in exercise.subjects
-          span.label.label-default= subject
-          = ' '
-    li.list-group-item Type: <!--space-->
-      span.pull-right= exercise.type
+      li.list-group-item Subjects: <!--space-->
+        if exercise.subjects
+          each subject in exercise.subjects
+            span.badge.text-bg-secondary= subject
+            = ' '
 
-    li.list-group-item Duration: <!--space-->
-      if exercise.duration
-        span.pull-right= exercise.duration
-          | min
+      li.list-group-item Type: <!--space-->
+        span.float-end= exercise.type
 
-    li.list-group-item Credits: <!--space-->
-      span.badge.pull-right= exercise.credits
+      li.list-group-item Duration: <!--space-->
+        if exercise.duration
+          span.float-end= exercise.duration
+            | min
 
-    li.list-group-item Difficulty: <!--space-->
-      if exercise.difficulty !== undefined
-        span.pull-right= exercise.difficulty
-        .progress
-          .progress-bar(style='width: #{exercise.difficulty * 100}%')
+      li.list-group-item Credits: <!--space-->
+        span.badge.text-bg-secondary.float-end= exercise.credits
 
-    li.list-group-item Tags: <!--space-->
-      if exercise.tags
-        each tag in exercise.tags
-          span.label.label-default= tag
-          = ' '
+      li.list-group-item Difficulty: <!--space-->
+        if exercise.difficulty !== undefined
+          span.float-end= exercise.difficulty
+          .progress
+            .progress-bar(style=`width: ${exercise.difficulty * 100}%`)
 
-    li.list-group-item Note: <!--space-->
-      br
-      small.text-muted
-        = exercise.note
+      li.list-group-item Tags: <!--space-->
+        if exercise.tags
+          each tag in exercise.tags
+            span.badge.text-bg-secondary= tag
+            = ' '
 
-    li.list-group-item Created By: <!--space-->
-      if exercise.createdBy
-        a.pull-right(href='/' + exercise.createdBy)
-          = exercise.createdBy
-
-    li.list-group-item Created At: <!--space-->
-      if exercise.originalCreatedAt
-        - var createdAt = exercise.originalCreatedAt.toISOString().substr(0, 19).split('T').join(' ')
+      li.list-group-item Note: <!--space-->
         br
         small.text-muted
-          = createdAt + ' UTC'
+          = exercise.note
 
-    li.list-group-item Last Modified: <!--space-->
-      if exercise.updatedAt
-        - var updatedAt = exercise.updatedAt.toISOString().substr(0, 19).split('T').join(' ')
-        br
-        small.text-muted
-          = updatedAt + ' UTC'
+      li.list-group-item Created By: <!--space-->
+        if exercise.createdBy
+          a.float-end(href='/' + exercise.createdBy)
+            = exercise.createdBy
+
+      li.list-group-item Created At: <!--space-->
+        if exercise.originalCreatedAt
+          - var createdAt = exercise.originalCreatedAt.toISOString().substr(0, 19).split('T').join(' ')
+          br
+          small.text-muted
+            = createdAt + ' UTC'
+
+      li.list-group-item Last Modified: <!--space-->
+        if exercise.updatedAt
+          - var updatedAt = exercise.updatedAt.toISOString().substr(0, 19).split('T').join(' ')
+          br
+          small.text-muted
+            = updatedAt + ' UTC'
 
 block scripts
   script.
@@ -132,4 +139,10 @@ block scripts
       },
     }
 
-  script(async src='/modules/mathjax/es5/tex-mml-chtml.js')
+    document.addEventListener('shown.bs.collapse', (event) => {
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([event.target])
+      }
+    })
+
+  script(async src='/modules/mathjax/tex-mml-chtml.js')

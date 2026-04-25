@@ -13,7 +13,7 @@
    * Bootstrap templates for Backbone Forms
    */
   Form.template = _.template('\
-    <form class="form-horizontal" data-fieldsets></form>\
+    <form data-fieldsets></form>\
   ')
 
   Form.Fieldset.template = _.template('\
@@ -25,11 +25,11 @@
   ')
 
   Form.Field.template = _.template('\
-    <div class="form-group field-<%= key %>">\
-      <label class="col-lg-2 control-label" for="<%= editorId %>">\
+    <div class="row mb-3 field-<%= key %>">\
+      <label class="col-lg-2 col-form-label" for="<%= editorId %>">\
         <%= title %>\
-        <span class="glyphicon glyphicon-question-sign" \
-        title="<%= help %>" data-container="body"></span>\
+        <span class="text-muted" \
+        title="<%= help %>" data-container="body">?</span>\
       </label>\
       <div class="col-lg-10" data-editor>\
         <div class="alert alert-danger" data-error></div>\
@@ -39,18 +39,18 @@
 
   Form.NestedField.template = _.template('\
     <div class="field-<%= key %>">\
-      <div title="<%= title %>" class="input-xlarge">\
+      <div title="<%= title %>">\
         <span data-editor></span>\
-        <div class="help-inline" data-error></div>\
+        <div class="form-text text-danger" data-error></div>\
       </div>\
-      <div class="help-block"><%= help %></div>\
+      <div class="form-text"><%= help %></div>\
     </div>\
   ')
 
   Form.editors.List.template = _.template('\
     <div class="bbf-list">\
       <ul class="row list-unstyled" data-items></ul>\
-      <button class="btn btn-default bbf-add" data-action="add">\
+      <button class="btn btn-secondary bbf-add" data-action="add">\
         Add\
       </button>\
     </div>\
@@ -59,9 +59,7 @@
   Form.editors.List.Item.template = _.template('\
     <li class="row col-lg-8">\
       <div data-editor class="col-lg-11"></div>\
-      <button type="button" class="close bbf-del" data-action="remove">\
-        &times;\
-      </button>\
+      <button type="button" class="btn-close bbf-del" data-action="remove" aria-label="Remove"></button>\
       <div class="alert alert-danger" data-error></div>\
     </li>\
   ')

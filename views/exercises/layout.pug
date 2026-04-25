@@ -4,23 +4,24 @@ block content
   if exercise
     - var url = '/exercises/' + exercise.slug
 
-  .tabbable.col-sm-9
-    ul#tabHandlers.nav.nav-tabs
-      li(class= (page == 'exerciseView') ? 'active' : '')
-        a(href=url, exercise-toggle='tab') Exercise
-      li(class= (page == 'exerciseEdit') ? 'active' : '')
-        a(href=url + '/edit', exercise-toggle='tab') Edit
-      li(class= (page == 'exerciseHistory') ? 'active' : '')
-        a(href=url + '/history', exercise-toggle='tab') History
+  .row
+    .tabbable.col-sm-9
+      ul#tabHandlers.nav.nav-tabs
+        li.nav-item
+          a(href=url, class='nav-link' + ((page == 'exerciseView') ? ' active' : '')) Exercise
+        li.nav-item
+          a(href=url + '/edit', class='nav-link' + ((page == 'exerciseEdit') ? ' active' : '')) Edit
+        li.nav-item
+          a(href=url + '/history', class='nav-link' + ((page == 'exerciseHistory') ? ' active' : '')) History
 
-    .tab-content
-      #viewTab.tab-pane(class= (page == 'exerciseView') ? 'active' : '')
-        block firstTab
+      .tab-content
+        #viewTab.tab-pane(class= (page == 'exerciseView') ? 'active' : '')
+          block firstTab
 
-      #editTab.tab-pane(class= (page == 'exerciseEdit') ? 'active' : '')
-        block secondTab
+        #editTab.tab-pane(class= (page == 'exerciseEdit') ? 'active' : '')
+          block secondTab
 
-      #historyTab.tab-pane(class= (page == 'exerciseHistory') ? 'active' : '')
-        block thirdTab
+        #historyTab.tab-pane(class= (page == 'exerciseHistory') ? 'active' : '')
+          block thirdTab
 
-  block sidebar
+    block sidebar

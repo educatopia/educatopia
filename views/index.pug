@@ -19,26 +19,22 @@ block content
     a.btn.btn-primary.btn-lg(href='/exercises') Start Browsing
     a.btn.btn-primary.btn-lg(href='/exercises/create') Add a New Exercise
 
-  .center(style='max-width: 960px; margin: 5rem auto 0 auto;')
-    .row
-      for exercise, index in featuredExercises
-        .col-xs-6.col-sm-6
-          .panel.panel-info
-            .panel-heading
-              h3.panel-title
-                = 'Exercise by '
-                a(href=`/${exercise.createdBy}`)
-                  = exercise.createdBy
-                if exercise.subjects
-                  = ' in '
-                  = exercise.subjects.join(' and ')
+  .container.mt-5
+    .row.g-3
+      for exercise in featuredExercises
+        .col-md-6
+          .card.h-100.text-bg-light
+            h6.card-header
+              = 'Exercise by '
+              a.text-reset(href=`/${exercise.createdBy}`)
+                = exercise.createdBy
+              if exercise.subjects
+                = ' in '
+                = exercise.subjects.join(' and ')
 
-            .panel-body
-              = exercise.task
-              br
-              a.btn.btn-default.pull-right(
-                href=`/exercises/${exercise.slug}` type='button').
-                Go to Exercise
-
-        if index % 2 == 1
-          .clearfix
+            .card-body.d-flex.flex-column
+              p= exercise.task
+              .text-end.mt-auto
+                a.btn.btn-outline-secondary(
+                  href=`/exercises/${exercise.slug}` type='button').
+                  Go to Exercise

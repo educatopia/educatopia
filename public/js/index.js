@@ -336,13 +336,14 @@ hljs, Login
       }
       else {
         this.$el
-          .addClass('well')
+          .addClass('card')
+          .addClass('card-body')
           .addClass('col-lg-12')
 
-        this.$('#tabHandlers li:nth-of-type(1)')
+        this.$('#tabHandlers li:nth-of-type(1) .nav-link')
           .removeClass('active')
 
-        this.$('#tabHandlers li:nth-of-type(2)')
+        this.$('#tabHandlers li:nth-of-type(2) .nav-link')
           .addClass('active')
 
         this.$('#tab2')
@@ -409,11 +410,11 @@ hljs, Login
       const submitSpan = this.$('#exerciseEditSubmit span')
 
       if (!errors) {
-        // TODO: Use spin.js instead of glyphicons
+        // TODO: Use a real spinner
 
         submitSpan
-          .addClass('glyphicon')
-          .addClass('glyphicon-refresh')
+          .addClass('spinner-border')
+          .addClass('spinner-border-sm')
 
 
         ExerciseEditForm.model.save('', '', {
@@ -425,14 +426,14 @@ hljs, Login
               .text('The exercise was successfully saved')
 
             submitSpan
-              .removeClass('glyphicon')
-              .removeClass('glyphicon-refresh')
+              .removeClass('spinner-border')
+              .removeClass('spinner-border-sm')
           },
           error: function () {
 
             submitSpan
-              .removeClass('glyphicon')
-              .removeClass('glyphicon-refresh')
+              .removeClass('spinner-border')
+              .removeClass('spinner-border-sm')
 
             this
               .$('.successInfo')
@@ -472,7 +473,7 @@ hljs, Login
         .attr('step', 0.1)
 
       this
-        .$('.glyphicon-question-sign')
+        .$('[data-bs-toggle="tooltip"]')
         .tooltip()
 
       return this
@@ -718,7 +719,7 @@ hljs, Login
         cont = shaven(
           [
             ref[0],
-            ['div.panel-heading', this.id],
+            ['div.card-header', this.id],
             ['ul.list-group$list'],
           ])
 
