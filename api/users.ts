@@ -9,6 +9,8 @@ import type { User, AppRequest, AuthCallback, UserData, UserWithConfirmation, Ma
 
 const _mailUsername = process.env.MAIL_USERNAME
 
+const CONFIRMATION_CODE_MAX_AGE_MS = 24 * 60 * 60 * 1000
+
 function randomBase62String(length: number) {
   return crypto
     .randomBytes(length)
@@ -225,9 +227,9 @@ export function signup(
 
     try {
       db.query(`
-        INSERT INTO users (username, name, password, email, confirmationCode, createdAt)
-        VALUES (?, ?, ?, ?, ?, ?)
-      `).run(userData.username, userData.name || null, userData.password!, userData.email, userData.confirmationCode, userData.createdAt.toISOString())
+        INSERT INTO users (username, name, password, email, confirmationCode, confirmationCodeCreatedAt, createdAt)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `).run(userData.username, userData.name || null, userData.password!, userData.email, userData.confirmationCode, userData.createdAt.toISOString(), userData.createdAt.toISOString())
     } catch (insertError) {
       if (process.env.NODE_ENV !== 'test' && !process.env.BUN_TEST) {
         console.error("Database insertion error:", insertError)
@@ -252,16 +254,38 @@ export function confirm(db: Database, confirmationCode: string, done: AuthCallba
     .query("SELECT * FROM users WHERE confirmationCode = ?")
     .get(confirmationCode)
 
-  const user = result as UserWithConfirmation | undefined
+  const user = result as
+    | (UserWithConfirmation & { confirmationCodeCreatedAt?: string | null })
+    | undefined
 
   if (!user) {
     done(new Error("Invalid confirmation code"))
     return
   }
 
+  const issuedAt = user.confirmationCodeCreatedAt
+    ? Date.parse(user.confirmationCodeCreatedAt)
+    : NaN
+  const isExpired =
+    Number.isNaN(issuedAt) ||
+    Date.now() - issuedAt > CONFIRMATION_CODE_MAX_AGE_MS
+
+  if (isExpired) {
+    try {
+      db.query("DELETE FROM users WHERE confirmationCode = ?")
+        .run(confirmationCode)
+    } catch (deleteError) {
+      done(new Error(`Following error occurred while deleting expired user: ${deleteError}`))
+      return
+    }
+    done(new Error("Confirmation code has expired. Please sign up again."))
+    return
+  }
+
   try {
-    db.query("UPDATE users SET confirmationCode = NULL WHERE confirmationCode = ?")
-      .run(confirmationCode)
+    db.query(
+      "UPDATE users SET confirmationCode = NULL, confirmationCodeCreatedAt = NULL WHERE confirmationCode = ?",
+    ).run(confirmationCode)
 
     // Remove confirmationCode from user object
     const updatedUser: User = { ...user }

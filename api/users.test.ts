@@ -15,6 +15,7 @@ beforeEach(() => {
       password TEXT NOT NULL,
       email TEXT NOT NULL UNIQUE COLLATE NOCASE,
       confirmationCode TEXT,
+      confirmationCodeCreatedAt TEXT,
       createdAt TEXT,
       updatedAt TEXT
     )
@@ -383,9 +384,15 @@ describe("User API", () => {
     const confirmCode = "abc123xyz"
     testDb
       .query(
-        "INSERT INTO users (username, password, email, confirmationCode) VALUES (?, ?, ?, ?)"
+        "INSERT INTO users (username, password, email, confirmationCode, confirmationCodeCreatedAt) VALUES (?, ?, ?, ?, ?)"
       )
-      .run("unconfirmed", "hashedpass", "unconfirmed@example.com", confirmCode)
+      .run(
+        "unconfirmed",
+        "hashedpass",
+        "unconfirmed@example.com",
+        confirmCode,
+        new Date().toISOString(),
+      )
 
     users.confirm(testDb, confirmCode, (error, user) => {
       expect(error).toBeNull()
@@ -394,10 +401,87 @@ describe("User API", () => {
 
       // Verify confirmation code was removed
       const result = testDb
-        .query("SELECT confirmationCode FROM users WHERE username = ?")
-        .get("unconfirmed") as { confirmationCode: string | null }
+        .query(
+          "SELECT confirmationCode, confirmationCodeCreatedAt FROM users WHERE username = ?"
+        )
+        .get("unconfirmed") as {
+          confirmationCode: string | null
+          confirmationCodeCreatedAt: string | null
+        }
 
       expect(result.confirmationCode).toBeNull()
+      expect(result.confirmationCodeCreatedAt).toBeNull()
+      done()
+    })
+  })
+
+  test("confirm - rejects expired confirmation code and removes user", (done) => {
+    const confirmCode = "expiredcode"
+    const issuedAt = new Date(Date.now() - 25 * 60 * 60 * 1000).toISOString()
+    testDb
+      .query(
+        "INSERT INTO users (username, password, email, confirmationCode, confirmationCodeCreatedAt) VALUES (?, ?, ?, ?, ?)"
+      )
+      .run(
+        "stale",
+        "hashedpass",
+        "stale@example.com",
+        confirmCode,
+        issuedAt,
+      )
+
+    users.confirm(testDb, confirmCode, (error, user) => {
+      expect(error).toBeDefined()
+      expect(error?.message).toContain("expired")
+      expect(user).toBeUndefined()
+
+      const remaining = testDb
+        .query("SELECT id FROM users WHERE username = ?")
+        .get("stale")
+      expect(remaining).toBeNull()
+      done()
+    })
+  })
+
+  test("confirm - accepts code issued just under the max age", (done) => {
+    const confirmCode = "barelyfresh"
+    const issuedAt = new Date(Date.now() - 23 * 60 * 60 * 1000).toISOString()
+    testDb
+      .query(
+        "INSERT INTO users (username, password, email, confirmationCode, confirmationCodeCreatedAt) VALUES (?, ?, ?, ?, ?)"
+      )
+      .run(
+        "fresh",
+        "hashedpass",
+        "fresh@example.com",
+        confirmCode,
+        issuedAt,
+      )
+
+    users.confirm(testDb, confirmCode, (error, user) => {
+      expect(error).toBeNull()
+      expect(user?.username).toBe("fresh")
+      done()
+    })
+  })
+
+  test("confirm - treats missing issuance timestamp as expired", (done) => {
+    const confirmCode = "notimestamp"
+    testDb
+      .query(
+        "INSERT INTO users (username, password, email, confirmationCode) VALUES (?, ?, ?, ?)"
+      )
+      .run(
+        "notime",
+        "hashedpass",
+        "notime@example.com",
+        confirmCode,
+      )
+
+    users.confirm(testDb, confirmCode, (error, user) => {
+      expect(error).toBeDefined()
+      expect(error?.message).toContain("expired")
+      expect(user).toBeUndefined()
       done()
     })
   })

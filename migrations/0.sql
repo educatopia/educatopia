@@ -8,6 +8,7 @@ CREATE TABLE users (
   password TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE COLLATE NOCASE,
   confirmationCode TEXT,
+  confirmationCodeCreatedAt TEXT,
   createdAt TEXT,
   updatedAt TEXT
 );
