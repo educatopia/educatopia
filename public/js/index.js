@@ -65,18 +65,8 @@ hljs, Login
 
   marked.setOptions({
     gfm: true,
-    /* highlight: function (code, lang, callback) {
-     pygmentize({ lang: lang, format: 'html' }, code, function (err, result) {
-     if (err) return callback(err);
-     callback(null, result.toString());
-     });
-     },*/
-    tables: true,
     breaks: true,
     pedantic: false,
-    smartLists: true,
-    smartypants: false,
-    langPrefix: 'lang-',
   })
 
 
@@ -378,18 +368,8 @@ hljs, Login
 
         data = this.model.toJSON()
 
-        marked(data.task, (error, content) => {
-          if (error) throw error
-
-          data.task = content
-
-        })
-
-        marked(data.approach, (error, content) => {
-          if (error) throw error
-
-          data.approach = content
-        })
+        data.task = marked.parse(data.task)
+        data.approach = marked.parse(data.approach)
 
         this.$el.html(this.template({data: data}))
 
