@@ -3,9 +3,9 @@
 -- Users table
 CREATE TABLE users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT NOT NULL UNIQUE,
+  username TEXT NOT NULL UNIQUE COLLATE NOCASE,
   password TEXT NOT NULL,
-  email TEXT NOT NULL UNIQUE,
+  email TEXT NOT NULL UNIQUE COLLATE NOCASE,
   confirmationCode TEXT,
   createdUtc now()
 );
