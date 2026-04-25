@@ -15,9 +15,11 @@ Check out the detailed instructions in [development.md](./development.md).
 ### General Education
 
 - [AnimaGraffs] - 3D animations explaining mechanisms and processes.
+- [Explained Visually] - Interactive visualizations explaining tricky ideas.
 - [Explorable Explanations] - A hub for learning through play.
 
 [Explorable Explanations]: http://explorabl.es
+[Explained Visually]: https://github.com/vicapow/explained-visually
 [AnimaGraffs]: https://animagraffs.com/
 
 
