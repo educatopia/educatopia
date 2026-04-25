@@ -146,7 +146,7 @@ export async function one(request: RouteRequest, response: RouteResponse, next: 
       originalCreatedAt = oldestEntry.createdAt
     }
 
-    const hostname = request.app.get("hostname") || request.hostname || "localhost:3470"
+    const hostname = request.app.get("hostname") || request.get("host") || "localhost:3470"
 
     response.render("exercises/view", {
       title: "Exercise",
