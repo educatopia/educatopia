@@ -167,6 +167,7 @@ export function getHistoryById(id: string) {
 export type ExerciseFilter = {
   tag?: string
   subject?: string
+  q?: string
 }
 
 export function getAll(filter: ExerciseFilter = {}) {
@@ -176,6 +177,7 @@ export function getAll(filter: ExerciseFilter = {}) {
 
   const normalizedTag = filter.tag?.toLowerCase()
   const normalizedSubject = filter.subject?.toLowerCase()
+  const normalizedQuery = filter.q?.trim().toLowerCase()
 
   return exercises
     .map((exercise) => {
@@ -200,6 +202,27 @@ export function getAll(filter: ExerciseFilter = {}) {
       if (normalizedSubject) {
         const subjects = (exercise.subjects as string[]).map((s) => s.toLowerCase())
         if (!subjects.includes(normalizedSubject)) return false
+      }
+      if (normalizedQuery) {
+        const haystackParts: string[] = []
+        if (exercise.task) haystackParts.push(String(exercise.task))
+        if (exercise.approach) haystackParts.push(String(exercise.approach))
+        if (exercise.note) haystackParts.push(String(exercise.note))
+        if (exercise.type) haystackParts.push(String(exercise.type))
+        if (Array.isArray(exercise.subjects)) {
+          haystackParts.push(...(exercise.subjects as string[]))
+        }
+        if (Array.isArray(exercise.tags)) {
+          haystackParts.push(...(exercise.tags as string[]))
+        }
+        if (Array.isArray(exercise.hints)) {
+          haystackParts.push(...(exercise.hints as string[]))
+        }
+        if (Array.isArray(exercise.solutions)) {
+          haystackParts.push(...(exercise.solutions as string[]))
+        }
+        const haystack = haystackParts.join(" ").toLowerCase()
+        if (!haystack.includes(normalizedQuery)) return false
       }
       return true
     })

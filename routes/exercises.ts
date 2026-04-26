@@ -26,9 +26,10 @@ type RenderObject = {
   title?: string
   exercises?: Exercise[]
   history?: Exercise[]
-  filter?: { tag?: string; subject?: string }
+  filter?: { tag?: string; subject?: string; q?: string }
   allSubjects?: string[]
   allTags?: string[]
+  searchQuery?: string
 }
 
 const sharedPath = path.resolve(__dirname, "../public/shared")
@@ -199,8 +200,9 @@ export function all(request: RouteRequest, response: RouteResponse) {
   try {
     const tag = typeof request.query.tag === "string" ? request.query.tag : undefined
     const subject = typeof request.query.subject === "string" ? request.query.subject : undefined
+    const q = typeof request.query.q === "string" ? request.query.q : undefined
 
-    const exercises = api.getAll({ tag, subject })
+    const exercises = api.getAll({ tag, subject, q })
     if (!exercises) {
       throw new Error("Failed to get exercises")
     }
@@ -209,7 +211,8 @@ export function all(request: RouteRequest, response: RouteResponse) {
       title: "Exercises",
       page: "exercises",
       exercises: exercises,
-      filter: { tag, subject },
+      filter: { tag, subject, q },
+      searchQuery: q,
       allSubjects: api.getAllSubjects(),
       allTags: api.getAllTags(),
       featureMap: config.featureMap,

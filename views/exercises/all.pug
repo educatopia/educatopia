@@ -2,6 +2,8 @@ extends ../layout
 
 block content
   form.row.g-2.align-items-end.mb-3(action='/exercises', method='get')
+    if filter && filter.q
+      input(type='hidden', name='q', value=filter.q)
     .col-sm-4
       label.form-label.small.mb-1(for='filterSubject') Subject
       input#filterSubject.form-control.form-control-sm(
@@ -32,11 +34,15 @@ block content
             option(value=tag)
     .col-sm-4.d-flex.gap-2
       button.btn.btn-sm.btn-primary(type='submit') Filter
-      if filter && (filter.tag || filter.subject)
+      if filter && (filter.tag || filter.subject || filter.q)
         a.btn.btn-sm.btn-outline-secondary(href='/exercises') Clear
 
+  if filter && filter.q
+    p.text-muted.small.mb-3
+      | Showing results for #[strong=filter.q]
+
   if exercises.length === 0
-    if filter && (filter.tag || filter.subject)
+    if filter && (filter.tag || filter.subject || filter.q)
       h1.pb-2.mb-4.border-bottom.
         No exercises match the selected filter.
     else

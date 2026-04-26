@@ -36,6 +36,57 @@ code {
     margin-right: 0.3em;
 }
 
+.navbar-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 320px;
+    width: 100%;
+}
+
+.navbar-search-input {
+    width: 100%;
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 999px;
+    padding: 0.45rem 1rem 0.45rem 2.4rem;
+    font-size: 0.95rem;
+    line-height: 1.25;
+    background-color: white;
+    color: inherit;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.navbar-search-input:focus {
+    border-color: rgb(150, 150, 150);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.navbar-search-input::-webkit-search-cancel-button {
+    cursor: pointer;
+}
+
+.navbar-search-icon {
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    color: rgb(60, 60, 60);
+    cursor: pointer;
+}
+
+.navbar-search-icon:hover,
+.navbar-search-icon:focus {
+    color: black;
+    outline: none;
+}
+
 s {
     color: rgb(185, 74, 72) !important;
     text-decoration: none;
