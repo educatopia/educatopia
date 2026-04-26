@@ -2,7 +2,8 @@ module.exports = {
   apps : [
     {
       name: 'server',
-      script: 'server.js',
+      script: 'server.ts',
+      interpreter: 'bun',
       instances: 1,
       autorestart: true,
       watch: false,
@@ -11,12 +12,7 @@ module.exports = {
       },
       env_development: {
         NODE_ENV: 'development',
-        EDUCATOPIA_FEATURED_EXERCISES: [
-          '5e76a924b954eb4ef41c05e3',
-          '5e76b03d1b8862538748dc50',
-          '5e776c08a7d39a72aedceb6e',
-          '5e776c7a95c6d072cc5df782',
-        ].join(',')
+        EDUCATOPIA_FEATURED_EXERCISES: '1871,1895,1910,1911',
       },
     },
   ],

@@ -5,30 +5,6 @@ Check out the [makefile] for all build steps.
 [makefile]: ./makefile
 
 
-## Create and Load Database Backup
-
-1. Create backup with `mongodump`
-1. Gzip directory: `tar -czf dump.tgz dump`
-1. Download file: `scp netcup:/root/dump.tgz .`
-1. Unpack database directory: `tar -xzf dump.tgz`
-1. Load backup
-    ```sh
-    mongorestore \
-        --db educatopia \
-        ./dump/educatopia
-    ```
-1. Delete files `rm -rf dump.bin dump.tgz dump`
-
-
-## Local
-
-Start MongoDB server:
-
-```sh
-docker run --rm -p 27017:27017 mongo:3
-```
-
-
 ## V-Server
 
 ### Setup
@@ -91,11 +67,10 @@ with following content:
 ```txt
 [Unit]
 Description=Educatopia Server
-After=mongodb.service
 After=network.target
 
 [Service]
-ExecStart=/home/root/.bun/bin/bun /root/educatopia/server.js
+ExecStart=/root/.bun/bin/bun /root/educatopia/server.ts
 WorkingDirectory=/root/educatopia
 Restart=always
 RestartSec=5
@@ -107,7 +82,7 @@ SyslogIdentifier=educatopia-server
 User=root
 # Group=<alternate group>
 Environment=NODE_ENV=development
-Environment=EDUCATOPIA_FEATURED_EXERCISES=5720f7386fcd760ac5ac889f,5e7a81fcff317963cd06cec1,5e7a77b7ff317963cd06cec0,57210d136fcd760ac5ac88b7
+Environment=EDUCATOPIA_FEATURED_EXERCISES=1871,1895,1910,1911
 
 [Install]
 WantedBy=multi-user.target
