@@ -30,7 +30,17 @@ type RenderObject = {
   allSubjects?: string[]
   allTags?: string[]
   searchQuery?: string
+  pagination?: {
+    currentPage: number
+    totalPages: number
+    pageSize: number
+    totalCount: number
+    startIndex: number
+    queryString: string
+  }
 }
+
+const PAGE_SIZE = 100
 
 const sharedPath = path.resolve(__dirname, "../public/shared")
 const schemaPath = path.join(sharedPath, "exerciseSchema.yaml")
@@ -207,15 +217,41 @@ export function all(request: RouteRequest, response: RouteResponse) {
       throw new Error("Failed to get exercises")
     }
 
+    const totalCount = exercises.length
+    const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
+    const requestedPage = Number.parseInt(
+      typeof request.query.page === "string" ? request.query.page : "1",
+      10,
+    )
+    const currentPage = Number.isFinite(requestedPage)
+      ? Math.min(Math.max(requestedPage, 1), totalPages)
+      : 1
+    const startIndex = (currentPage - 1) * PAGE_SIZE
+    const pagedExercises = exercises.slice(startIndex, startIndex + PAGE_SIZE)
+
+    const filterParams = new URLSearchParams()
+    if (tag) filterParams.set("tag", tag)
+    if (subject) filterParams.set("subject", subject)
+    if (q) filterParams.set("q", q)
+    const queryString = filterParams.toString()
+
     response.render("exercises/all", {
       title: "Exercises",
       page: "exercises",
-      exercises: exercises,
+      exercises: pagedExercises,
       filter: { tag, subject, q },
       searchQuery: q,
       allSubjects: api.getAllSubjects(),
       allTags: api.getAllTags(),
       featureMap: config.featureMap,
+      pagination: {
+        currentPage,
+        totalPages,
+        pageSize: PAGE_SIZE,
+        totalCount,
+        startIndex,
+        queryString,
+      },
     })
   } catch (error) {
     throw new Error(String(error))

@@ -69,7 +69,7 @@ block content
         tbody
           each exercise, index in exercises
             tr
-              td= index + 1
+              td= (pagination ? pagination.startIndex : 0) + index + 1
               td.small
                 if exercise.subjects && exercise.subjects.length
                   each subject, subjectIndex in exercise.subjects
@@ -108,3 +108,39 @@ block content
 
               td.small.text-muted
                 = (exercise.note) ? exercise.note : ''
+
+    if pagination && pagination.totalPages > 1
+      - var qs = pagination.queryString ? pagination.queryString + '&' : ''
+      - var rangeStart = pagination.startIndex + 1
+      - var rangeEnd = Math.min(pagination.startIndex + pagination.pageSize, pagination.totalCount)
+      nav.d-flex.justify-content-between.align-items-center.mt-3(aria-label='Exercise pagination')
+        .small.text-muted
+          | Showing #{rangeStart}–#{rangeEnd} of #{pagination.totalCount}
+        ul.pagination.pagination-sm.mb-0
+          li.page-item(class=(pagination.currentPage <= 1) ? 'disabled' : '')
+            a.page-link(
+              href=(pagination.currentPage > 1) ? '?' + qs + 'page=' + (pagination.currentPage - 1) : '#',
+              aria-label='Previous'
+            ) ‹ Prev
+          - var windowStart = Math.max(1, pagination.currentPage - 2)
+          - var windowEnd = Math.min(pagination.totalPages, pagination.currentPage + 2)
+          if windowStart > 1
+            li.page-item
+              a.page-link(href='?' + qs + 'page=1') 1
+            if windowStart > 2
+              li.page-item.disabled
+                span.page-link …
+          - for (var p = windowStart; p <= windowEnd; p++)
+            li.page-item(class=(p === pagination.currentPage) ? 'active' : '')
+              a.page-link(href='?' + qs + 'page=' + p)= p
+          if windowEnd < pagination.totalPages
+            if windowEnd < pagination.totalPages - 1
+              li.page-item.disabled
+                span.page-link …
+            li.page-item
+              a.page-link(href='?' + qs + 'page=' + pagination.totalPages)= pagination.totalPages
+          li.page-item(class=(pagination.currentPage >= pagination.totalPages) ? 'disabled' : '')
+            a.page-link(
+              href=(pagination.currentPage < pagination.totalPages) ? '?' + qs + 'page=' + (pagination.currentPage + 1) : '#',
+              aria-label='Next'
+            ) Next ›
