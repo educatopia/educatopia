@@ -116,7 +116,7 @@ and update the environment variables for production:
 Environment=NODE_ENV=production
 Environment=EDUCATOPIA_FEATURED_EXERCISES=<todo>
 Environment=SESSION_SECRET=<todo>
-Environment=SENDGRID_API_KEY=<todo>
+Environment=LETTERMINT_API_TOKEN=<todo>
 ```
 
 Finally, restart the server with the new configuration:

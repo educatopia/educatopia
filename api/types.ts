@@ -120,6 +120,8 @@ export type UserWithConfirmation = User & {
 
 export type MailResponse = {
   messageId?: string
+  message_id?: string
+  status?: string
   message?: string
 }
 

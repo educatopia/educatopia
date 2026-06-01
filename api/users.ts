@@ -4,7 +4,7 @@ import nodemailer from "nodemailer"
 import pug from "pug"
 import { stripIndent } from "common-tags"
 import type { Database } from "bun:sqlite"
-import sendgrid from "@sendgrid/mail"
+import { Lettermint } from "lettermint"
 import type { User, AppRequest, AuthCallback, UserData, UserWithConfirmation, MailResponse } from "./types"
 
 const _mailUsername = process.env.MAIL_USERNAME
@@ -60,7 +60,7 @@ function sendMail(
 
     if (process.env.NODE_ENV !== 'test' && !process.env.BUN_TEST) {
       if (isProduction) {
-        console.info("Message sent: %s", (response as MailResponse)?.messageId)
+        console.info("Message sent: %s", (response as MailResponse)?.message_id)
       } else {
         console.info(JSON.parse((response as MailResponse)?.message || '{}'))
       }
@@ -73,21 +73,20 @@ function sendMail(
   const fromEmail = "info@educatopia.org"
 
   if (isProduction) {
-    sendgrid.setApiKey(process.env.SENDGRID_API_KEY!)
-    sendgrid.send({
-      from: {
-        email: fromEmail,
-        name: fromName,
-      },
-      to: {
-        email: userData.email,
-        name: userData.username,
-      },
-      ...mailContent,
-    }).then(
-      (response) => mailCallback(null, response),
-      (error) => mailCallback(error, null)
-    )
+    const lettermint = new Lettermint({
+      apiToken: process.env.LETTERMINT_API_TOKEN!,
+    })
+    lettermint.email
+      .from(`${fromName} <${fromEmail}>`)
+      .to(`${userData.username} <${userData.email}>`)
+      .subject(mailContent.subject)
+      .html(mailContent.html)
+      .text(mailContent.text)
+      .send()
+      .then(
+        (response) => mailCallback(null, response),
+        (error) => mailCallback(error, null)
+      )
   }
   else {
     nodemailer
