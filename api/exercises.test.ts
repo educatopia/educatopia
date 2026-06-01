@@ -5,6 +5,17 @@ import type { Exercise, User } from "./types"
 // Use a test-specific database file
 const testDb = new Database("test-exercises.sqlite", { strict: true })
 
+// Mirror of normalize() in exercises.ts — drops empty array entries (e.g. a
+// blank solution textarea) so the test stays in parallel with production.
+function dropEmptyEntries(value: unknown): unknown {
+  if (!Array.isArray(value)) {
+    return value
+  }
+  return value.filter((element) =>
+    typeof element === "string" ? element.trim() !== "" : Boolean(element),
+  )
+}
+
 // Mock module for testing - we'll create local versions of the functions
 // that use our test database instead of the production one
 const exercisesModule = {
@@ -16,9 +27,9 @@ const exercisesModule = {
       createdBy: user.username,
       task: exercise.task || '',
       subjects: exercise.subjects,
-      hints: exercise.hints || [],
+      hints: dropEmptyEntries(exercise.hints || []),
       approach: exercise.approach || '',
-      solutions: exercise.solutions || [],
+      solutions: dropEmptyEntries(exercise.solutions || []),
       type: exercise.type || 'problem',
       credits: exercise.credits || 0,
       difficulty: exercise.difficulty || 0,
@@ -116,9 +127,9 @@ const exercisesModule = {
         createdBy: user.username,
         task: exerciseFromForm.task || '',
         subjects: JSON.stringify(exerciseFromForm.subjects || []),
-        hints: JSON.stringify(exerciseFromForm.hints || []),
+        hints: JSON.stringify(dropEmptyEntries(exerciseFromForm.hints || [])),
         approach: exerciseFromForm.approach || '',
-        solutions: JSON.stringify(exerciseFromForm.solutions || []),
+        solutions: JSON.stringify(dropEmptyEntries(exerciseFromForm.solutions || [])),
         type: exerciseFromForm.type || 'problem',
         credits: exerciseFromForm.credits || 0,
         difficulty: exerciseFromForm.difficulty || 0,
@@ -220,6 +231,69 @@ describe("Exercise API", () => {
     const result = exercisesModule.add(exercise, testUser)
     expect(result.changes).toBe(1)
     expect(result.lastInsertRowid).toBeGreaterThan(0)
+  })
+
+  test("add - drops empty solutions from a multi-solution exercise", () => {
+    const addResult = exercisesModule.add(
+      {
+        id: "",
+        slug: "",
+        task: "Has a blank solution field",
+        subjects: ["Math"],
+        type: "problem",
+        solutions: ["Solution 1", "", "  ", "Solution 2"],
+        hints: [],
+        tags: [],
+        approach: "",
+      },
+      testUser
+    )
+
+    const retrieved = exercisesModule.getById(
+      String(addResult.lastInsertRowid)
+    ) as Exercise
+    expect(JSON.parse(retrieved.solutions as string)).toEqual([
+      "Solution 1",
+      "Solution 2",
+    ])
+  })
+
+  test("update - removes a solution whose textarea was cleared", () => {
+    const addResult = exercisesModule.add(
+      {
+        id: "",
+        slug: "",
+        task: "Two solutions",
+        subjects: ["Math"],
+        type: "problem",
+        solutions: ["Keep me", "Remove me"],
+        hints: [],
+        tags: [],
+        approach: "",
+      },
+      testUser
+    )
+
+    const exerciseId = String(addResult.lastInsertRowid)
+    const exercise = exercisesModule.getById(exerciseId) as Exercise
+
+    exercisesModule.update(
+      {
+        id: exerciseId,
+        slug: exercise.slug,
+        task: "Two solutions",
+        subjects: ["Math"],
+        type: "problem",
+        solutions: ["Keep me", ""],
+        hints: [],
+        tags: [],
+        approach: "",
+      },
+      testUser
+    )
+
+    const updated = exercisesModule.getById(exerciseId) as Exercise
+    expect(JSON.parse(updated.solutions as string)).toEqual(["Keep me"])
   })
 
   test("getById - retrieves an exercise by id", () => {

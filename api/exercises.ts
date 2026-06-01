@@ -23,17 +23,24 @@ function normalize(obj: Record<string, unknown>) {
   const temp: Record<string, unknown> = {}
 
   for (const [key, value] of Object.entries(obj)) {
-    const isEmptyArray =
-      Array.isArray(value) && (value.length === 0 || value[0] === "")
-
-    if (!value || isEmptyArray) {
-      // continue
+    if (!value) {
+      // skip falsy values
     } else if (typeof value === "string") {
       temp[key] = normalizeLineBreaks(value)
     } else if (Array.isArray(value)) {
-      temp[key] = value.map((element) =>
-        typeof element === "string" ? normalizeLineBreaks(element) : element,
-      )
+      // Drop empty entries so that a blank textarea — e.g. an unused
+      // solution field among several — is removed rather than stored as "".
+      const cleaned = value
+        .map((element) =>
+          typeof element === "string" ? normalizeLineBreaks(element) : element,
+        )
+        .filter((element) =>
+          typeof element === "string" ? element.trim() !== "" : Boolean(element),
+        )
+
+      if (cleaned.length > 0) {
+        temp[key] = cleaned
+      }
     }
   }
 
