@@ -5,139 +5,50 @@ Check out the [makefile] for all build steps.
 [makefile]: ./makefile
 
 
-## V-Server
+## Production Server
 
 ### Setup
 
-- OS: Ubuntu 24.04
-- Database: SQLite
-- Backend: Express server running on Bun.js
-- Orchestration: PM2
-- Edge Router: Caddy
+- Host: `cloud.feram.io`
+- Database: SQLite (`educatopia.sqlite`, bind-mounted into the container)
+- Backend: Express server running on Bun.js, in a Docker container
+- Orchestration: Docker Compose (`docker-compose.yml`)
+- Edge Router: Traefik (shared `http_network`, handles TLS for `educatopia.org`)
+
+The repository is checked out on the server at
+`/home/admin/Docker/educatopia`.
+Production environment variables (`SESSION_SECRET`,
+`LETTERMINT_API_TOKEN`, `EDUCATOPIA_FEATURED_EXERCISES`, …)
+are set in the `environment` block of `docker-compose.yml` on the server.
 
 
 ### Deployment
 
-```sh
-apt update
-apt upgrade
-```
-
-Set timezone of server to UTC:
+Deploy the latest code from your machine with:
 
 ```sh
-timedatectl set-timezone UTC
+make deploy
 ```
 
-Configure and enable firewall:
+This SSHes into `cloud.feram.io`, pulls the latest code, and rebuilds and
+restarts the container. Equivalent to running on the server:
 
 ```sh
-ufw default deny incoming
-ufw default allow outgoing
-ufw allow ssh
-ufw allow http
-ufw allow https
-ufw enable
+cd /home/admin/Docker/educatopia
+git pull
+docker compose up -d --build
 ```
 
-Install Bun:
+`--build` rebuilds the image from the updated code and `-d` restarts the
+container in detached mode. Traefik keeps routing `educatopia.org` to the new
+container automatically.
+
+
+### Sanity checks
+
+After deploying, verify the container started and the site is serving:
 
 ```sh
-curl -fsSL https://bun.sh/install | bash
-```
-
-```sh
-git clone https://github.com/educatopia/educatopia
-cd educatopia
-```
-
-Install all dependencies:
-
-```sh
-bun install --production
-```
-
-For process management we use Ubuntu's default `systemd`.
-As an alternative you could also use PM2.
-Check out the appendix for instructions.
-
-Create a `/etc/systemd/system/educatopia.service` file
-with following content:
-
-```txt
-[Unit]
-Description=Educatopia Server
-After=network.target
-
-[Service]
-ExecStart=/root/.bun/bin/bun /root/educatopia/server.ts
-WorkingDirectory=/root/educatopia
-Restart=always
-RestartSec=5
-
-StandardOutput=syslog
-StandardError=syslog
-SyslogIdentifier=educatopia-server
-
-User=root
-# Group=<alternate group>
-Environment=NODE_ENV=development
-Environment=EDUCATOPIA_FEATURED_EXERCISES=1871,1895,1910,1911
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Enable the service and start it:
-
-```sh
-systemctl enable educatopia.service
-systemctl start educatopia.service
-systemctl status educatopia.service
-```
-
-Use `journalctl -u educatopia` for logging.
-
-Now create a CNAME redirection to the v-server host for each domain
-(e.g. v2202003116344111398.powersrv.de),
-as the HTTP challenge is used for verifying the TLS certificates.
-
-Install and set up Caddy.
-
-Wait a few minutes until TLS certificates are obtained and
-then the website should be reachable at <https://educatopia.org>.
-
-When everything works as expected, it's time to switch to production mode.
-Run `systemctl edit educatopia`
-and update the environment variables for production:
-
-```txt
-[Service]
-Environment=NODE_ENV=production
-Environment=EDUCATOPIA_FEATURED_EXERCISES=<todo>
-Environment=SESSION_SECRET=<todo>
-Environment=LETTERMINT_API_TOKEN=<todo>
-```
-
-Finally, restart the server with the new configuration:
-
-```sh
-systemctl restart educatopia.service
-```
-
-
-## Appendix
-
-### Use PM2
-
-Install production process manager:
-
-```sh
-bun install --global pm2
-```
-
-Start server in production mode:
-
-```sh
-pm2 start ./ecosystem.config.js
+docker compose logs -f --tail=50 educatopia   # watch startup
+curl -I https://educatopia.org                # verify it's serving
 ```

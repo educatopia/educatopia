@@ -32,7 +32,7 @@ export default defineConfig([
   })),
   // Configuration for Node.js JavaScript files
   {
-    files: ["ecosystem.config.js", "public/js/lang.js"],
+    files: ["public/js/lang.js"],
     languageOptions: {
       globals: globals.node,
       ecmaVersion: 2022,
