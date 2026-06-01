@@ -10,7 +10,7 @@ services:
       - NODE_ENV=production
       - EDUCATOPIA_FEATURED_EXERCISES=1871,1895,1910,1911
       - SESSION_SECRET=TODO_replace_with_a_secure_random_string
-      - SENDGRID_API_KEY=TODO_replace_with_your_sendgrid_api_key
+      - LETTERMINT_API_TOKEN=TODO_replace_with_your_lettermint_api_token
     volumes:
       - ./educatopia.sqlite:/usr/src/app/educatopia.sqlite:rw
     networks:
