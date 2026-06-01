@@ -2,10 +2,8 @@
 -- and align the schema with the application code (add name, replace
 -- createdUtc with createdAt, add updatedAt).
 -- SQLite cannot ALTER a column's collation, so the table is rebuilt.
--- Run inside a transaction. Aborts on conflict so duplicates can be
--- resolved manually before re-running.
-
-BEGIN;
+-- The migration runner wraps this file in a transaction, so a conflict
+-- aborts the whole migration and duplicates can be resolved before re-running.
 
 CREATE TABLE users_new (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,5 +21,3 @@ INSERT INTO users_new (id, username, password, email, confirmationCode, createdA
 
 DROP TABLE users;
 ALTER TABLE users_new RENAME TO users;
-
-COMMIT;

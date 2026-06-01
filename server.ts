@@ -10,6 +10,7 @@ import favicon from "serve-favicon"
 import bodyParser from "body-parser"
 import { Database } from "bun:sqlite"
 
+import { migrate } from "./migrate"
 import index from "./routes/index"
 import login from "./routes/login"
 import logout from "./routes/logout"
@@ -21,6 +22,9 @@ import users from "./routes/users"
 
 const app = express()
 const database = new Database("educatopia.sqlite", { strict: true })
+
+// Bring the schema up to date before serving any requests.
+migrate(database)
 
 const devMode = app.get("env") === "development"
 const conf = {

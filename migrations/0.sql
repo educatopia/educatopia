@@ -4,13 +4,10 @@
 CREATE TABLE users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT NOT NULL UNIQUE COLLATE NOCASE,
-  name TEXT,
   password TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE COLLATE NOCASE,
   confirmationCode TEXT,
-  confirmationCodeCreatedAt TEXT,
-  createdAt TEXT,
-  updatedAt TEXT
+  createdUtc TEXT
 );
 
 -- Exercises table (final schema including slug)

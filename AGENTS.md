@@ -18,7 +18,14 @@ This file provides guidance to coding agents when working with code in this repo
 
 Bun + TypeScript + Express server rendering Pug views, backed by SQLite via `bun:sqlite`.
 Production DB file: `educatopia.sqlite`.
-Schema lives in `migrations/0.sql`.
+
+**Schema migrations:** numbered `migrations/<n>.sql` files form a linear sequence
+starting at `0.sql` (the original schema). `migrate.ts` runs at server startup,
+applying every file whose number is `>=` the DB's `PRAGMA user_version` (the count
+of migrations applied), each in its own transaction. Add a change as the next
+`<n>.sql` — no `BEGIN`/`COMMIT` (the runner wraps each file). A DB that already
+holds a given schema must be baselined with `PRAGMA user_version = <count>` so the
+runner skips the replay.
 
 **Two-layer separation, both keyed by domain (`exercises`, `lessons`, `courses`, `users`):**
 - `api/<domain>.ts` — data access.
