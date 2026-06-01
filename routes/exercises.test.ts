@@ -102,7 +102,7 @@ describe("exercise update authorization (C1)", () => {
 
   test("allows the owner to update", () => {
     const fake = makeApi({
-      getById: (() => ({ id: "1", createdBy: "alice" })) as never,
+      getById: (() => ({ id: "1", slug: "s", createdBy: "alice" })) as never,
     })
     _setTestHooks(fake.api, config)
     const req = {
@@ -112,7 +112,9 @@ describe("exercise update authorization (C1)", () => {
     const res = makeRes()
     update(req, res, () => {})
     expect(fake.state.updateCalls).toBe(1)
-    expect(res.rendered).toBe("exercises/view")
+    // POST-redirect-GET: redirect to the canonical exercise URL so the view is
+    // re-rendered with the slug intact (avoids `/exercises/undefined/...` links).
+    expect(res.redirectedTo).toBe("/exercises/s")
   })
 })
 

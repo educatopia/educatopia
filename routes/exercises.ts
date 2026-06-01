@@ -381,12 +381,11 @@ export function update(request: RouteRequest, response: RouteResponse, next: Nex
   try {
     api.update(updatedExercise as Exercise, user as User)
 
-    response.render("exercises/view", {
-      title: "Update",
-      page: "exerciseView",
-      exercise: updatedExercise,
-      featureMap: config.featureMap,
-    })
+    // Redirect to the canonical exercise URL (POST-redirect-GET) so the view is
+    // re-rendered by `one`, with the slug and rendered markdown intact. Rendering
+    // the raw form body here would leave `exercise.slug` undefined and break the
+    // tab links (e.g. `/exercises/undefined/history`).
+    response.redirect(`/exercises/${existing.slug}`)
   } catch (error) {
     throw new Error(String(error))
   }
