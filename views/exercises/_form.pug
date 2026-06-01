@@ -45,6 +45,8 @@ mixin textarea(element, field, index)
 
 form(role='form', action=actionUrl, method='POST')
 
+  input(type='hidden', name='_csrf', value=csrfToken)
+
   if exercise && exercise.id
     input(type='hidden', name='id', value=exercise.id)
 

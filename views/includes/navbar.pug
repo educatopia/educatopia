@@ -52,7 +52,9 @@ nav.navbar.navbar-expand-md(role="navigation")
             a.nav-link(href='/' + session.user.username)
               = session.user.username
           li.nav-item
-            a#logoutButton.nav-link(href='/logout') Logout
+            form.d-inline(action='/logout', method='post')
+              input(type='hidden', name='_csrf', value=csrfToken)
+              button#logoutButton.nav-link.btn.btn-link(type='submit') Logout
       else
         ul.navbar-nav.ms-auto
           li.nav-item

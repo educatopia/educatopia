@@ -4,8 +4,9 @@ import path from "node:path"
 import type { NextFunction } from "express"
 import yaml from "js-yaml"
 import langs from "langs"
-import type { Exercise, RouteRequest, RouteResponse, Config, ApiModules, Fieldsets } from "../api/types"
+import type { Exercise, RouteRequest, RouteResponse, Config, ApiModules, Fieldsets, User } from "../api/types"
 import * as exercisesApi from "../api/exercises"
+import { canModifyExercise } from "../api/security"
 
 type SchemaField = {
   type?: string
@@ -52,6 +53,12 @@ const fieldsets = yaml.load(fs.readFileSync(fieldsetsPath, "utf8")) as Record<st
 // These will be initialized by the default export function
 let config: Config
 let api: ApiModules['exercises']
+
+// Test seam: inject a fake api / config without standing up the real database.
+export function _setTestHooks(testApi: ApiModules['exercises'], testConfig: Config) {
+  api = testApi
+  config = testConfig
+}
 
 schema.language.options = langs
   .names(true)
@@ -259,6 +266,27 @@ export function all(request: RouteRequest, response: RouteResponse) {
 }
 
 export function edit(request: RouteRequest, response: RouteResponse, next: NextFunction) {
+  const user = request.session?.user
+  if (!user) {
+    response.redirect("/login")
+    return
+  }
+
+  // Only the creator may open the edit form or submit changes.
+  const target = api.getBySlug(request.params.id) as Exercise | null
+  if (!target) {
+    next()
+    return
+  }
+
+  if (!canModifyExercise(user, target)) {
+    response.status(403).render("error", {
+      status: 403,
+      featureMap: config.featureMap,
+    })
+    return
+  }
+
   const renderObject: RenderObject = {
     title: "Edit",
     page: "exerciseEdit",
@@ -267,7 +295,7 @@ export function edit(request: RouteRequest, response: RouteResponse, next: NextF
     featureMap: config.featureMap,
   }
 
-  if (request.method === "POST" && (request as RouteRequest & { session: { user?: unknown } }).session.user) {
+  if (request.method === "POST") {
     addEmptyFields(request)
 
     renderObject.exercise = reformatFormContent(request.body)
@@ -276,28 +304,22 @@ export function edit(request: RouteRequest, response: RouteResponse, next: NextF
     response.render("exercises/edit", renderObject)
   } else {
     try {
-      const exercise = api.getBySlug(request.params.id) as Exercise | null
-
-      if (exercise) {
-        // Process array fields that are stored as JSON strings
-        const processedExercise = { ...exercise }
-        if (processedExercise.subjects && typeof processedExercise.subjects === 'string') {
-          processedExercise.subjects = JSON.parse(processedExercise.subjects || '[]')
-        }
-        if (processedExercise.hints && typeof processedExercise.hints === 'string') {
-          processedExercise.hints = JSON.parse(processedExercise.hints || '[]')
-        }
-        if (processedExercise.tags && typeof processedExercise.tags === 'string') {
-          processedExercise.tags = JSON.parse(processedExercise.tags || '[]')
-        }
-        if (processedExercise.solutions && typeof processedExercise.solutions === 'string') {
-          processedExercise.solutions = JSON.parse(processedExercise.solutions || '[]')
-        }
-        renderObject.exercise = processedExercise
-        response.render("exercises/edit", renderObject)
-      } else {
-        next()
+      // Process array fields that are stored as JSON strings
+      const processedExercise = { ...target }
+      if (processedExercise.subjects && typeof processedExercise.subjects === 'string') {
+        processedExercise.subjects = JSON.parse(processedExercise.subjects || '[]')
       }
+      if (processedExercise.hints && typeof processedExercise.hints === 'string') {
+        processedExercise.hints = JSON.parse(processedExercise.hints || '[]')
+      }
+      if (processedExercise.tags && typeof processedExercise.tags === 'string') {
+        processedExercise.tags = JSON.parse(processedExercise.tags || '[]')
+      }
+      if (processedExercise.solutions && typeof processedExercise.solutions === 'string') {
+        processedExercise.solutions = JSON.parse(processedExercise.solutions || '[]')
+      }
+      renderObject.exercise = processedExercise
+      response.render("exercises/edit", renderObject)
     } catch (error) {
       console.error(error)
       next()
@@ -333,14 +355,31 @@ export function history(request: RouteRequest, response: RouteResponse, next: Ne
   }
 }
 
-export function update(request: RouteRequest, response: RouteResponse) {
+export function update(request: RouteRequest, response: RouteResponse, next: NextFunction) {
+  const user = request.session?.user
+  if (!user) {
+    response.redirect("/login")
+    return
+  }
+
+  const existing = api.getById(String(request.body.id)) as Exercise | null
+  if (!existing) {
+    next()
+    return
+  }
+
+  if (!canModifyExercise(user, existing)) {
+    response.status(403).render("error", {
+      status: 403,
+      featureMap: config.featureMap,
+    })
+    return
+  }
+
   const updatedExercise = reformatFormContent(request.body)
 
   try {
-    api.update(
-      updatedExercise as Exercise,
-      request.session?.user || { username: '', email: '', password: '' }
-    )
+    api.update(updatedExercise as Exercise, user as User)
 
     response.render("exercises/view", {
       title: "Update",

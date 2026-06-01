@@ -1,5 +1,6 @@
 import { test, expect, beforeEach, afterEach, describe } from "bun:test"
 import { Database } from "bun:sqlite"
+import bcrypt from "bcrypt"
 import * as users from "./users"
 import type { AppRequest } from "./types"
 
@@ -192,7 +193,7 @@ describe("User API", () => {
     })
   })
 
-  test("signup - treats emails case-insensitively as duplicates", (done) => {
+  test("signup - does not reveal that an email is already registered (case-insensitive)", (done) => {
     testDb
       .query("INSERT INTO users (username, password, email) VALUES (?, ?, ?)")
       .run("bob", "hashedpass", "bob@example.com")
@@ -209,9 +210,14 @@ describe("User API", () => {
       },
     } as unknown as AppRequest
 
-    users.signup(testDb, request, (error) => {
-      expect(error).toBeDefined()
-      expect(error?.message).toContain("Email-address is already taken")
+    users.signup(testDb, request, (error, response) => {
+      // Neutral response — no "already taken" disclosure, and no new account.
+      expect(error).toBeNull()
+      expect(String(response)).not.toContain("taken")
+      const created = testDb
+        .query("SELECT id FROM users WHERE username = 'bobby'")
+        .get()
+      expect(created).toBeNull()
       done()
     })
   })
@@ -356,7 +362,7 @@ describe("User API", () => {
     })
   })
 
-  test("signup - rejects duplicate email", (done) => {
+  test("signup - returns a neutral response for a duplicate email", (done) => {
     testDb
       .query("INSERT INTO users (username, password, email) VALUES (?, ?, ?)")
       .run("existinguser2", "hashedpass", "existing2@example.com")
@@ -373,9 +379,39 @@ describe("User API", () => {
       },
     } as unknown as AppRequest
 
-    users.signup(testDb, request, (error) => {
-      expect(error).toBeDefined()
-      expect(error?.message).toContain("Email-address is already taken")
+    users.signup(testDb, request, (error, response) => {
+      expect(error).toBeNull()
+      expect(String(response)).not.toContain("taken")
+      const created = testDb
+        .query("SELECT id FROM users WHERE username = 'newuser'")
+        .get()
+      expect(created).toBeNull()
+      done()
+    })
+  })
+
+  test("signup - successful signup yields the same neutral message as a duplicate email", (done) => {
+    const request = {
+      body: {
+        username: "neutraluser",
+        email: "neutral@example.com",
+        password: "password123",
+      },
+      hostname: "localhost",
+      app: {
+        get: () => "development",
+      },
+    } as unknown as AppRequest
+
+    users.signup(testDb, request, (error, response) => {
+      expect(error).toBeNull()
+      // Indistinguishable from the duplicate-email response above.
+      expect(String(response)).not.toContain("taken")
+      const stored = testDb
+        .query("SELECT confirmationCode FROM users WHERE username = 'neutraluser'")
+        .get() as { confirmationCode: string }
+      // L1: confirmation code is URL-safe.
+      expect(stored.confirmationCode).toMatch(/^[A-Za-z0-9_-]+$/)
       done()
     })
   })
@@ -523,16 +559,34 @@ describe("User API", () => {
     })
   })
 
-  test("login - rejects unconfirmed user", (done) => {
+  test("login - reveals unconfirmed state only once the password is correct", (done) => {
+    const hash = bcrypt.hashSync("password123", 4)
     testDb
       .query(
         "INSERT INTO users (username, password, email, confirmationCode) VALUES (?, ?, ?, ?)"
       )
-      .run("unconfirmed", "hashedpass", "unconfirmed@example.com", "code123")
+      .run("unconfirmed", hash, "unconfirmed@example.com", "code123")
 
-    users.login(testDb, "unconfirmed", "password", (error, user) => {
+    users.login(testDb, "unconfirmed", "password123", (error, user) => {
       expect(error).toBeDefined()
       expect(error?.message).toContain("Email-address must first be verified")
+      expect(user).toBeUndefined()
+      done()
+    })
+  })
+
+  test("login - does not reveal unconfirmed state on a wrong password", (done) => {
+    const hash = bcrypt.hashSync("password123", 4)
+    testDb
+      .query(
+        "INSERT INTO users (username, password, email, confirmationCode) VALUES (?, ?, ?, ?)"
+      )
+      .run("unconfirmed2", hash, "unconfirmed2@example.com", "code123")
+
+    users.login(testDb, "unconfirmed2", "wrongpassword", (error, user) => {
+      expect(error).toBeDefined()
+      // Generic message — must NOT disclose that the account exists/unconfirmed.
+      expect(error?.message).toBe("Wrong username or password")
       expect(user).toBeUndefined()
       done()
     })

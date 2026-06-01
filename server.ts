@@ -6,11 +6,18 @@ import compress from "compression"
 import morgan from "morgan"
 import errorHandler from "errorhandler"
 import session from "express-session"
+import helmet from "helmet"
 import favicon from "serve-favicon"
 import bodyParser from "body-parser"
 import { Database } from "bun:sqlite"
 
 import { migrate } from "./migrate"
+import {
+  buildSessionOptions,
+  csrfProtection,
+  createRateLimiter,
+} from "./api/security"
+import { createSqliteSessionStore } from "./api/session-store"
 import index from "./routes/index"
 import login from "./routes/login"
 import logout from "./routes/logout"
@@ -57,35 +64,57 @@ app.use(
   }),
 )
 
+// Secure response headers. The Content-Security-Policy is disabled because the
+// views rely on inline scripts and assets served from /modules; XSS is instead
+// mitigated by sanitizing all rendered user content (see api/markdown.ts).
+app.use(helmet({ contentSecurityPolicy: false }))
+
 app.use(compress())
 app.use(express.static(path.join(__dirname, "public")))
 app.use("/modules", express.static(path.join(__dirname, "node_modules")))
 
 app.use(devMode ? morgan("dev") : morgan())
 
+// Secure cookies require the proxy-forwarded protocol to be trusted.
+app.set("trust proxy", 1)
+
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "dev",
-    saveUninitialized: true,
-    resave: true,
-  }),
+  session(
+    buildSessionOptions({
+      secret: process.env.SESSION_SECRET || "dev",
+      devMode,
+      store: createSqliteSessionStore(session, database),
+    }),
+  ),
 )
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+
+// CSRF protection (synchronizer token) for all state-changing requests. Must
+// run after the session and body parsers so the token and form body are
+// available.
+app.use(csrfProtection)
 
 app.use((request, response, next) => {
   response.locals.session = request.session
   next()
 })
 
+// Throttle authentication endpoints to slow brute-force and limit the cost of
+// the (deliberately slow) bcrypt hashing they trigger.
+const authRateLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: devMode ? 1000 : 20,
+})
+
 app.get("/", index(conf))
 
-app.route("/login").get(login(conf)).post(login(conf))
+app.route("/login").get(login(conf)).post(authRateLimiter.middleware, login(conf))
 
-app.get("/logout", logout())
+app.post("/logout", logout())
 
-app.route("/signup").get(signup(conf)).post(signup(conf))
+app.route("/signup").get(signup(conf)).post(authRateLimiter.middleware, signup(conf))
 
 app.get("/tracks", courses(conf).all)
 

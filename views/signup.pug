@@ -2,6 +2,7 @@ extends layout
 
 block content
   form(action='/signup', method='post')
+    input(type='hidden', name='_csrf', value=csrfToken)
     fieldset
       legend Sign Up
 

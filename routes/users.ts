@@ -1,7 +1,12 @@
 import type { NextFunction } from "express"
 import { confirm, getUserByUsername } from "../api/users"
 import { getByUser } from "../api/exercises"
+import { sanitizeUser } from "../api/security"
 import type { Config, RouteRequest, RouteResponse, User } from "../api/types"
+
+// Mirrors the signup username rules; guards the catch-all /:username route so
+// non-username paths fall through instead of triggering a DB lookup.
+const USERNAME_REGEX = /^[a-zA-Z0-9_-]{1,32}$/
 
 export default function (config: Config) {
   return {
@@ -29,12 +34,18 @@ export default function (config: Config) {
     },
 
     profile(request: RouteRequest, response: RouteResponse, next: NextFunction) {
+      if (!USERNAME_REGEX.test(request.params.username)) {
+        next()
+        return
+      }
+
       getUserByUsername(
         config.database,
         request.params.username,
         (error: Error | null, user?: User) => {
           if (error) {
             console.error(error)
+            next(error)
             return
           }
 
@@ -46,7 +57,8 @@ export default function (config: Config) {
           const exercises = getByUser(user.username);
           response.render("users/profile", {
             page: "profile",
-            user: user,
+            // Never expose the password hash / confirmation code to a view.
+            user: sanitizeUser(user as unknown as Record<string, unknown>),
             exercises: exercises,
             featureMap: config.featureMap,
           })

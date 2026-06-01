@@ -1,4 +1,3 @@
-import crypto from "node:crypto"
 import bcrypt from "bcrypt"
 import nodemailer from "nodemailer"
 import pug from "pug"
@@ -6,25 +5,24 @@ import { stripIndent } from "common-tags"
 import type { Database } from "bun:sqlite"
 import { Lettermint } from "lettermint"
 import type { User, AppRequest, AuthCallback, UserData, UserWithConfirmation, MailResponse } from "./types"
+import { randomUrlSafeString, confirmationUrl } from "./security"
 
 const _mailUsername = process.env.MAIL_USERNAME
 
 const CONFIRMATION_CODE_MAX_AGE_MS = 24 * 60 * 60 * 1000
 
-// bcrypt cost factor. 16 is deliberately slow (~seconds per hash) for
-// production; the test runner uses a low factor so the suite isn't
-// dominated by hashing and stays within the default per-test timeout.
-const BCRYPT_ROUNDS =
-  process.env.BUN_TEST || process.env.NODE_ENV === "test" ? 4 : 16
+// Same response whether or not the email is already registered, so signup
+// cannot be used to enumerate which email addresses have accounts.
+const SIGNUP_NEUTRAL_MESSAGE =
+  "If that email address is not already registered, " +
+  "a confirmation link is on its way. Please check your inbox."
 
-function randomBase62String(length: number) {
-  return crypto
-    .randomBytes(length)
-    .toString("base64")
-    .replace("+", "")
-    .replace("/", "")
-    .slice(0, length)
-}
+// bcrypt cost factor. 12 is a strong, conventional production value; a much
+// higher factor (e.g. 16, ~seconds per hash) turns every unauthenticated
+// login/signup into a CPU-amplified DoS vector. The test runner uses a low
+// factor so the suite isn't dominated by hashing.
+const BCRYPT_ROUNDS =
+  process.env.BUN_TEST || process.env.NODE_ENV === "test" ? 4 : 12
 
 function isValidEmail(email: string): boolean {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -44,16 +42,26 @@ function sendMail(
 ) {
   const isProduction = request.app.get("env") !== "development"
 
+  // Build the link from a TRUSTED host (set by the server via app.set) rather
+  // than request.hostname, which is derived from the client-controlled Host
+  // header and would otherwise allow host-header injection into the email.
+  const trustedHost = request.app.get("hostname") || "localhost:3470"
+  const confirmationLink = confirmationUrl(
+    trustedHost,
+    userData.confirmationCode,
+    isProduction,
+  )
+
   const mailContent = {
     subject: "Verify your email-address for Educatopia",
     text: stripIndent`
       Welcome to Educatopia!
       Finish the sign up process by opening following link:
-      http://${request.hostname}/confirm/${userData.confirmationCode}
+      ${confirmationLink}
     `,
     html: pug.renderFile("views/mails/signup.pug", {
       userData,
-      hostname: request.hostname,
+      confirmationLink,
     }),
   }
 
@@ -161,7 +169,7 @@ export function signup(
     username: rawUsername.trim(),
     name: request.body.name,
     email: rawEmail ? rawEmail.trim() : rawEmail,
-    confirmationCode: randomBase62String(33),
+    confirmationCode: randomUrlSafeString(33),
     createdAt: now,
     updatedAt: now,
   }
@@ -207,7 +215,10 @@ export function signup(
   }
 
   bcrypt.hash(password, BCRYPT_ROUNDS, (error, hash) => {
-    if (error) done(error)
+    if (error) {
+      done(error)
+      return
+    }
 
     userData.password = hash
 
@@ -222,10 +233,14 @@ export function signup(
       | undefined
 
     if (existing) {
+      // Usernames are already public (profile pages live at /:username), so a
+      // taken username may be reported plainly. A taken *email* must not be
+      // revealed — return the same neutral message a brand-new signup gets so
+      // the two cases are indistinguishable.
       if (existing.username.toLowerCase() === userData.username.toLowerCase()) {
         done(new Error("Username is already taken"))
       } else {
-        done(new Error("Email-address is already taken"))
+        done(null, SIGNUP_NEUTRAL_MESSAGE)
       }
       return
     }
@@ -249,7 +264,7 @@ export function signup(
         done(new Error("Mail could not be sent"))
         return
       }
-      done(null, "New user was created and mail was sent")
+      done(null, SIGNUP_NEUTRAL_MESSAGE)
     })
   })
 }
@@ -319,21 +334,26 @@ export function login(db: Database, username: string, loginPassword: string, don
       return
     }
 
-    if ((user as UserWithConfirmation).confirmationCode) {
-      done(new Error("Email-address must first be verified!"))
-      return
-    }
-
     bcrypt.compare(loginPassword, user.password || '', (compareError, result) => {
       if (compareError) {
-        throw compareError
+        done(compareError)
+        return
       }
 
-      if (result) {
-        done(null, user)
-      } else {
+      if (!result) {
         done(invalidCredentials)
+        return
       }
+
+      // Only reveal the unconfirmed state *after* the password is verified, so
+      // an attacker cannot probe which usernames exist / are unconfirmed
+      // without already knowing the password.
+      if ((user as UserWithConfirmation).confirmationCode) {
+        done(new Error("Email-address must first be verified!"))
+        return
+      }
+
+      done(null, user)
     })
   })
 }

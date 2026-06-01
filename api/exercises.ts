@@ -1,8 +1,8 @@
-import { marked } from "marked"
 import clone from "clone"
 import capitalizer from "capitalizer"
 import { Database } from "bun:sqlite"
 import type { Exercise, User, ExerciseDbParams } from "./types"
+import { renderMarkdown } from "./markdown"
 
 const db = new Database("educatopia.sqlite", { strict: true })
 
@@ -14,21 +14,6 @@ function generateSlug(): string {
   ).join('')
   return timestamp + random
 }
-
-// Lowercase fenced code-block language tags so highlight.js
-// (which keys registered languages by lowercase name) can match them.
-marked.use({
-  walkTokens(token) {
-    if (token.type === "code" && typeof token.lang === "string") {
-      token.lang = token.lang.toLowerCase()
-    }
-  },
-})
-
-// TODO
-// marked.setOptions({
-//   breaks: true,
-// })
 
 function normalizeLineBreaks(str: string) {
   return str.replace(/\r\n/g, "\n")
@@ -82,29 +67,6 @@ function exerciseToPrintFormat(exercise: Exercise) {
   }
 
   return temp
-}
-
-async function renderMarkdown(exercise: Exercise) {
-  if (exercise.task) {
-    exercise.task = marked.parse(exercise.task) as string
-  }
-
-  if (exercise.approach) {
-    exercise.approach = marked.parse(exercise.approach) as string
-  }
-
-  if (exercise.hints) {
-    exercise.hints = Array.isArray(exercise.hints)
-      ? exercise.hints.map((hint) => marked.parse(hint) as string)
-      : exercise.hints
-  }
-
-  if (exercise.solutions) {
-    exercise.solutions = Array.isArray(exercise.solutions)
-      ? exercise.solutions.map((solution) => marked.parse(solution) as string)
-      : exercise.solutions
-  }
-  return exercise
 }
 
 export function getById(id: string) {
