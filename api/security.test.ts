@@ -9,6 +9,9 @@ import {
   createRateLimiter,
   generateCsrfToken,
   csrfProtection,
+  generateMathChallenge,
+  verifyMathChallenge,
+  isHoneypotFilled,
 } from "./security"
 
 describe("sanitizeHtml", () => {
@@ -189,6 +192,76 @@ describe("createRateLimiter", () => {
     limiter.middleware(req, res, () => nextCalls++)
     expect(nextCalls).toBe(1)
     expect(status).toBe(429)
+  })
+})
+
+describe("isHoneypotFilled", () => {
+  test("trips on any non-empty value", () => {
+    expect(isHoneypotFilled("spam")).toBe(true)
+    expect(isHoneypotFilled("  x  ")).toBe(true)
+  })
+
+  test("passes for empty, whitespace, or missing values", () => {
+    expect(isHoneypotFilled("")).toBe(false)
+    expect(isHoneypotFilled("   ")).toBe(false)
+    expect(isHoneypotFilled(undefined)).toBe(false)
+    expect(isHoneypotFilled(null)).toBe(false)
+  })
+})
+
+describe("math challenge", () => {
+  const secret = "test-secret"
+
+  // Re-derive the answer from the visible "a + b" question so the test can
+  // submit a correct response without depending on internals.
+  function solve(question: string): number {
+    const [a, b] = question.split("+").map((part) => Number(part.trim()))
+    return a + b
+  }
+
+  test("accepts the correct answer", () => {
+    const { question, token } = generateMathChallenge(secret)
+    expect(verifyMathChallenge(secret, token, solve(question))).toBe(true)
+  })
+
+  test("accepts the answer as a string", () => {
+    const { question, token } = generateMathChallenge(secret)
+    expect(verifyMathChallenge(secret, token, ` ${solve(question)} `)).toBe(true)
+  })
+
+  test("rejects a wrong answer", () => {
+    const { question, token } = generateMathChallenge(secret)
+    expect(verifyMathChallenge(secret, token, solve(question) + 1)).toBe(false)
+  })
+
+  test("rejects a non-numeric answer", () => {
+    const { token } = generateMathChallenge(secret)
+    expect(verifyMathChallenge(secret, token, "abc")).toBe(false)
+    expect(verifyMathChallenge(secret, token, "")).toBe(false)
+    expect(verifyMathChallenge(secret, token, undefined)).toBe(false)
+  })
+
+  test("rejects a token signed with a different secret", () => {
+    const { question, token } = generateMathChallenge("other-secret")
+    expect(verifyMathChallenge(secret, token, solve(question))).toBe(false)
+  })
+
+  test("rejects an expired token", () => {
+    let clock = 1000
+    const { question, token } = generateMathChallenge(secret, () => clock)
+    clock += 10 * 60 * 1000 + 1
+    expect(verifyMathChallenge(secret, token, solve(question), () => clock)).toBe(false)
+  })
+
+  test("rejects a tampered expiry", () => {
+    const { question, token } = generateMathChallenge(secret, () => 1000)
+    const tampered = token.replace(/^\d+/, "9999999999999")
+    expect(verifyMathChallenge(secret, tampered, solve(question), () => 1000)).toBe(false)
+  })
+
+  test("rejects malformed tokens", () => {
+    expect(verifyMathChallenge(secret, "no-separator", 5)).toBe(false)
+    expect(verifyMathChallenge(secret, 123 as unknown as string, 5)).toBe(false)
   })
 })
 

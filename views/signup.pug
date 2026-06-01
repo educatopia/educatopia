@@ -6,6 +6,11 @@ block content
     fieldset
       legend Sign Up
 
+      //- Honeypot: hidden from humans, tempting to naive bots. Must stay empty.
+      div(aria-hidden='true', style='position:absolute;left:-9999px;top:-9999px;height:0;overflow:hidden')
+        label(for='website') Website
+        input#website(type='text', name='website', tabindex='-1', autocomplete='off')
+
       .mb-3
         label.form-label(for='username') Username
         input#username.form-control(type='text', name='username')
@@ -17,6 +22,11 @@ block content
       .mb-3
         label.form-label(for='password') Password
         input#password.form-control(type='password', name='password')
+
+      .mb-3
+        label.form-label(for='mathAnswer')= `What is ${mathQuestion}?`
+        input#mathAnswer.form-control(type='text', name='mathAnswer', inputmode='numeric', autocomplete='off', required)
+        input(type='hidden', name='mathToken', value=mathToken)
 
       input.btn.btn-primary(type='submit', value='Create Account')
 

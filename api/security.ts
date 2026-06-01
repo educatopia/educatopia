@@ -136,6 +136,64 @@ export function generateCsrfToken(): string {
   return randomUrlSafeString(32)
 }
 
+// Stateless arithmetic captcha. A challenge is `<a> + <b>`; the correct answer
+// is bound to an expiry via an HMAC so the server stores nothing. The token sent
+// to the client is `<expiresAt>.<hmac(secret, "<answer>:<expiresAt>")>`. On
+// submit, the server recomputes the HMAC from the *user-supplied* answer — a
+// match proves the answer is correct without ever persisting it. Deters bulk
+// signup bots; a targeted bot can still parse and solve the visible arithmetic.
+const CHALLENGE_TTL_MS = 10 * 60 * 1000
+
+function signChallenge(secret: string, answer: number, expiresAt: number): string {
+  const sig = crypto
+    .createHmac("sha256", secret)
+    .update(`${answer}:${expiresAt}`)
+    .digest("base64url")
+  return `${expiresAt}.${sig}`
+}
+
+// Honeypot check. A decoy field is hidden from humans via CSS but visible to
+// naive bots that fill every input. Any non-empty value means a bot submitted
+// the form. Returns true when the submission should be rejected.
+export function isHoneypotFilled(value: unknown): boolean {
+  return typeof value === "string" && value.trim().length > 0
+}
+
+export function generateMathChallenge(
+  secret: string,
+  now: () => number = () => Date.now(),
+): { question: string; token: string } {
+  // Single-digit operands keep the sum trivial for a human to compute.
+  const a = crypto.randomInt(1, 10)
+  const b = crypto.randomInt(1, 10)
+  const expiresAt = now() + CHALLENGE_TTL_MS
+  return { question: `${a} + ${b}`, token: signChallenge(secret, a + b, expiresAt) }
+}
+
+export function verifyMathChallenge(
+  secret: string,
+  token: unknown,
+  answer: unknown,
+  now: () => number = () => Date.now(),
+): boolean {
+  if (typeof token !== "string") return false
+
+  const numericAnswer = Number(typeof answer === "string" ? answer.trim() : answer)
+  if (!Number.isInteger(numericAnswer)) return false
+
+  const sepIndex = token.indexOf(".")
+  if (sepIndex < 0) return false
+  const expiresAt = Number(token.slice(0, sepIndex))
+  if (!Number.isInteger(expiresAt) || now() > expiresAt) return false
+
+  const expected = signChallenge(secret, numericAnswer, expiresAt)
+  const provided = Buffer.from(token)
+  const recomputed = Buffer.from(expected)
+  // Constant-time compare to avoid leaking the signature byte-by-byte.
+  if (provided.length !== recomputed.length) return false
+  return crypto.timingSafeEqual(provided, recomputed)
+}
+
 const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"])
 
 // Synchronizer-token CSRF protection. A per-session token is issued and exposed

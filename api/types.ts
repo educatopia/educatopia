@@ -5,6 +5,7 @@ export type Config = {
   devMode: boolean
   port: number
   database: Database
+  sessionSecret: string
   knowledgeBasePath: string
   featureMap: Record<string, boolean>
   featuredExercises: string[]

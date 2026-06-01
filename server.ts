@@ -38,6 +38,7 @@ const conf = {
   devMode,
   port: 3470,
   database,
+  sessionSecret: process.env.SESSION_SECRET || "dev",
   knowledgeBasePath: path.resolve("node_modules/knowledge_base"),
   featureMap: {
     courses: false,
@@ -81,7 +82,7 @@ app.set("trust proxy", 1)
 app.use(
   session(
     buildSessionOptions({
-      secret: process.env.SESSION_SECRET || "dev",
+      secret: conf.sessionSecret,
       devMode,
       store: createSqliteSessionStore(session, database),
     }),
