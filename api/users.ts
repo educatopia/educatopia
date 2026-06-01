@@ -11,6 +11,12 @@ const _mailUsername = process.env.MAIL_USERNAME
 
 const CONFIRMATION_CODE_MAX_AGE_MS = 24 * 60 * 60 * 1000
 
+// bcrypt cost factor. 16 is deliberately slow (~seconds per hash) for
+// production; the test runner uses a low factor so the suite isn't
+// dominated by hashing and stays within the default per-test timeout.
+const BCRYPT_ROUNDS =
+  process.env.BUN_TEST || process.env.NODE_ENV === "test" ? 4 : 16
+
 function randomBase62String(length: number) {
   return crypto
     .randomBytes(length)
@@ -200,7 +206,7 @@ export function signup(
     return
   }
 
-  bcrypt.hash(password, 16, (error, hash) => {
+  bcrypt.hash(password, BCRYPT_ROUNDS, (error, hash) => {
     if (error) done(error)
 
     userData.password = hash

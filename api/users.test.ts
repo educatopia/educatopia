@@ -238,7 +238,7 @@ describe("User API", () => {
       expect(stored.email).toBe("Dave@Example.com")
       done()
     })
-  }, 15000)
+  })
 
   test("getUserByUsername - lookup is case-insensitive", (done) => {
     testDb
