@@ -17,10 +17,12 @@ Check out the detailed instructions in [development.md](./development.md).
 - [AnimaGraffs] - 3D animations explaining mechanisms and processes.
 - [Explained Visually] - Interactive visualizations explaining tricky ideas.
 - [Explorable Explanations] - A hub for learning through play.
+- [MiniChemistry] - O-Level and A-Level chemistry notes and exercises.
 
-[Explorable Explanations]: http://explorabl.es
-[Explained Visually]: https://github.com/vicapow/explained-visually
 [AnimaGraffs]: https://animagraffs.com/
+[Explained Visually]: https://github.com/vicapow/explained-visually
+[Explorable Explanations]: http://explorabl.es
+[MiniChemistry]: https://www.minichemistry.com/
 
 
 ### Coding Tutorials
