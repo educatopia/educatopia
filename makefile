@@ -54,7 +54,8 @@ docker-push: docker-build
 
 
 .PHONY: deploy  # Pull latest code on the production server (cloud.feram.io) and rebuild
-deploy:
+deploy: test
+	git push
 	ssh cloud.feram.io '\
 		cd /home/admin/Docker/educatopia && \
 		git pull && \
