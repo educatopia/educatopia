@@ -9,7 +9,9 @@ RUN bun install
 
 # Sorted with increasing likelihood of change
 COPY makefile makefile
+COPY migrate.ts migrate.ts
 COPY server.ts server.ts
+COPY migrations migrations
 COPY routes routes
 COPY views views
 COPY api api
