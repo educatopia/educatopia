@@ -9,8 +9,8 @@ services:
     environment:
       - NODE_ENV=production
       - EDUCATOPIA_FEATURED_EXERCISES=1871,1895,1910,1911
-      - SESSION_SECRET=TODO_replace_with_a_secure_random_string
-      - LETTERMINT_API_TOKEN=TODO_replace_with_your_lettermint_api_token
+      - SESSION_SECRET=${SESSION_SECRET}
+      - LETTERMINT_API_TOKEN=${LETTERMINT_API_TOKEN}
     volumes:
       - ./educatopia.sqlite:/usr/src/app/educatopia.sqlite:rw
     networks:
