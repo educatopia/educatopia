@@ -351,3 +351,10 @@ pre code {
     color: #b8b8b8;
     opacity: 1;
 }
+
+/* CodeMirror Markdown editors in the exercise create/edit form.
+   Colors and layout are configured in client/exercise-editor.ts; this just
+   spaces consecutive editors (e.g. multiple solutions/hints) apart. */
+.cm-editor {
+    margin-bottom: 0.5rem;
+}

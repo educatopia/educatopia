@@ -9,6 +9,8 @@ export default defineConfig([
       "**/knowledge_base/**",
       "**/node_modules/**",
       "**/coderbyte-challenges/**",
+      // Generated bundle produced by `make build`.
+      "public/js/**",
     ]
   },
   // General JS configuration
@@ -40,6 +42,15 @@ export default defineConfig([
     },
     rules: {
       "@typescript-eslint/no-unused-expressions": "off"
+    }
+  },
+  // Client-side TypeScript (bundled for the browser)
+  {
+    files: ["client/**/*.ts"],
+    languageOptions: {
+      globals: globals.browser,
+      ecmaVersion: 2022,
+      sourceType: "module"
     }
   },
   // Configuration for browser JavaScript files

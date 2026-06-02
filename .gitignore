@@ -8,3 +8,6 @@
 /knowledge_base/code*
 /node_modules
 /*todo*
+
+# Generated client bundle (produced by `make build`)
+/public/js/

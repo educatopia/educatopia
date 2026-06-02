@@ -7,6 +7,16 @@ node_modules: package.json
 	if test ! -d $@; then bun install; fi
 
 
+.PHONY: build  # Bundle client-side TypeScript into public/js
+build: node_modules
+	rm -rf public/js
+	bun build client/exercise-editor.ts \
+		--outdir public/js \
+		--splitting \
+		--minify \
+		--entry-naming '[name].js'
+
+
 .PHONY: type-check
 type-check: node_modules
 	bunx tsc
@@ -23,12 +33,12 @@ format: node_modules
 
 
 .PHONY: test
-test: type-check lint
+test: type-check lint build
 	bun test api/ routes/ public/
 
 
 .PHONY: start
-start: node_modules
+start: node_modules build
 	bun run server.ts
 
 
