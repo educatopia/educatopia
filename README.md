@@ -18,11 +18,13 @@ Check out the detailed instructions in [development.md](./development.md).
 - [Explained Visually] - Interactive visualizations explaining tricky ideas.
 - [Explorable Explanations] - A hub for learning through play.
 - [MiniChemistry] - O-Level and A-Level chemistry notes and exercises.
+- [Quezzio] - Wolfram's AI-powered practice questions and study help.
 
 [AnimaGraffs]: https://animagraffs.com/
 [Explained Visually]: https://github.com/vicapow/explained-visually
 [Explorable Explanations]: http://explorabl.es
 [MiniChemistry]: https://www.minichemistry.com/
+[Quezzio]: https://www.wolfram.com/quezzio/
 
 
 ### Coding Tutorials
